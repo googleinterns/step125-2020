@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** */
+/** This is for testing the capabilities of the Marker Class (not started)
 @RunWith(JUnit4.class)
 public final class MarkerTest {
   @Test
@@ -184,4 +184,5 @@ public final class MarkerTest {
     Assert.assertTrue(emptyMiddle.overlaps(range));
     Assert.assertTrue(emptyEnd.overlaps(range));
   }
-}
+  
+}*/
