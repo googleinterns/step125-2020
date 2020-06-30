@@ -129,7 +129,7 @@ public class Marker {
   /**Functions I need: turn categories, links, and flags into list
   * Functions I want: send flag alert to admin, check for repeating markers 
   * (based on location and title), check if location coordinates are complete
-  */
+  
 
   @Override
   public Set<String> makeCategoriesList(cat1, cat2, cat3, cat4) {
@@ -150,4 +150,5 @@ public class Marker {
     // interface documentation, equals will check for set-equality across all set implementations.
     return a.title.equals(b.title) && a.when.equals(b.when) && a.attendees.equals(b.attendees);
   }
+  */
 }
