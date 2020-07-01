@@ -28,21 +28,21 @@ function addRandomGreeting() {
 }
 
 
-var form = document.getElementById("myForm");
 
-var btn = document.getElementById("myButton");
-
-var span = document.getElementsByClassName("close")[0];
 
 function openForm() {
-  document.form.style.display = "block";
+  var form = document.getElementById("myForm");
+  form.style.display = "block";
 }
 
 function closeForm() {
-  document.form.style.display = "none";
+  var form = document.getElementById("myForm");
+  form.style.display = "none";
 }
 
 window.onclick = function(event) {
+  var form = document.getElementById("myForm");
+
   if (event.target == form) {
     form.style.display = "none";
   }
