@@ -15,33 +15,39 @@
       <div id="greeting-container"></div>
     </div>
 
-    <button class="open-button" onclick="openForm()">Open Form</button>
+    <button class="open-button" id = "myButton" onclick="openForm()">Open Form</button>
+    <div id="myForm" class="form">
+        <div class="form-popup" id="myForm">
+            <span class="close" onclick="closeForm()">&times;</span>
+            <form action="/action_page.php" class="form-container">
+                <h1>Fill in Marker</h1>
 
-    <div class="form-popup" id="myForm">
-        <span class="close">&times;</span>
-        <form action="/action_page.php" class="form-container">
-            <h1>Fill in Marker</h1>
+                <label for="email"><b>Email</b></label>
+                <br>
+                <input type="text" placeholder="Enter Email" name="email" required>
+                <br>
+                <label for="marker-name"><b>Marker Name</b></label>
+                <br>
+                <input type="text" placeholder="Name" name="mrkr" required>
+                <br>
+                <label for="marker-name"><b>Marker Description</b></label>
+                <br>
+                <input type="text" placeholder="Description" name="dscr" required>
+                <br>
+                <label for="marker-name"><b>Category</b></label>
+                <br>
+                <select name = "Category" placeholder="Select a category" class="dropdown" required>
+                    <option value = "LGBT+">LGBT</option>
+                    <option value = "BLM">Black Lives Matter</option>
+                    <option value = "environment">Enviromental Crisis</option>
+                    <option value = "other">other</option>
+                </select>
+                <br>
 
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" required>
-
-            <label for="marker-name"><b>Marker Name</b></label>
-            <input type="text" placeholder="Name" name="mrkr" required>
-
-            <label for="marker-name"><b>Marker Description</b></label>
-            <input type="text" placeholder="Description" name="dscr" required>
-
-            <select name = "Category">
-                <option value = "LGBT+">LGBT</option>
-                <option value = "BLM">Black Lives Matter</option>
-                <option value = "environment">Enviromental Crisis</option>
-                <option value = "other">other</option>
-            </select>
-
-
-            <button type="submit" class="btn">Submit</button>
-            <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
-        </form>
+                <button type="submit" class="btn">Submit</button>
+                <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
+            </form>
+        </div>
     </div>
 
 
