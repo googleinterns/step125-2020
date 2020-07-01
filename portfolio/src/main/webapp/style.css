@@ -7,3 +7,10 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+.open-button {
+  background-color: rgb(238, 64, 64);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+}

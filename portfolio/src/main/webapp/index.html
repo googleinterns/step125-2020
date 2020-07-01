@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
@@ -14,5 +14,36 @@
       <button onclick="addRandomGreeting()">Hello</button>
       <div id="greeting-container"></div>
     </div>
+
+    <button class="open-button" onclick="openForm()">Open Form</button>
+
+    <div class="form-popup" id="myForm">
+        <span class="close">&times;</span>
+        <form action="/action_page.php" class="form-container">
+            <h1>Fill in Marker</h1>
+
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="email" required>
+
+            <label for="marker-name"><b>Marker Name</b></label>
+            <input type="text" placeholder="Name" name="mrkr" required>
+
+            <label for="marker-name"><b>Marker Description</b></label>
+            <input type="text" placeholder="Description" name="dscr" required>
+
+            <select name = "Category">
+                <option value = "LGBT+">LGBT</option>
+                <option value = "BLM">Black Lives Matter</option>
+                <option value = "environment">Enviromental Crisis</option>
+                <option value = "other">other</option>
+            </select>
+
+
+            <button type="submit" class="btn">Submit</button>
+            <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
+
+
   </body>
 </html>
