@@ -7,19 +7,11 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
-    </div>
-
     <button class="open-button" id = "myButton" onclick="openForm()">Open Form</button>
-    <div id="myForm" class="form">
-        <div class="form-popup" id="myForm">
+    <div id="myFormPopup" class="form">
+        <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form action="/action_page.php" class="form-container">
+            <form action="" class="form-container">
                 <h1>Fill in Marker</h1>
 
                 <label for="email"><b>Email</b></label>
