@@ -33,7 +33,7 @@
   display: hidden; 
   position: fixed; 
   z-index: 1; 
-  padding-top: 100px; 
+  padding-top: 0px; 
   left: 0;
   top: 0;
   width: 100%; 
@@ -106,4 +106,14 @@ li {
   top: 7%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
 }
