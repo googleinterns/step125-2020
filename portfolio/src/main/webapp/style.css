@@ -1,3 +1,8 @@
+
+
+.body {
+    margin: 0px;
+}
 #content {
   margin-left: auto;
   margin-right: auto;
@@ -68,4 +73,37 @@
 .form-container input[type=text]:focus, .form-container input[type=password]:focus {
   background-color: #ddd;
   outline: none;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  background-color: #333;
+  top: 0;
+  width: 100%;
+}
+
+li a {
+  display: block;
+  text-align: center;
+  padding: 5px 16px;
+  text-decoration: none;
+}
+
+li {
+    float: left;
+}
+
+.navText {
+    color: yellow;
+}
+
+.centerNav a {
+  float: none;
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

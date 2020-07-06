@@ -7,8 +7,27 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <button class="open-button" id = "myButton" onclick="openForm()">Open Form</button>
+
+    <ul>
+        <li><a class="navText" href="#home"><h1>home</h1></a></li>
+        <li class = "centerNav"><a href="#home"><h1>
+            <span style='color: blue'>M</span>
+            <span style='color: red'>A</span>
+            <span style='color: yellow'>P</span>
+            <span style='color: blue'>T</span>
+            <span style='color: red'>I</span>
+            <span style='color: yellow'>V</span>
+            <span style='color: blue'>I</span>
+            <span style='color: red'>S</span>
+            <span style='color: yellow'>T</span>
+        </h1></a></li>
+        <li style = "float:right"><a class = "navText" href="#home"><h1>explore</h1></a></li>
+    </ul>
+    
+
+    <button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
     <div id="myFormPopup" class="form">
+        <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
             <form action="" class="form-container">
@@ -41,6 +60,7 @@
             </form>
         </div>
     </div>
+
 
 
   </body>
