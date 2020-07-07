@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Marker is the container class for when an unique marker is createsof people are meeting and are therefore
@@ -38,7 +39,9 @@ public class Marker {
       Feminism,
       Other;
   }
-  // Add a unique id for each marker UUID?
+  // Add a unique id for each marker (UUID)
+  private final UUID id;
+
   private final String title;
   private final String description;
 
@@ -52,8 +55,11 @@ public class Marker {
   // The links attributes holds the multiple urls that are posted with the marker
   private Set<String> links = new HashSet<String>();
 
-  // The flags attribute holds written supports that are posted when the marker is flagged
+  // The flags attribute holds written reports that are posted when the marker is flagged
   private ArrayList<String> flags = new ArrayList<String>();
+  
+  // The comments attributes holds written comments that are submitted and posted on a marker popup
+  private ArrayList<String> comments = new ArrayList<String>();
 
   // The votes attribute is a mutable counter for the number of upvotes a marker has gotten
   private int votes;
@@ -71,6 +77,10 @@ public class Marker {
    */
 
   public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<Category> categories) {
+    
+    // Creates a random UUID for the marker can be identified. Can be used as the id for the HTML id
+    this.id = UUID.randomUUID();
+
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
     }
@@ -81,7 +91,7 @@ public class Marker {
 
     if (categories.isEmpty()) {
       categories.add(Category.Other);  
-      throw new IllegalArgumentException("categories cannot be null. Add other instead.");
+      //throw new IllegalArgumentException("categories cannot be null. Other will be added instead.");
     }
 
     if (latitude < -90 || latitude > 90){
@@ -99,6 +109,13 @@ public class Marker {
     this.longitude = longitude;
     this.links = links;
     this.votes = 0;
+  }
+
+  /**
+   * Returns the randomized id for this marker.
+   */
+  public UUID getUUID(){
+      return id;
   }
 
   /**
@@ -121,7 +138,7 @@ public class Marker {
   public Set<Category> getCategories() {
     // Return the categories as an unmodifiable set so that the caller can't change our
     // internal data.
-    return Collections.unmodifiableSet(categories);
+    return categories;
   }
 
   /**
@@ -149,12 +166,21 @@ public class Marker {
   }
 
   /**
-   * Returns a read-only set of flag reports for this marker.
+   * Returns a mutable set of flag reports for this marker.
    */
   public ArrayList<String> getFlags () {
     // Return the flag reports as a modifiable set so that the caller can add to our
     // internal data.
     return flags;
+  }
+  
+  /**
+   * Returns a mutable set of comments for this marker.
+   */
+  public ArrayList<String> getComments() {
+    // Return the comments as a modifiable set so that the caller can add to our
+    // internal data.
+    return comments;
   }
 
   /**
@@ -166,18 +192,18 @@ public class Marker {
   }
 
   /**Functions I need:  flags into list
-  * Functions I want: send flag alert to admin(think more about this), increment votes 
+  * Functions I want: send flag alert to admin, increment votes 
   */
 
-  //@Override
   public void addFlagReport(String flagReport) {
     flags.add(flagReport);
   }
-  
-  //@Override
+
+  public void addComment(String comment) {
+    comments.add(comment);   
+  }
+
   public void addVote() {
-    // 
-    // interface documentation, equals will check for set-equality across all set implementations.
     votes++;   
   }
 

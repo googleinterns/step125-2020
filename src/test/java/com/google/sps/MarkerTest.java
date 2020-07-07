@@ -17,8 +17,10 @@ package com.google.sps;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection; 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,12 +32,12 @@ import org.junit.runners.JUnit4;
 public final class MarkerTest {
 
   // All the different mock examples of marker info obtained by servlet through POST method or sent by querystring
-  private static final String TITLE_A = "Justice for Breonna Taylor";
+  private static final String TITLE = "Justice for Breonna Taylor";
 
-  private static final String DESCRIPT_A = "We will walk to the capital";
+  private static final String DESCRIPT = "We will walk to the capital";
 
-  private static final double LAT_A = 32.565;
-  private static final double LONG_A = 45.8574;
+  private static final double LAT = 32.565;
+  private static final double LONG = 45.8574;
 
   private static final Marker.Category CAT_A = Marker.Category.BLM;
   private static final Marker.Category CAT_B = Marker.Category.LGBT;
@@ -47,6 +49,8 @@ public final class MarkerTest {
   private static final String FLAG_A = "Hateful message";
   private static final String FLAG_B = "Not real";
 
+  private static final String COMMENT = "What should we bring?";
+
   @Test
   public void createMarkerWithoutCategories() {
     Set<Marker.Category> CATS = new HashSet<>();
@@ -54,11 +58,32 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker noCatMarker = new Marker(TITLE_A, DESCRIPT_A, LAT_A, LONG_A, LINKS, CATS);
+    Marker noCatMarker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
 
-    Collection<Marker.Category> actual = noCatMarker.getCategories();
-    Collection<Marker.Category> expected = Arrays.asList(Marker.Category.Other);
+    Set<Marker.Category> actual = noCatMarker.getCategories();
+    Set<Marker.Category> expected = new HashSet<Marker.Category>();
+        expected.add(Marker.Category.Other);
+
     Assert.assertEquals(expected, actual);
+  }
+  
+  @Test
+  public void checkUUID() {
+    Set<Marker.Category> CATS = new HashSet<>();
+        CATS.add(CAT_A);
+        CATS.add(CAT_B);
+        CATS.add(CAT_C);
+
+    Set<String> LINKS = new HashSet<>();
+        LINKS.add(LINK_A);
+        LINKS.add(LINK_B);
+
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS); 
+
+    UUID actual = marker.getUUID();
+    UUID not_expected = null;
+    
+    Assert.assertNotEquals(not_expected, actual); 
   }
 
   @Test
@@ -72,7 +97,7 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE_A, DESCRIPT_A, LAT_A, LONG_A, LINKS, CATS);
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
     marker.addFlagReport(FLAG_A); 
 
     int actual = marker.getFlags().size();
@@ -92,10 +117,30 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE_A, DESCRIPT_A, LAT_A, LONG_A, LINKS, CATS);
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
     marker.addVote();
 
     int actual = marker.getVotes();
+    int expected = 1;
+    
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void addComment() {
+    Set<Marker.Category> CATS = new HashSet<>();
+        CATS.add(CAT_A);
+        CATS.add(CAT_B);
+        CATS.add(CAT_C);
+
+    Set<String> LINKS = new HashSet<>();
+        LINKS.add(LINK_A);
+        LINKS.add(LINK_B);
+
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
+    marker.addComment(COMMENT);
+
+    int actual = marker.getComments().size();
     int expected = 1;
     
     Assert.assertEquals(expected, actual);
