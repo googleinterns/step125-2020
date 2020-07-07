@@ -15,32 +15,14 @@
 /**
  * Filters markers based on category
  */
-function getMarkersByCategory() {
+
+const category = document.getElementById("category");
+
+function getMarkersByCategory(category) {
     fetch("/marker").then(response => response.json()).then((markers) => {
         console.log(markers);
-        const markersToDisplay = filterCategories(markers);
+        const markersToDisplay = markers.filter(marker => marker.category == category);
     })
     return markersToDisplay;
 }
 
-function getMarkersByLocation() {
-    fetch("/marker").then(response => response.json()).then((images) => {
-    console.log(images);
-    const markersToDisplay = filterCategories(markers);
-    imageList.innerText = "";
-    for (i = 0; i < images.length; i++) {
-        imageList.appendChild(createImageList(images[i]["uploadUrl"]));
-    }
-  })
-}
-
-function filterCategories(markers){
-    const category = document.getElementById("category");
-    const markersToDisplay;
-    for (i = 0; i < markers.length; i++) {
-        if (markers[i]["category"] == category){
-            markersToDisplay.push(markers[i]);
-        }
-    }
-    return markersToDisplay;    
-}
