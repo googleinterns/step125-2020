@@ -1,9 +1,9 @@
-This directory is where you'll write all of your code!
+Here lies the source code for Maptivist. There are also unit tests that accompany the JavaScript functions 
+and the Java files using Jest and JUnit4, respectively.
 
-By default it contains a barebones web app. To run a local server, execute this
-command:
+
 
 Small change
 ```bash
-mvn package appengine:run
+mvn test
 ```
