@@ -18,6 +18,11 @@
   color: white;
   padding: 16px 20px;
   border: none;
+  float: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 
@@ -98,7 +103,6 @@ li {
 
 .navText {
     color: yellow;
-    font
 }
 
 .centerNav a {
@@ -117,4 +121,9 @@ li {
   background-color: black;
   color: white;
   text-align: center;
+}
+
+.mainText {
+    text-align: center;
+    color: black;
 }
