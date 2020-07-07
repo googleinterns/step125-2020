@@ -1,9 +1,3 @@
-This directory is where you'll write all of your code!
+# Maptivist
 
-By default it contains a barebones web app. To run a local server, execute this
-command:
-
-Small change
-```bash
-mvn package appengine:run
-```
+The files pertaining the development of Maptivist are in this Folder. 
