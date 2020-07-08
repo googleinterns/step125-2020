@@ -33,3 +33,21 @@ function addRandomGreeting() {
 * Intializes primary map for the main webpage
  */
 function initMap(){}
+
+function openForm() {
+  var form = document.getElementById("myFormPopup");
+  form.style.display = "block";
+}
+
+function closeForm() {
+  var form = document.getElementById("myFormPopup");
+  form.style.display = "none";
+}
+
+window.onclick = function(event) {
+  var form = document.getElementById("myFormPopup");
+
+  if (event.target == form) {
+    form.style.display = "none";
+  }
+}
