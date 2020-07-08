@@ -22,5 +22,5 @@ const blackInternWeek =     {
     }
 
 test('categories', () => {
-    expect(categories("BLM").toBe(blackInternWeek));
+    expect(categories("BLM")).toBe(blackInternWeek);
 });
