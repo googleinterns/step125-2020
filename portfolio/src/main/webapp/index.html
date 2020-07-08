@@ -37,32 +37,34 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form action="" class="form-container">
+            <form action="" method = "POST" class="form-container">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
                 <input type="text" placeholder="Enter Email" name="email" required>
                 <br>
-                <label for="marker-name"><b>Marker Name</b></label>
+                <label for="marker-title"><b>Marker Title</b></label>
                 <br>
-                <input type="text" placeholder="Name" name="mrkr" required>
+                <input type="text" placeholder="Name" name="marker-title" required>
                 <br>
-                <label for="marker-name"><b>Marker Description</b></label>
+                <label for="marker-description"><b>Marker Description</b></label>
                 <br>
-                <input type="text" placeholder="Description" name="dscr" required>
+                <input type="text" placeholder="Description" name="marker-description" required>
                 <br>
-                <label for="marker-name"><b>Category</b></label>
+                <label for="marker-category"><b>Category</b></label>
                 <br>
-                <select name = "Category" placeholder="Select a category" class="dropdown" required>
-                    <option value = "LGBT+">LGBT</option>
+                <select name = "marker-category" placeholder="Select a category" class="dropdown" required>
+                    <option value = "LGBT">LGBT+</option>
                     <option value = "BLM">Black Lives Matter</option>
                     <option value = "environment">Enviromental Crisis</option>
-                    <option value = "other">other</option>
+                    <option value = "feminist">Feminism</option>
+                    <option value = "policy">Policy</option>
+                    <option value = "other">Other</option>
                 </select>
                 <br>
-                <label for="marker-name"><b>Link for marker</b></label>
+                <label for="marker-link"><b>Link for marker</b></label>
                 <br>
-                <input type="text" placeholder="Enter link here" name="link">
+                <input type="text" placeholder="Enter link here" name="marker-link">
                 <br>
 
                 <button type="submit" class="btn">Submit</button>
