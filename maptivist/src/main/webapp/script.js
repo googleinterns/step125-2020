@@ -26,3 +26,24 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+
+
+
+function openForm() {
+  var form = document.getElementById("myFormPopup");
+  form.style.display = "block";
+}
+
+function closeForm() {
+  var form = document.getElementById("myFormPopup");
+  form.style.display = "none";
+}
+
+window.onclick = function(event) {
+  var form = document.getElementById("myFormPopup");
+
+  if (event.target == form) {
+    form.style.display = "none";
+  }
+}
