@@ -32,7 +32,15 @@ function addRandomGreeting() {
 /**
 * Intializes primary map for the main webpage
  */
-function initMap(){}
+function initMap(){
+  var minneapolis = {lat: 44.9778, lng: -93.2650};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: minneapolis,
+    mapId: '837a93b1537b2a61'
+  });
+}
 
 function openForm() {
   var form = document.getElementById("myFormPopup");

@@ -5,11 +5,11 @@
     <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap"
-    type="text/javascript"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap">
+    </script>
   </head>
   <body>
-
+    
     <ul>
         <li><a class="navText" href="#home"><h1>home</h1></a></li>
         <li class = "centerNav"><a href="#home"><h1>
@@ -35,6 +35,7 @@
     <div class = "header">
         <button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
     </div>
+    <div id="map"></div>
     <div id="myFormPopup" class="form">
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
