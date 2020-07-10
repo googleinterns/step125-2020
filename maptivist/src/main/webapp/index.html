@@ -40,7 +40,7 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form action="" method = "POST" class="form-container">
+            <form action="" method = "POST" class="form-container" onsubmit="createMarker()">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
@@ -59,10 +59,10 @@
                 <select name = "marker-category" placeholder="Select a category" class="dropdown" required>
                     <option value = "LGBT">LGBT+</option>
                     <option value = "BLM">Black Lives Matter</option>
-                    <option value = "environment">Enviromental Crisis</option>
-                    <option value = "feminist">Feminism</option>
-                    <option value = "policy">Policy</option>
-                    <option value = "other">Other</option>
+                    <option value = "Environment">Enviromental Crisis</option>
+                    <option value = "Feminist">Feminism</option>
+                    <option value = "Policy">Policy</option>
+                    <option value = "Other">Other</option>
                 </select>
                 <br>
                 <label for="marker-link"><b>Link for marker</b></label>
