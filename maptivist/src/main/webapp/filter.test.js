@@ -65,10 +65,15 @@ describe("Filter function by proximity", () => {
                 longitude: 2.2957289,
                 latitude: 48.8539173, 
             },
+            {
+                name: "buckingham",
+                longitude: -0.1440787,
+                latitude: 51.5013673, 
+            }
         ];
         
         // location of champs-elysees in france
-        expect(filterByProximity(input, 48.8697953, 2.3056317)).toMatchObject(output);
+        expect(filterByProximity(input, 10000, 48.8697953, 2.3056317)).toMatchObject(output);
 
     });
 });

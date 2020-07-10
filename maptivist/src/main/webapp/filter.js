@@ -16,12 +16,10 @@
  * Filters markers based on category
  */
 
-function getMarkersByCategory() {
+async function getMarkersByCategory() {
     const category = document.getElementById("category");
-    fetch("/marker").then(response => response.json()).then((markers) => {
-        console.log(markers);
-        const markersToDisplay = filterByCategory(markers, category);
-    })
+    const markers = await fetch("/marker").then(response => response.json());
+    const markersToDisplay = filterByCategory(markers, category);
     return markersToDisplay;
 }
 
@@ -36,32 +34,36 @@ function filterByCategory(markers, markerCategory) {
 }
 
 
-function getMarkersByProximity() {
+async function getMarkersByProximity() {
     const userLongitude = document.getElementById("user-longitude");
     const userLatitude = document.getElementById("user-latitude");
-
-    fetch("/marker").then(response => response.json()).then((markers) => {
-        console.log(markers);
-        const markersToDisplay = filterByProximity(markers, userLongitude, userLatitude);
-
-    })
+    const markerRadius = document.getElementById("marker-radius");
+    const markers = await fetch("/marker").then(response => response.json());
+    
+    const markersToDisplay = filterByProximity(markers, markerRadius, userLongitude, userLatitude);
     return markersToDisplay;
 }
 
-function filterByProximity(markers, userLongitude, userLatitude) {
-    markers.sort(function (a, b) {
-        return a.distance - b.distance;
-    });
+function filterByProximity(markers, markerRadius, userLongitude, userLatitude) {
+
 
     for ( let marker in markers) {
         markers[marker]["distance"] = distanceBetweenTwoCoordinates(markers[marker].longitude, markers[marker].latitude, userLongitude, userLatitude);
     }
 
-    markers.sort();
+    const markersToDisplay = [];
+
+    for (let marker in markers) {
+        if (markers[marker].distance < markerRadius) {
+            markersToDisplay.push(markers[marker]);
+        }
+    }
+
     for (let marker in markers) {
         delete markers[marker].distance;
     }
-    return markers.slice(0, 1);
+
+    return markersToDisplay;
 }
 
 function toRadians(degrees) {
@@ -78,7 +80,7 @@ function distanceBetweenTwoCoordinates(longitudeA, latitudeA, longitudeB, latitu
     longitudeDifference = longitudeB - longitudeA;
     latitudeDifference = latitudeB - latitudeA;
     
-    // using haverdine formula
+    // using haversine formula
     a = Math.sin(latitudeDifference / 2) ** 2 + Math.cos(latitudeA) * Math.cos(latitudeB) * Math.sin(longitudeDifference / 2) ** 2;
     c = 2 * Math.asin(Math.sqrt(a));
 
