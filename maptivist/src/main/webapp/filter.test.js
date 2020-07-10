@@ -1,4 +1,4 @@
-const { filterByCategory, filterByProximity } = require("./script");
+const { filterByCategory, filterByProximity } = require("./filter");
 
 describe("Filter function by category", () => {
     test("it should filter by category", () => {
