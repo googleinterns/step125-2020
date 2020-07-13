@@ -16,6 +16,8 @@
  * Filters markers based on category
  */
 
+//All distance variable use the unit - Kilometer
+
 async function getMarkersByCategory() {
     const category = document.getElementById("category");
     const markers = await fetch("/marker").then(response => response.json());
