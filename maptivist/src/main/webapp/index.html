@@ -33,12 +33,9 @@
         </p>
     </div>
     <div class = "header">
-        
-				<button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
-				<button id="revoke-access-button" style="display: none; margin-left: 25px">Revoke access</button>
-				<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
-				<button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
-
+		<button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
+		<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
+		<button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
     </div>
     <div id="myFormPopup" class="form">
         <!--TODO: Connect this to the backend--> 
@@ -87,7 +84,7 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad()"
+        onload="this.onload=function(){};handleClientLoad();closeForm()"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
 	</script>
 </html>

@@ -55,13 +55,13 @@ window.onclick = function(event) {
 //GOOGLE OAUTH
 
 var GoogleAuth;
-  var SCOPE = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+  var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
   function handleClientLoad() {
     gapi.load('client:auth2', initClient);
   }
 
   function initClient() {
-    var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+    var discoveryUrl = 'https://people.googleapis.com/$discovery/rest?version=v1'
 
     gapi.client.init({
         'apiKey': 'AIzaSyAxjgLiAauEKT35UoAhinExXFUvQSCHTKM',
@@ -104,12 +104,12 @@ var GoogleAuth;
     var isAuthorized = user.hasGrantedScopes(SCOPE);
     if (isAuthorized) {
       $('#sign-in-or-out-button').html('Sign out');
-      $('#revoke-access-button').css('display', 'inline-block');
+      $('#myButton').css('display', 'block');
       $('#auth-status').html('You are currently signed in and have granted ' +
           'access to this app.');
     } else {
       $('#sign-in-or-out-button').html('Sign In/Authorize');
-      $('#revoke-access-button').css('display', 'none');
+      $('#myButton').css('display', 'none');
       $('#auth-status').html('You have not authorized this app or you are ' +
           'signed out.');
     }
