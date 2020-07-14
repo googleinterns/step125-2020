@@ -79,8 +79,13 @@ var GoogleAuth;
       $('#sign-in-or-out-button').click(function() {
         handleAuthClick();
       });
-      $('#revoke-access-button').click(function() {
-        revokeAccess();
+
+      $('#myButton').click(function() {
+        handleAuthClick2();
+      });
+
+      $('#authLink').click(function() {
+        handleAuthClick();
       });
     });
   }
@@ -95,6 +100,17 @@ var GoogleAuth;
     }
   }
 
+  function handleAuthClick2() {
+    if (GoogleAuth.isSignedIn.get()) {
+
+      openForm();
+    } else {
+
+      GoogleAuth.signIn();
+    }
+  }
+
+
   function revokeAccess() {
     GoogleAuth.disconnect();
   }
@@ -104,14 +120,13 @@ var GoogleAuth;
     var isAuthorized = user.hasGrantedScopes(SCOPE);
     if (isAuthorized) {
       $('#sign-in-or-out-button').html('Sign out');
-      $('#myButton').css('display', 'block');
-      $('#auth-status').html('You are currently signed in and have granted ' +
-          'access to this app.');
+      $('#authLink').html('Sign out');
+      $('#myButton').html('Become a Maptivist');
+      $('#myButton').css('display','block');
     } else {
-      $('#sign-in-or-out-button').html('Sign In/Authorize');
-      $('#myButton').css('display', 'none');
-      $('#auth-status').html('You have not authorized this app or you are ' +
-          'signed out.');
+      $('#authLink').html('Sign in here');
+      $('#myButton').html('Sign in');
+      $('#myButton').css('display','block');
     }
   }
 
