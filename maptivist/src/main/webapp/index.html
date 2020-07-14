@@ -5,7 +5,7 @@
     <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places">
     </script>
   </head>
   <body>
@@ -32,27 +32,46 @@
             Laoreet sit amet cursus sit. Vitae semper quis lectus nulla. Lectus urna duis convallis convallis tellus. Tellus integer feugiat scelerisque varius morbi enim nunc faucibus a. Mi quis hendrerit dolor magna eget est lorem. Nunc sed blandit libero volutpat. Tristique nulla aliquet enim tortor at auctor. Diam sollicitudin tempor id eu nisl nunc mi ipsum faucibus. Parturient montes nascetur ridiculus mus mauris vitae ultricies. Malesuada nunc vel risus commodo viverra. Eget nunc lobortis mattis aliquam faucibus purus in. Tristique nulla aliquet enim tortor at auctor urna nunc. Vitae turpis massa sed elementum tempus egestas sed sed risus. Facilisis magna etiam tempor orci eu lobortis elementum.
         </p>
     </div>
-    <div class = "header">
+
+    <div class="header"> 
         <button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
     </div>
+
+    <div class="search-container">
+        <input id="search-input" type="text" placeholder="Find a location for your marker">
+    </div>
     <div id="map"></div>
+    <div id="infowindow-content">
+      <img src="" width="16" height="16" id="place-icon">
+      <span id="place-name"  class="title"></span><br>
+      <span id="place-address"></span>
+    </div>
+    
     <div id="myFormPopup" class="form">
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form action="" method = "POST" class="form-container" onsubmit="createMarker()">
+            <form onsubmit="createMarker()" action="/data" method = "GET" class="form-container">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
-                <input type="text" placeholder="Enter Email" name="email" required>
+                <input type="text" placeholder="Enter Email" id="email" name="email" required>
+                <br>
+                <label for="marker-lat"><b>Marker Location (Latitude)</b></label>
+                <br>
+                <input type="number" step="any" value="38.9227" id="marker-lat" name="marker-lat" required>
+                <br>
+                <label for="marker-lng"><b>Marker Location (Longitude)</b></label>
+                <br>
+                <input type="number" step="any" id="marker-lng" name="marker-lng" value="-77.0194"  required>
                 <br>
                 <label for="marker-title"><b>Marker Title</b></label>
                 <br>
-                <input type="text" placeholder="Name" name="marker-title" required>
+                <input type="text" placeholder="Name" id="marker-title" name="marker-title" required>
                 <br>
                 <label for="marker-description"><b>Marker Description</b></label>
                 <br>
-                <input type="text" placeholder="Description" name="marker-description" required>
+                <input type="text" placeholder="Description" id="marker-description" name="marker-description" required>
                 <br>
                 <label for="marker-category"><b>Category</b></label>
                 <br>
@@ -67,7 +86,7 @@
                 <br>
                 <label for="marker-link"><b>Link for marker</b></label>
                 <br>
-                <input type="text" placeholder="Enter link here" name="marker-link">
+                <input type="text" placeholder="Enter link here" id="marker-link" name="marker-link">
                 <br>
 
                 <button type="submit" class="btn">Submit</button>
