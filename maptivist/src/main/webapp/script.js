@@ -99,16 +99,13 @@ function searchBox(){
  */
 
 function createMarker() {
-  var lat = parseFloat(document.getElementById('marker-lat').value);
-  var lng = parseFloat(document.getElementById('marker-lng').value);
-
-  var location = new google.maps.LatLng(lat, lng);
-  var title = document.getElementById('marker-title').textContent;
+  //var latitude = parseFloat(document.getElementById('marker-lat').value);
+  //var longitude = parseFloat(document.getElementById('marker-lng').value);
 
   var marker = new google.maps.Marker({
-    position: location,
+    position: { lat: parseFloat(document.getElementById('marker-lat').value), lng: parseFloat(document.getElementById('marker-lng').value) },
     map: map,
-    title:title
+    title: document.getElementById('marker-title').value    
   });
 
   // Adds the new marker to the map  
@@ -120,7 +117,6 @@ function createMarker() {
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
-  console.log(location);
 }
 
 /**
@@ -128,10 +124,10 @@ function createMarker() {
  */
 function createInfowindow(position) {
   //Set info window content from form
-  var title = document.getElementById('marker-title').textContent;
+  var title = document.getElementById('marker-title').value;
   var location = position.toString();
-  var description = document.getElementById('marker-description').textContent;
-  var link = document.getElementById('marker-link').textContent;
+  var description = document.getElementById('marker-description').value;
+  var link = document.getElementById('marker-link').value;
   var category = document.getElementsByClassName('marker-category').value;
   
   // Set the content of the info window. (A popup may need to be used instead)
