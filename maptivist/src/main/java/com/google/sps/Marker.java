@@ -31,14 +31,6 @@ import java.util.UUID;
 
 public class Marker {
   
-  enum Category {
-      BLM,
-      LGBT,
-      Environment,
-      Policy,
-      Feminism,
-      Other;
-  }
   // Add a unique id for each marker (UUID)
   private final UUID id;
 
@@ -50,7 +42,7 @@ public class Marker {
   private final double longitude;
 
   // The category attribute holds the enum values of the protest categories assigned to the marker
-  private Set<Category> categories = new HashSet<Category>();
+  private Set<String> categories = new HashSet<String>();
 
   // The links attributes holds the multiple URLs that are posted with the marker
   private Set<String> links = new HashSet<String>();
@@ -76,7 +68,7 @@ public class Marker {
    * @param links Collected list of all the urls connected to the specific marker and can be null.
    */
 
-  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<Category> categories) {
+  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories) {
     
     // Creates a random UUID for the marker can be identified. Can be used as the id for the HTML id
     this.id = UUID.randomUUID();
@@ -90,7 +82,7 @@ public class Marker {
     }
     
     if (categories.isEmpty()) {
-      categories.add(Category.Other);  
+      categories.add("Other");  
     }
 
     if (latitude < -90 || latitude > 90){
@@ -134,7 +126,7 @@ public class Marker {
   /**
    * Returns a read-only set of assigned categories for this marker.
    */
-  public Set<Category> getCategories() {
+  public Set<String> getCategories() {
     // Return the categories as an unmodifiable set so that the caller can't change our
     // internal data.
     return categories;

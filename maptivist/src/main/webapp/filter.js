@@ -16,6 +16,8 @@
  * Filters markers based on category
  */
 
+//All distance variable use the unit - Kilometer
+
 async function getMarkersByCategory() {
     const category = document.getElementById("category");
     const markers = await fetch("/marker").then(response => response.json());
@@ -84,7 +86,7 @@ function distanceBetweenTwoCoordinates(longitudeA, latitudeA, longitudeB, latitu
     a = Math.sin(latitudeDifference / 2) ** 2 + Math.cos(latitudeA) * Math.cos(latitudeB) * Math.sin(longitudeDifference / 2) ** 2;
     c = 2 * Math.asin(Math.sqrt(a));
 
-    earthRadius = 6378;
+    earthRadius = 6378; 
     distance = earthRadius * c;
 
     return distance;

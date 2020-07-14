@@ -39,9 +39,9 @@ public final class MarkerTest {
   private static final double LAT = 32.565;
   private static final double LONG = 45.8574;
 
-  private static final Marker.Category CAT_A = Marker.Category.BLM;
-  private static final Marker.Category CAT_B = Marker.Category.LGBT;
-  private static final Marker.Category CAT_C = Marker.Category.Policy;
+  private static final String CAT_A = "BLM";
+  private static final String CAT_B = "LGBTQ";
+  private static final String CAT_C = "Policy";
 
   private static final String LINK_A = "google.com";
   private static final String LINK_B = "bing.com";
@@ -53,23 +53,23 @@ public final class MarkerTest {
 
   @Test
   public void createMarkerWithoutCategories() {
-    Set<Marker.Category> CATS = new HashSet<>();
+    Set<String> CATS = new HashSet<>();
     Set<String> LINKS = new HashSet<>();
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
     Marker noCatMarker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
 
-    Set<Marker.Category> actual = noCatMarker.getCategories();
-    Set<Marker.Category> expected = new HashSet<Marker.Category>();
-        expected.add(Marker.Category.Other);
+    Set<String> actual = noCatMarker.getCategories();
+    Set<String> expected = new HashSet<String>();
+        expected.add("Other");
 
     Assert.assertEquals(expected, actual);
   }
   
   @Test
   public void checkUUID() {
-    Set<Marker.Category> CATS = new HashSet<>();
+    Set<String> CATS = new HashSet<>();
         CATS.add(CAT_A);
         CATS.add(CAT_B);
         CATS.add(CAT_C);
@@ -88,7 +88,7 @@ public final class MarkerTest {
 
   @Test
   public void addReport() {
-    Set<Marker.Category> CATS = new HashSet<>();
+    Set<String> CATS = new HashSet<>();
         CATS.add(CAT_A);
         CATS.add(CAT_B);
         CATS.add(CAT_C);
@@ -108,7 +108,7 @@ public final class MarkerTest {
 
   @Test
   public void addVotes() {
-    Set<Marker.Category> CATS = new HashSet<>();
+    Set<String> CATS = new HashSet<>();
         CATS.add(CAT_A);
         CATS.add(CAT_B);
         CATS.add(CAT_C);
@@ -128,7 +128,7 @@ public final class MarkerTest {
 
   @Test
   public void addComment() {
-    Set<Marker.Category> CATS = new HashSet<>();
+    Set<String> CATS = new HashSet<>();
         CATS.add(CAT_A);
         CATS.add(CAT_B);
         CATS.add(CAT_C);
