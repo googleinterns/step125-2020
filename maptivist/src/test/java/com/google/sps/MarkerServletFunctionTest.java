@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import java.util.Base64;
+import java.nio.CharBuffer; 
  
  
 /** */
@@ -35,7 +36,7 @@ import java.util.Base64;
 public final class MarkerServletFunctionTest {
  
     private static final String[] categoryArray = new String[] {"BLM", "LGBTQ"};
-    private static final String[] flagArray = new String[] {"boy", "girl", "cow"};
+    private static final String[] flagArray = new String[] {"boy, and wo,rld", "girl,", ",cow"};
     private static final String[] linkArray = new String[] {"www.google.com", "www.youtube.com", "www.pinterest.com"};
  
     private static final Set<String> categoryObject = new HashSet<String>(Arrays.asList(categoryArray));
@@ -54,51 +55,29 @@ public final class MarkerServletFunctionTest {
     }
  
     @Test
-    public void testCreateCategoriesString() {
-        String actual = testMarkerServletFunctions.createCategoriesString(categoryObject);
-        String expected = "QkxN,TEdCVFE=";
+    public void matchingDelimiterCounts() {
+        String categoriesString = testMarkerServletFunctions.createCategoriesString(categoryObject);
+        int expected = 1;
+        long actual = categoriesString.chars().filter(delim -> delim == ',').count();
+        Assert.assertEquals(actual, expected);
  
-        Assert.assertEquals(expected, actual);
     }
  
     @Test
-    public void testCreateCategoriesObject() {
-        Set<String> actual = testMarkerServletFunctions.createCategoriesObject("QkxN,TEdCVFE=");
-        Set<String> expected = categoryObject;
- 
-        Assert.assertEquals(expected, actual);
+    public void delimiterIncludedInString() {
+        String flagString = testMarkerServletFunctions.createFlagString(flagObject);
+        int expected = 2;
+        long actual = flagString.chars().filter(delim -> delim == ',').count();
+
+        Assert.assertEquals(actual, expected);
     }
  
     @Test
-    public void testCreateFlagString() {
-        String actual = testMarkerServletFunctions.createFlagString(flagObject);
-        String expected = "Ym95IA==,Z2lybCA=,Y293";
+    public void inverseFunctionsWorkTogether() {
+        String linkString = testMarkerServletFunctions.createLinkString(linkObject);
+        Set<String> expected = testMarkerServletFunctions.createLinkObject(linkString);
  
-        Assert.assertEquals(expected, actual);
-    }
- 
-    @Test
-    public void testCreateFlagObject() {
-        ArrayList<String> actual = testMarkerServletFunctions.createFlagObject("Ym95IA==,Z2lybCA=,Y293");
-        ArrayList<String> expected = flagObject;
-         
-        Assert.assertEquals(expected, actual);
-    }
- 
-    @Test
-    public void testCreateLinkString() {
-        String actual = testMarkerServletFunctions.createLinkString(linkObject);
-        String expected = "d3d3Lmdvb2dsZS5jb20=,d3d3LnBpbnRlcmVzdC5jb20=,d3d3LnlvdXR!YmUuY29t";
-        
-        Assert.assertEquals(expected, actual);
-    }
- 
-    @Test
-    public void testCreateLinkObject() {
-        Set<String> actual = testMarkerServletFunctions.createLinkObject("d3d3Lmdvb2dsZS5jb20=,d3d3LnBpbnRlcmVzdC5jb20=,d3d3LnlvdXR!YmUuY29t");
-        Set<String> expected = linkObject;
- 
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(linkObject, expected);
     }
  
  }
