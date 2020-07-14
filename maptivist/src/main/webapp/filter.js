@@ -48,23 +48,13 @@ async function getMarkersByProximity() {
 
 function filterByProximity(markers, markerRadius, userLongitude, userLatitude) {
 
-
-    for ( let marker in markers) {
-        markers[marker]["distance"] = distanceBetweenTwoCoordinates(markers[marker].longitude, markers[marker].latitude, userLongitude, userLatitude);
-    }
-
     const markersToDisplay = [];
 
     for (let marker in markers) {
-        if (markers[marker].distance < markerRadius) {
+        if (distanceBetweenTwoCoordinates(markers[marker].longitude, markers[marker].latitude, userLongitude, userLatitude) < markerRadius) {
             markersToDisplay.push(markers[marker]);
         }
     }
-
-    for (let marker in markers) {
-        delete markers[marker].distance;
-    }
-
     return markersToDisplay;
 }
 
