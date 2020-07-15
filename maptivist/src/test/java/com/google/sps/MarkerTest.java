@@ -50,6 +50,7 @@ public final class MarkerTest {
   private static final String FLAG_B = "Not real";
 
   private static final String COMMENT = "What should we bring?";
+  private static final int VOTES = 0;
 
   @Test
   public void createMarkerWithoutCategories() {
@@ -57,8 +58,11 @@ public final class MarkerTest {
     Set<String> LINKS = new HashSet<>();
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
+    ArrayList<String> FLAGS = new ArrayList<>();
+        FLAGS.add(FLAG_A);
+        FLAGS.add(FLAG_B);
 
-    Marker noCatMarker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
+    Marker noCatMarker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
 
     Set<String> actual = noCatMarker.getCategories();
     Set<String> expected = new HashSet<String>();
@@ -78,7 +82,11 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS); 
+    ArrayList<String> FLAGS = new ArrayList<>();
+        FLAGS.add(FLAG_A);
+        FLAGS.add(FLAG_B);
+
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES); 
 
     UUID actual = marker.getUUID();
     UUID not_expected = null;
@@ -97,7 +105,11 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
+    ArrayList<String> FLAGS = new ArrayList<>();
+        FLAGS.add(FLAG_A);
+        FLAGS.add(FLAG_B);
+
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
     marker.addFlagReport(FLAG_A); 
 
     int actual = marker.getFlags().size();
@@ -117,7 +129,11 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
+    ArrayList<String> FLAGS = new ArrayList<>();
+        FLAGS.add(FLAG_A);
+        FLAGS.add(FLAG_B);
+
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
     marker.addVote();
 
     int actual = marker.getVotes();
@@ -137,7 +153,11 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS);
+    ArrayList<String> FLAGS = new ArrayList<>();
+        FLAGS.add(FLAG_A);
+        FLAGS.add(FLAG_B);
+
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
     marker.addComment(COMMENT);
 
     int actual = marker.getComments().size();
