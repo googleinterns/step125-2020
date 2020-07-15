@@ -43,10 +43,6 @@ public final class MarkerServletFunctionTest {
     private static final ArrayList<String> flagObject = new ArrayList<String>(Arrays.asList(flagArray));
     private static final Set<String> linkObject = new HashSet<String>(Arrays.asList(linkArray));
  
-    Base64.Decoder decoder = Base64.getDecoder();  
-    Base64.Encoder encoder = Base64.getEncoder();  
- 
- 
     private MarkerServlet testMarkerServletFunctions;
  
     @Before
