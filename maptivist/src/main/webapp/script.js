@@ -28,6 +28,9 @@ function initMap(){
     mapId: '837a93b1537b2a61'
   });
 
+  //Initializes the search box
+  searchBox();
+  
   // Example Marker
   var myLatlng = {lat: 44.8549, lng: -93.2422}
 
@@ -39,9 +42,13 @@ function initMap(){
 
   // Adds the new marker to the map
   marker.setMap(map);
-
-  //Initializes the search box
-  searchBox();
+  var infowindow = new google.maps.InfoWindow({
+    content: "<h3>This works</h3>"
+  });
+  
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
 }
 
 /**
@@ -99,11 +106,14 @@ function searchBox(){
  */
 
 function createMarker() {
-  //var latitude = parseFloat(document.getElementById('marker-lat').value);
-  //var longitude = parseFloat(document.getElementById('marker-lng').value);
+  //google.maps.event.addDomListener(document.getElementById('create-form'), 'submit', function() {
+
+  var latitude = parseFloat(document.getElementById('marker-lat').value);
+  var longitude = parseFloat(document.getElementById('marker-lng').value);
+  var myLatlng = new google.maps.LatLng(latitude, longitude);
 
   var marker = new google.maps.Marker({
-    position: { lat: parseFloat(document.getElementById('marker-lat').value), lng: parseFloat(document.getElementById('marker-lng').value) },
+    position: myLatlng,
     map: map,
     title: document.getElementById('marker-title').value    
   });
