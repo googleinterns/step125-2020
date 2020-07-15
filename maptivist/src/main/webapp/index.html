@@ -51,7 +51,7 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form onsubmit="createMarker()" action="/data" method = "GET" class="form-container">
+            <form class="form-container">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
@@ -89,8 +89,8 @@
                 <input type="text" placeholder="Enter link here" id="marker-link" name="marker-link">
                 <br>
 
-                <button type="submit" class="btn">Submit</button>
-                <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
+                <button type="button" class="btn" onclick="createMarker()">Submit</button>
+                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
             </form>
         </div>
     </div>
