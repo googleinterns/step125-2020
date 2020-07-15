@@ -68,7 +68,7 @@ public class Marker {
    * @param links Collected list of all the urls connected to the specific marker and can be null.
    */
 
-  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories) {
+  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, ArrayList<String> flags, int votes) {
     
     // Creates a random UUID for the marker can be identified. Can be used as the id for the HTML id
     this.id = UUID.randomUUID();

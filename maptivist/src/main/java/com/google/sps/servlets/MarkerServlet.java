@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
@@ -57,42 +58,41 @@ public final class MarkerServlet extends HttpServlet {
         String title = request.getParameter("title");
         String longitude = request.getParameter("longitude");
         String latitude = request.getParameter("latitude");
-        String description = request.getParameter("description");
-        Boolean votes = Boolean.parseBoolean(request.getParameter("upvotes"));
- 
+        String description = request.getParameter("description"); 
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("links")));
         String links = createLinkString(linkSet);
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("category")));
         String categories = createCategoriesString(categorySet);
-        String flag = request.getParameter("flag");
-
-        if (!checkIfMarkerAlreadyInDatastore(title, request)) {
-            Key markerKey = datastore.newKeyFactory()
-                .setKind("Marker")
-                .newKey(title);
+        String flag = request.getParameter("flags");
+        Boolean voteCheck = Boolean.parseBoolean(request.getParameter("upvotes"));
+        int votes = 0;
+        if (voteCheck) {votes = 1;}
  
-            Entity markerEntity = new newBuilder(markerKey);
-                .set("title", title);
-                .set("description", description);
-                .set("longitude", longitude);            
-                .set("latitude", latitude);
-                .set("flags", flag);
-                .set("links", links);
-                .set("category", categories);
-                .set("votes", votes);
-                .build();
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+ 
+        if (!checkIfMarkerAlreadyInDatastore(title)) {
+ 
+            Entity markerEntity = new Entity("Marker");
+            markerEntity.setProperty("title", title);
+            markerEntity.setProperty("description", description);
+            markerEntity.setProperty("longitude", longitude);            
+            markerEntity.setProperty("latitude", latitude);
+            markerEntity.setProperty("flags", flag);
+            markerEntity.setProperty("links", links);
+            markerEntity.setProperty("category", categories);
+            markerEntity.setProperty("votes", votes);
  
  
-            DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
             datastore.put(markerEntity);
         } else {
-            Entity markerEntity = datastore.get(title);
+            Entity markerEntity = getEntity(datastore, title);
+            Key markerKey = markerEntity.getKey();
             if (flag == null) {
-                updateFlags(title, flag);
+                updateFlags(markerEntity, datastore, markerKey, flag);
             }
             
-            if (!votes) {
-                updateVotes(markerEntity);
+            if (!voteCheck) {
+                updateVotes(markerEntity, datastore, markerKey);
             }
         }
  
@@ -114,6 +114,7 @@ public final class MarkerServlet extends HttpServlet {
             Set<String> links = createLinkObject((String) entity.getProperty("links"));
             ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
             Set<String> categories = createCategoriesObject((String) entity.getProperty("category"));
+            int votes = Integer.parseInt((String) entity.getProperty("votes"));
         
             Marker marker = new Marker(title, description, latitude, longitude, links, categories, flags, votes);
             markers.add(marker);
@@ -187,24 +188,36 @@ public final class MarkerServlet extends HttpServlet {
         return linkList;
     }
 
-    public checkIfMarkerAlreadyInDatastore(Key markerKey, HttpServletRequest request){
-        Entity markerEntity = datastore.get(markerKey);
-        if (markerEntity == null) {return false;}
+    public Boolean checkIfMarkerAlreadyInDatastore(String title){
+        Query query = new Query("Marker");
+        query.addFilter("title", Query.FilterOperator.EQUAL, title);
+
+        if (query == null) {return false;}
         return true;
     }
 
-    public updateFlags(Key markerKey, String newFlag) {
-        ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
-        flags.put(newFlag);
-        String flagsString = createFlagString(flags);     
-        Entity markerEntity = Entity.newBuilder(datastore.get(markerKey)).set("flags", flagsString).build();
-        datastore.update(markerEntity);
+    public Entity getEntity(DatastoreService datastore, String title) {
+        Query query = new Query("Marker");
+        query.addFilter("title", Query.FilterOperator.EQUAL, title); 
+
+        PreparedQuery results = datastore.prepare(query);
+        Entity marker = results.asSingleEntity();
+        return marker;
     }
 
-    public updateVotes(Key markerKey) {
-        int votes = Integer.parseInteger((String) entity.getProperty("votes"));
-        votes += 1;
-        Entity markerEntity = Entity.newBuilder(datastore.get(markerKey)).set("votes", votes).build();
-        datastore.update(markerEntity);
+    public void updateFlags(Entity markerEntity, DatastoreService datastore, Key markerKey, String newFlag) {
+        ArrayList<String> flags = createFlagObject((String) markerEntity.getProperty("flags"));
+        flags.add(newFlag);
+        String flagsString = createFlagString(flags);     
+        markerEntity.setProperty("flags", flagsString);
+        datastore.put(markerEntity);
     }
+
+    public void updateVotes(Entity markerEntity, DatastoreService datastore, Key markerKey) {
+        int votes = Integer.parseInt((String) markerEntity.getProperty("votes"));
+        votes += 1;
+        markerEntity.setProperty("votes", votes);
+        datastore.put(markerEntity);
+    }
+
 }
