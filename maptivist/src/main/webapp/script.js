@@ -42,8 +42,29 @@ function initMap(){
 
   // Adds the new marker and infowindow to the map
   marker.setMap(map);
+  var contentString =
+    `<div class="marker-window">
+        <h1>Justice for George Floyd</h1>
+        <br>
+        <h3>BLM</h3>
+        <br>
+        <h2>Mall of America</h2>
+        <br>
+        <p>This is an example marker from a past protest</p>
+        <br>
+        <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
+        <br>
+        <div class="upvote">
+            <button>Upvote</button>
+            <p>counter: </p>
+        </div>
+        <div class="flag">
+            <button>Flag</button>
+        </div>
+    </div>`;
+
   var infowindow = new google.maps.InfoWindow({
-    content: '<button>This works<button>'
+    content: contentString
   });
   
   marker.addListener('click', function() {
@@ -69,7 +90,7 @@ function searchBox(){
   // Set the data fields to return when the user selects a place.
   var autocomplete = new google.maps.places.Autocomplete(input);
   autocomplete.setFields(
-    ['address_components', 'geometry', 'icon', 'name']);
+    ['formatted_address', 'geometry', 'icon', 'name']);
 
   autocomplete.addListener('place_changed', function() {
     var place = autocomplete.getPlace();
@@ -89,20 +110,13 @@ function searchBox(){
     }
     
     // Concatentates a readable address for an autocomplete result
-    var address = '';
-        if (place.address_components) {
-            address = [
-                (place.address_components[0] && place.address_components[0].short_name || ''),
-                (place.address_components[1] && place.address_components[1].short_name || ''),
-                (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-        }
+    var address = place.formatted_address;
 
-        // Add the result contents to the infowindow display
-        infowindowContent.children['place-icon'].src = place.icon;
-        infowindowContent.children['place-name'].textContent = place.name;
-        infowindowContent.children['place-address'].textContent = address;
-        infowindow.open(map);
+    // Add the result contents to the infowindow display
+    infowindowContent.children['place-icon'].src = place.icon;
+    infowindowContent.children['place-name'].textContent = place.name;
+    infowindowContent.children['place-address'].textContent = address;
+    infowindow.open(map);
   }); 
 }
 
@@ -145,9 +159,26 @@ function createInfowindow(position) {
   var category = document.getElementsByClassName('marker-category').value;
   
   // Set the content of the info window 
-  var contentString = `<div id="marker-window"><h1>${title}</h1><br><h2>${location}</h2><br><p>${description}</p><br><p>${link}</p><br>`
-  '<button>Upvote</button><br>' + '<button>Flag</button><br>' +
-  '<h3>' + category + '</h3></div>';
+  var contentString = 
+  `<div class="marker-window">
+    <h1>${title}</h1>
+    <br>
+    <h3>${category}</h3>
+    <br>
+    <h2>${location}</h2>
+    <br>
+    <p>${description}</p>
+    <br>
+    <a href=${link}>Related source</a>
+    <br>
+    <div class="upvote">
+        <button>Upvote</button>
+        <p>counter: </p>
+    </div>
+    <div class="flag">
+        <button>Flag</button>
+    </div>
+  </div>`;
 
   var infowindow = new google.maps.InfoWindow({
     content: contentString
