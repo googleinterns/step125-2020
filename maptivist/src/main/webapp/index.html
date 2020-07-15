@@ -5,7 +5,7 @@
     <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places,geometry,drawing">
     </script>
   </head>
   <body>
@@ -51,7 +51,7 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form onsubmit="createMarker()" action="/data" method = "GET" class="form-container">
+            <form class="form-container" id="create-form">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
