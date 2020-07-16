@@ -1,4 +1,4 @@
-# Google Student Training in Engineering Program
+# Capstone
 
 This repo contains the 2020 Capstone project of Adetunji, Ayo and Teanna: Maptivist! This project is a 
 App Engine website that utilizes Google Maps, OAuth, and Perspective API to build an interactive mapping community!
