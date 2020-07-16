@@ -229,21 +229,12 @@ var GoogleAuth;
       setSigninStatus();
 
 
-      $('#sign-in-or-out-button').click(function() {
-        handleAuthClick();
-      });
-
-      $('#myButton').click(function() {
-        handleAuthClick2();
-      });
-
-      $('#authLink').click(function() {
-        handleAuthClick();
-      });
+      
     });
   }
 
   function handleAuthClick() {
+    //basic sign in/sign out functions
     if (GoogleAuth.isSignedIn.get()) {
 
       GoogleAuth.signOut();
@@ -254,6 +245,7 @@ var GoogleAuth;
   }
 
   function handleAuthClick2() {
+    //opens map if signed in, prompts to sign in if not signed in
     if (GoogleAuth.isSignedIn.get()) {
 
       openForm();
@@ -271,6 +263,15 @@ var GoogleAuth;
   function setSigninStatus(isSignedIn) {
     var user = GoogleAuth.currentUser.get();
     var isAuthorized = user.hasGrantedScopes(SCOPE);
+    $('#sign-in-or-out-button').click(function() {
+        handleAuthClick();
+      });
+      $('#myButton').click(function() {
+        handleAuthClick2();
+      });
+      $('#authLink').click(function() {
+        handleAuthClick();
+      });
     if (isAuthorized) {
       $('#sign-in-or-out-button').html('Sign out');
       $('#authLink').html('Sign out');
@@ -282,6 +283,7 @@ var GoogleAuth;
       $('#myButton').css('display','block');
     }
   }
+
 
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
