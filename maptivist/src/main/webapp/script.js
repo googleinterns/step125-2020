@@ -196,13 +196,18 @@ function createInfowindow(marker, position) {
  */
 function loadMarkers(){
     // Collect the current bounds of the map
-    var map_bounds = map.getBounds().toUrlValue();
-
+    var map_bounds = map.getBounds().toJSON();
+    var bounds = [
+        map_bounds["south"],
+        map_bounds["west"],
+        map_bounds["north"],
+        map_bounds["east"]
+    ]
     // Sets the bound array to the hidden form
-    document.getElementById("mapBounds").value= map_bounds;
+    document.getElementById("mapBounds").value= bounds;
 
     // Send the bounds to the Marker Servlet and fetches the filtered Marker objects
-    fetch('/marker?mapBounds='+ map_bounds)
+    fetch('/marker?mapBounds[0]='+ bounds[0] + '&mapBounds=' + bounds[1] + '&mapBounds=' + bounds[2] + '&mapBounds=' + bounds[3])
     .then(response => response.json()).then((markers) => {
         var i = 0;
         for(i = 0; i < markers.length; i++){

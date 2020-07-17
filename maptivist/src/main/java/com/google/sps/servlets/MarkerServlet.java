@@ -104,11 +104,11 @@ public final class MarkerServlet extends HttpServlet {
     private ArrayList<Marker> getMarkers(HttpServletRequest request){
         ArrayList<Marker> markers = new ArrayList<>();
  
-        String bounds = request.getParameterValues("mapBounds");
-        Double lowLat = bounds["south"];
-        Double lowLng = bounds["west"];
-        Double highLat = bounds["north"];
-        Double highLng = bounds["east"];
+        String[] bounds = request.getParameterValues("mapBounds");
+        Double lowLat = Double.parseDouble(bounds[0]);
+        Double lowLng = Double.parseDouble(bounds[1]);
+        Double highLat = Double.parseDouble(bounds[2]);
+        Double highLng = Double.parseDouble(bounds[3]);
         
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
