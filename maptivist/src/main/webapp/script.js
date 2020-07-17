@@ -30,7 +30,6 @@ function initMap(){
 
   // Initializes the search box
   searchBox();
-  loadMarkers();
 
   // Example Marker
   var myLatlng = {lat: 44.8549, lng: -93.2422}
@@ -71,7 +70,8 @@ function initMap(){
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
-
+  
+  // When the user moves the map, markers in that area will be loaded
   map.addListener('bounds_changed', function() {
     loadMarkers();
   });
@@ -192,20 +192,17 @@ function createInfowindow(marker, position) {
   return infowindow;  
 }
 
-/** Adds a new Marker based on form submission
+/** Adds collection Markers to the map based on JSON from the Marker Servlet
  */
 function loadMarkers(){
-    var map_bounds = map.getBounds();
-    var bounds = [
-        map_bounds[0].lat(), 
-        map_bounds[0].lng(),
-        map_bounds[1].lat(), 
-        map_bounds[1].lng()
-    ]
+    // Collect the current bounds of the map
+    var map_bounds = map.getBounds().toUrlValue();
 
-    document.getElementById("hiddenField").value= bounds;
+    // Sets the bound array to the hidden form
+    document.getElementById("mapBounds").value= map_bounds;
 
-    fetch('/marker?hiddenField[0]='+ bounds[0] + '&hiddenField[1]='+ bounds[1] +'&hiddenField[2]='+ bounds[2] + '&hiddenField[3]='+ bounds[3])
+    // Send the bounds to the Marker Servlet and fetches the filtered Marker objects
+    fetch('/marker?mapBounds='+ map_bounds)
     .then(response => response.json()).then((markers) => {
         var i = 0;
         for(i = 0; i < markers.length; i++){
