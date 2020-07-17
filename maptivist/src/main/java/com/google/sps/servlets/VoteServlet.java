@@ -41,16 +41,14 @@ import java.util.Base64;
 @WebServlet("/votes")
 public final class VoteServlet extends HttpServlet {
     
+    private static String voteCount;
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
- 
-        List<Marker> markers = new ArrayList<>();
-        ArrayList<Marker> results = getMarkers(request);
  
         Gson gson = new Gson();
  
         response.setContentType("text/html;");
-        response.getWriter().println((String) voteCount);
+        response.getWriter().println(voteCount);
     }
  
  
@@ -60,7 +58,7 @@ public final class VoteServlet extends HttpServlet {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
         
-        int voteCount = updateVotes(datastore);
+        voteCount = Integer.toString(updateVotes(datastore, title));
         response.sendRedirect("/index.html");
     }
  
@@ -74,7 +72,7 @@ public final class VoteServlet extends HttpServlet {
         return marker;
     }
 
-    public int updateVotes(DatastoreService datastore) {
+    public int updateVotes(DatastoreService datastore, String title) {
         Entity markerEntity = getEntity(datastore, title);
         Key markerKey = markerEntity.getKey();
         int votes = Integer.parseInt((String) markerEntity.getProperty("votes"));
