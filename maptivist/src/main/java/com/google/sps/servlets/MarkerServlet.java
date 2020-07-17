@@ -55,22 +55,23 @@ public final class MarkerServlet extends HttpServlet {
  
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String title = request.getParameter("title");
-        String longitude = request.getParameter("longitude");
-        String latitude = request.getParameter("latitude");
-        String description = request.getParameter("description"); 
-        Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("links")));
+        String email = request.getParameter("email");
+        String title = request.getParameter("marker-title");
+        String longitude = request.getParameter("marker-lng");
+        String latitude = request.getParameter("marker-lat");
+        String description = request.getParameter("marker-description"); 
+        Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameter("marker-link")));
         String links = createLinkString(linkSet);
-        Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("category")));
+        Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameter("marker-category")));
         String categories = createCategoriesString(categorySet);
         String flag = request.getParameter("flags");
-        Boolean voteCheck = Boolean.parseBoolean(request.getParameter("upvotes"));
+        Boolean voteCheck = true; // Boolean.parseBoolean(request.getParameter("votes"));
         int votes = 0;
         if (voteCheck) {votes = 1;}
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        if (!checkIfMarkerAlreadyInDatastore(title)) {
+        if (!checkIfMarkerAlreadyInDatastore(datastore, title)) {
  
             Entity markerEntity = new Entity("Marker");
             markerEntity.setProperty("title", title);
@@ -96,7 +97,7 @@ public final class MarkerServlet extends HttpServlet {
             }
         }
  
-        response.sendRedirect("/maps.html");
+        response.sendRedirect("/index.html");
     }
  
     private ArrayList<Marker> getMarkers(HttpServletRequest request){
@@ -109,8 +110,8 @@ public final class MarkerServlet extends HttpServlet {
         for (Entity entity : results.asIterable()) {
             String title = (String) entity.getProperty("marker-title");
             String description = (String) entity.getProperty("marker-description");
-            Double longitude = Double.parseDouble((String) entity.getProperty("longitude"));
-            Double latitude = Double.parseDouble((String) entity.getProperty("latitude"));
+            Double longitude = Double.parseDouble((String) entity.getProperty("marker-lng"));
+            Double latitude = Double.parseDouble((String) entity.getProperty("marker-lat"));
             Set<String> links = createLinkObject((String) entity.getProperty("marker-link"));
             ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
             Set<String> categories = createCategoriesObject((String) entity.getProperty("marker-category"));
@@ -188,11 +189,12 @@ public final class MarkerServlet extends HttpServlet {
         return linkList;
     }
 
-    public Boolean checkIfMarkerAlreadyInDatastore(String title){
+    public Boolean checkIfMarkerAlreadyInDatastore(DatastoreService datastore, String title){
         Query query = new Query("Marker");
         query.addFilter("title", Query.FilterOperator.EQUAL, title);
-
-        if (query == null) {return false;}
+        PreparedQuery pq = datastore.prepare(query);
+        
+        if (pq.countEntities() == 0) {return false;}
         return true;
     }
 
