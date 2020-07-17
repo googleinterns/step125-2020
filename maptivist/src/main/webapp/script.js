@@ -30,7 +30,8 @@ function initMap(){
 
   // Initializes the search box
   searchBox();
-  
+  loadMarkers();
+
   // Example Marker
   var myLatlng = {lat: 44.8549, lng: -93.2422}
 
@@ -69,6 +70,10 @@ function initMap(){
   
   marker.addListener('click', function() {
     infowindow.open(map, marker);
+  });
+
+  map.addListener('bounds_changed', function() {
+    loadMarkers();
   });
 }
 
@@ -123,40 +128,40 @@ function searchBox(){
 /** Adds a new Marker based on form submission
  */
 
-function createMarker() {
+function createMarker(marker) {
   // Get the coordinates from the form input and create a new Latlng object
-  var latitude = parseFloat(document.getElementById('marker-lat').value);
-  var longitude = parseFloat(document.getElementById('marker-lng').value);
+  var latitude = parseFloat(marker.latitude);
+  var longitude = parseFloat(marker.longitude);
   var myLatlng = new google.maps.LatLng(latitude, longitude);
   
   // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
-  var marker = new google.maps.Marker({
+  var new_marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
-    title: document.getElementById('marker-title').value    
+    title: marker.title    
   });
 
   // Adds the new marker to the map and pans to the marker 
-  marker.setMap(map);
-  map.panTo(marker.getPosition());
+  new_marker.setMap(map);
 
   // Adds the new infowindow to the marker
-  var infowindow = createInfowindow(marker.getPosition());
-  marker.addListener('click', function() {
-    infowindow.open(map, marker);
+  var infowindow = createInfowindow(new_marker.getPosition());
+  new_marker.addListener('click', function() {
+    infowindow.open(map, new_marker);
   });
 }
 
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow(position) {
+function createInfowindow(marker, position) {
   //Set info window content from form
-  var title = document.getElementById('marker-title').value;
+  var title = marker.title;
   var location = position.toString();
-  var description = document.getElementById('marker-description').value;
-  var link = document.getElementById('marker-link').value;
-  var category = document.getElementsByClassName('marker-category').value;
+  var description = marker.description;
+  var link = marker.links;
+  var category = marker.categories;
+  var upvotes = marker.votes;
   
   // Set the content of the info window 
   var contentString = 
@@ -173,7 +178,7 @@ function createInfowindow(position) {
     <br>
     <div class="upvote">
         <button>Upvote</button>
-        <p>counter: </p>
+        <p>counter: ${upvotes}</p>
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -185,6 +190,29 @@ function createInfowindow(position) {
   });
 
   return infowindow;  
+}
+
+/** Adds a new Marker based on form submission
+ */
+function loadMarkers(){
+    var map_bounds = map.getBounds();
+    var bounds = [
+        map_bounds[0].lat(), 
+        map_bounds[0].lng(),
+        map_bounds[1].lat(), 
+        map_bounds[1].lng()
+    ]
+
+    document.getElementById("hiddenField").value= bounds;
+
+    fetch('/marker?hiddenField[0]='+ bounds[0] + '&hiddenField[1]='+ bounds[1] +'&hiddenField[2]='+ bounds[2] + '&hiddenField[3]='+ bounds[3])
+    .then(response => response.json()).then((markers) => {
+        var i = 0;
+        for(i = 0; i < markers.length; i++){
+            createMarker(markers[i]);
+        }
+        map.panTo(markers[markers.length -1], new_marker.getPosition());
+    });
 }
 
 function openForm() {

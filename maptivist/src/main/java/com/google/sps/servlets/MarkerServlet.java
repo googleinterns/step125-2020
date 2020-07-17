@@ -26,10 +26,10 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import com.google.sps.Marker;
 import java.util.Set;
@@ -102,8 +102,23 @@ public final class MarkerServlet extends HttpServlet {
     private ArrayList<Marker> getMarkers(HttpServletRequest request){
         ArrayList<Marker> markers = new ArrayList<>();
  
+        String[] bounds = request.getParameterValues("hiddenField");
+        Double lowLat = Double.parseDouble(bounds[0]);
+        Double lowLng = Double.parseDouble(bounds[1]);
+        Double highLat = Double.parseDouble(bounds[2]);
+        Double highLng = Double.parseDouble(bounds[3]);
+        
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query("Marker");
+
+        Collection<Query.Filter> filters = new ArrayList<Query.Filter>(Arrays.asList(
+            new Query.FilterPredicate("latitude", Query.FilterOperator.GREATER_THAN_OR_EQUAL , lowLat),
+            new Query.FilterPredicate("longitude", Query.FilterOperator.GREATER_THAN_OR_EQUAL , lowLng),
+            new Query.FilterPredicate("latitude", Query.FilterOperator.LESS_THAN_OR_EQUAL , highLat),
+            new Query.FilterPredicate("longitude", Query.FilterOperator.LESS_THAN_OR_EQUAL , highLng)
+        ));
+
+        Query query = new Query("Marker").setFilter(new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filters));
+        
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity entity : results.asIterable()) {

@@ -1,0 +1,6 @@
+indexes:
+- kind: Marker
+  properties:
+  - name: longitude
+  - name: latitude
+    direction: desc
