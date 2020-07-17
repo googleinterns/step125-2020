@@ -65,9 +65,8 @@ public final class MarkerServlet extends HttpServlet {
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameter("marker-category")));
         String categories = createCategoriesString(categorySet);
         String flag = request.getParameter("flags");
-        Boolean voteCheck = true; // Boolean.parseBoolean(request.getParameter("votes"));
+        Boolean voteCheck = Boolean.parseBoolean(request.getParameter("vote-choice"));
         int votes = 0;
-        if (voteCheck) {votes = 1;}
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  

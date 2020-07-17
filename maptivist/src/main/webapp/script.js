@@ -55,8 +55,15 @@ function initMap(){
         <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
         <br>
         <div class="upvote">
-            <button>Upvote</button>
             <p>counter: </p>
+            <form action="/marker" method="POST">
+                <h1>Vote For Marker</h1>
+                    <input type="radio" id="yes" name="vote-choice" value="true" checked>
+                    <label for="Yes">Yes</label><br>
+                    <input type="radio" id="no" name="vote-choice" value="false">
+                    <label for="No">No</label><br> 
+                <input type="submit" value="Submit">
+            </form>
         </div>
         <div class="flag">
             <button>Flag</button>
