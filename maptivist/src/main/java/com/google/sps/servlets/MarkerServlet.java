@@ -107,13 +107,13 @@ public final class MarkerServlet extends HttpServlet {
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity entity : results.asIterable()) {
-            String title = (String) entity.getProperty("title");
-            String description = (String) entity.getProperty("description");
+            String title = (String) entity.getProperty("marker-title");
+            String description = (String) entity.getProperty("marker-description");
             Double longitude = Double.parseDouble((String) entity.getProperty("longitude"));
             Double latitude = Double.parseDouble((String) entity.getProperty("latitude"));
-            Set<String> links = createLinkObject((String) entity.getProperty("links"));
+            Set<String> links = createLinkObject((String) entity.getProperty("marker-link"));
             ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
-            Set<String> categories = createCategoriesObject((String) entity.getProperty("category"));
+            Set<String> categories = createCategoriesObject((String) entity.getProperty("marker-category"));
             int votes = Integer.parseInt((String) entity.getProperty("votes"));
         
             Marker marker = new Marker(title, description, latitude, longitude, links, categories, flags, votes);

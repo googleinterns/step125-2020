@@ -75,5 +75,5 @@ public final class MarkerServletFunctionTest {
  
         Assert.assertEquals(linkObject, expected);
     }
- 
+
  }
