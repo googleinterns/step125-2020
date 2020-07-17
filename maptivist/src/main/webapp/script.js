@@ -15,7 +15,6 @@
 /** The global map variable is the initialized primary map for the webpage 
 and should be used for any map parameters or variables */
 var map;
-
 /**
 * Intializes the primary map for the main webpage
  */
@@ -56,7 +55,7 @@ function initMap(){
         <br>
         <div class="upvote">
             <p>counter: </p>
-            <form action="/marker" method="POST">
+            <form action="/vote" method="POST">
                 <h1>Vote For Marker</h1>
                     <input type="radio" id="yes" name="vote-choice" value="true" checked>
                     <label for="Yes">Yes</label><br>

@@ -53,7 +53,7 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form class="form-container" id="create-form" action="/marker" method="POST">
+            <form class="form-container" id="create-form" action="/marker" method="POST" autocomplete="off">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
@@ -91,7 +91,6 @@
                 <input type="text" placeholder="Enter link here" id="marker-link" name="marker-link">
                 <br>
                 <input type="submit" value="Submit">
-                <br>
             </form>
                 <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
             </form>
