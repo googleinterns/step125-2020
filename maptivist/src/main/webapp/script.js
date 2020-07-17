@@ -70,6 +70,14 @@ function initMap(){
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
+
+  map.addListener('bounds_changed', function(){
+      var markers = getMarkerstoDisplay();
+      var i;
+      for (i = 0; i < markers.length; i++){
+          createMarker(markers[i]);
+      }
+  });
 }
 
 /**
@@ -123,25 +131,25 @@ function searchBox(){
 /** Adds a new Marker based on form submission
  */
 
-function createMarker() {
+function createMarker(markerObj) {
   // Get the coordinates from the form input and create a new Latlng object
-  var latitude = parseFloat(document.getElementById('marker-lat').value);
-  var longitude = parseFloat(document.getElementById('marker-lng').value);
+  var latitude = markerObj.latitude;
+  var longitude = markerObj.longitude;
   var myLatlng = new google.maps.LatLng(latitude, longitude);
   
   // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
   var marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
-    title: document.getElementById('marker-title').value    
+    title: markerObj.title    
   });
 
   // Adds the new marker to the map and pans to the marker 
   marker.setMap(map);
-  map.panTo(marker.getPosition());
+  //map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = createInfowindow(marker.getPosition());
+  var infowindow = createInfowindow(markerObj, marker.getPosition());
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
@@ -150,13 +158,13 @@ function createMarker() {
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow(position) {
+function createInfowindow(markerObj, position) {
   //Set info window content from form
-  var title = document.getElementById('marker-title').value;
+  var title = markerObj.title;
   var location = position.toString();
-  var description = document.getElementById('marker-description').value;
-  var link = document.getElementById('marker-link').value;
-  var category = document.getElementsByClassName('marker-category').value;
+  var description = markerObj.description;
+  var link = markerObj.link;
+  var category = markerObj.category;
   
   // Set the content of the info window 
   var contentString = 
