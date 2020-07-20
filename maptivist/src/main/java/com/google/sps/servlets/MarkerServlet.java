@@ -55,6 +55,7 @@ public final class MarkerServlet extends HttpServlet {
  
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String email = request.getParameter("email");
         String title = request.getParameter("marker-title");
         String longitude = request.getParameter("marker-lng");
         String latitude = request.getParameter("marker-lat");
@@ -64,13 +65,13 @@ public final class MarkerServlet extends HttpServlet {
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
         String categories = createCategoriesString(categorySet);
         String flag = request.getParameter("flags");
-        Boolean voteCheck = Boolean.parseBoolean(request.getParameter("upvotes"));
+        Boolean voteCheck = true; //  It is assumed that the creator of the marker would vote for it. Changes to voteChecking will made added.
         int votes = 0;
         if (voteCheck) {votes = 1;}
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        if (!checkIfMarkerAlreadyInDatastore(title)) {
+        if (!checkIfMarkerAlreadyInDatastore(datastore, title)) {
  
             Entity markerEntity = new Entity("Marker");
             markerEntity.setProperty("title", title);
@@ -188,11 +189,12 @@ public final class MarkerServlet extends HttpServlet {
         return linkList;
     }
 
-    public Boolean checkIfMarkerAlreadyInDatastore(String title){
+    public Boolean checkIfMarkerAlreadyInDatastore(DatastoreService datastore, String title){
         Query query = new Query("Marker");
         query.addFilter("title", Query.FilterOperator.EQUAL, title);
-
-        if (query == null) {return false;}
+        PreparedQuery pq = datastore.prepare(query);
+        
+        if (pq.countEntities() == 0) {return false;}
         return true;
     }
 
