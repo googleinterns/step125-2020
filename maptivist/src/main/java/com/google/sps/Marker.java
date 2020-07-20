@@ -99,6 +99,7 @@ public class Marker {
     this.latitude = latitude;
     this.longitude = longitude;
     this.links = links;
+    this.flags = flags;
     this.votes = 0;
   }
 

@@ -113,7 +113,7 @@ public final class MarkerTest {
     marker.addFlagReport(FLAG_A); 
 
     int actual = marker.getFlags().size();
-    int expected = 1;
+    int expected = 3;
     
     Assert.assertEquals(expected, actual); 
   }

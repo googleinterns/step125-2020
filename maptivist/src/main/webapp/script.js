@@ -126,20 +126,58 @@ function searchBox(){
   }); 
 }
 
+
+function filterByCategory(markers, markerCategory) {
+    const markersToDisplay = [];
+    for (marker = 0; marker < markers.length; marker++) {
+        if (markers[marker].categories.includes(markerCategory) === true) {
+            markersToDisplay.push(markers[marker]);
+        }
+    }
+    return markersToDisplay;
+}
+
+
+async function getMarkersByCategory() {
+    const category = "BLM";
+    const response = await fetch("/marker");
+    const markersArray = await response.json();
+    const markers = await Promise.all(markersArray);
+    return filterByCategory(markers, category);
+}
+
 /** Adds a new Marker based on form submission
  */
+function createMarkers() {
+    const markerse = getMarkersByCategory();
+    console.log(markerse);
+    console.log("-------------------");
+    for (markere = 0; markere < markerse.length; markere++) {
+      console.log(markerse[markere]);
+    //   createMarker(markerse[markere]);
+  }
+}
 
-function createMarker() {
-  // Get the coordinates from the form input and create a new Latlng object
-  var latitude = parseFloat(document.getElementById('marker-lat').value);
-  var longitude = parseFloat(document.getElementById('marker-lng').value);
+function createMarker(markerTemp) {
+  //Get the coordinates from the form input and create a new Latlng object
+  const title = markerTemp.title;
+  const longitude = markerTemp.longitude;
+  const latitude = markerTemp.longitude;
+  var mapcent = {lat: latitude, lng: longitude};
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: mapcent,
+    mapId: '837a93b1537b2a61'
+  });
+
   var myLatlng = new google.maps.LatLng(latitude, longitude);
   
   // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
   var marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
-    title: document.getElementById('marker-title').value    
+    title: title    
   });
 
   // Adds the new marker to the map and pans to the marker 
@@ -147,7 +185,7 @@ function createMarker() {
   map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = createInfowindow(marker.getPosition());
+  var infowindow = createInfowindow(markerTemp, marker.getPosition());
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
@@ -156,13 +194,13 @@ function createMarker() {
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow(position) {
+function createInfowindow(markerTemp, position) {
+  const title = markerTemp.title;
+  const description = markerTemp.description;
+  const category = markerTemp.category;
+  const links = markerTemp.links;
   //Set info window content from form
-  var title = document.getElementById('marker-title').value;
   var location = position.toString();
-  var description = document.getElementById('marker-description').value;
-  var link = document.getElementById('marker-link').value;
-  var category = document.getElementsByClassName('marker-category').value;
   
   // Set the content of the info window 
   var contentString = 
@@ -175,7 +213,7 @@ function createInfowindow(position) {
     <br>
     <p>${description}</p>
     <br>
-    <a href=${link}>Related source</a>
+    <a href=${links}>Related source</a>
     <br>
     <div class="upvote">
         <button>Upvote</button>
