@@ -59,7 +59,7 @@ function initMap(){
             <p>counter: </p>
         </div>
         <div class="flag">
-            <button>Flag</button>
+            <button onclick="flagFunction()">Flag</button>
         </div>
     </div>`;
 
@@ -176,9 +176,10 @@ function createInfowindow(position) {
         <p>counter: </p>
     </div>
     <div class="flag">
-        <button>Flag</button>
+        <button onclick = "flagFunction()">Flag</button>
     </div>
   </div>`;
+
 
   var infowindow = new google.maps.InfoWindow({
     content: contentString
@@ -187,6 +188,21 @@ function createInfowindow(position) {
   return infowindow;  
 }
 
+function flagFunction() {
+  var flagString = 
+    `<div class="flag-window">
+		<h1>Enter issue here</h1>
+		<input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
+		<button type="button" class="btn cancel" onclick="InfoWindow.close()">Close</button>
+    </div>`;
+
+
+	var flagWindow = new google.maps.InfoWindow({
+    content: flagString
+  });
+
+	return flagWindow
+}
 function openForm() {
   var form = document.getElementById("myFormPopup");
   form.style.display = "block";
@@ -233,7 +249,7 @@ var GoogleAuth;
     });
   }
 
-  function handleAuthClick() {
+  function signInOrOut() {
     //basic sign in/sign out functions
     if (GoogleAuth.isSignedIn.get()) {
 
@@ -244,7 +260,7 @@ var GoogleAuth;
     }
   }
 
-  function handleAuthClick2() {
+  function signInOrOut2() {
     //opens map if signed in, prompts to sign in if not signed in
     if (GoogleAuth.isSignedIn.get()) {
 
@@ -264,13 +280,13 @@ var GoogleAuth;
     var user = GoogleAuth.currentUser.get();
     var isAuthorized = user.hasGrantedScopes(SCOPE);
     $('#sign-in-or-out-button').click(function() {
-        handleAuthClick();
+        signInOrOut();
       });
       $('#myButton').click(function() {
-        handleAuthClick2();
+        signInOrOut2();
       });
       $('#authLink').click(function() {
-        handleAuthClick();
+        signInOrOut();
       });
     if (isAuthorized) {
       $('#sign-in-or-out-button').html('Sign out');
