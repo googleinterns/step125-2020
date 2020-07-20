@@ -82,32 +82,4 @@ function distanceBetweenTwoCoordinates(longitudeA, latitudeA, longitudeB, latitu
     return distance;
 }
 
-async function getMarkersByBoundary() {
-    const bounds = map.getBounds().toJSON();
-    const markers = await fetch("/marker").then(response => response.json());
-    const markersToDisplay = filterByBoundary(markers, bounds);
-    return markersToDisplay;
-}
-
-function filterByBoundary(markers, bounds){
-    const markersToDisplay = [];
-    for (let marker in markers) {
-        if (inBoundary(markers[marker], bounds)) {
-            markersToDisplay.push(markers[marker]);
-        }
-    }
-    return markersToDisplay;
-}
-
-function inBoundary(marker, bounds){
-    if (marker.latitude <= bounds["north"] && marker.latitude >= bounds["south"]){
-        if (marker.longitude <= bounds["west"] && marker.longitude >= bounds["east"]){
-            return true;
-        }else{
-            return false;
-        }   
-    }
-    return false;
-}
-
 module.exports = {filterByCategory, filterByProximity};

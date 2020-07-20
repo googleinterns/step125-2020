@@ -82,9 +82,8 @@ public final class MarkerServlet extends HttpServlet {
             markerEntity.setProperty("category", categories);
             markerEntity.setProperty("votes", votes);
  
- 
             datastore.put(markerEntity);
-        } else {
+        } /**else {
             Entity markerEntity = getEntity(datastore, title);
             Key markerKey = markerEntity.getKey();
             if (flag == null) {
@@ -94,9 +93,9 @@ public final class MarkerServlet extends HttpServlet {
             if (!voteCheck) {
                 updateVotes(markerEntity, datastore, markerKey);
             }
-        }
+        }*/
  
-        response.sendRedirect("/maps.html");
+        response.sendRedirect("/index.html");
     }
  
     private ArrayList<Marker> getMarkers(HttpServletRequest request){

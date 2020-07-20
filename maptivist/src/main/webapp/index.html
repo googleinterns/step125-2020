@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script type="text/javascript" src="script.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places,geometry,drawing">
     </script>
   </head>
   <body>
-    
     <ul>
         <li><a class="navText" href="#home"><h1>home</h1></a></li>
         <li class = "centerNav"><a href="#home"><h1>
@@ -59,25 +58,25 @@
                 <br>
                 <input type="text" placeholder="Enter Email" id="email" name="email" required>
                 <br>
-                <label for="marker-lat"><b>Marker Location (Latitude)</b></label>
+                <label for="latitude"><b>Marker Location (Latitude)</b></label>
                 <br>
-                <input type="number" step="any" placeholder="38.9227" id="marker-lat" name="marker-lat" required>
+                <input type="number" step="any" placeholder="0.000" id="latitude" name="latitude" required>
                 <br>
-                <label for="marker-lng"><b>Marker Location (Longitude)</b></label>
+                <label for="longitude"><b>Marker Location (Longitude)</b></label>
                 <br>
-                <input type="number" step="any" id="marker-lng" name="marker-lng" placeholder="-77.0194" required>
+                <input type="number" step="any" placeholder="0.000" id="longitude" name="longitude" required>
                 <br>
-                <label for="marker-title"><b>Marker Title</b></label>
+                <label for="title"><b>Marker Title</b></label>
                 <br>
-                <input type="text" placeholder="Name" id="marker-title" name="marker-title" required>
+                <input type="text" placeholder="Name" id="title" name="title" required>
                 <br>
-                <label for="marker-description"><b>Marker Description</b></label>
+                <label for="description"><b>Marker Description</b></label>
                 <br>
-                <input type="text" placeholder="Description" id="marker-description" name="marker-description" required>
+                <input type="text" placeholder="Description" id="description" name="description" required>
                 <br>
-                <label for="marker-category"><b>Category</b></label>
+                <label for="category"><b>Category</b></label>
                 <br>
-                <select name = "marker-category" placeholder="Select a category" class="dropdown" required>
+                <select name = "category" placeholder="Select a category" class="dropdown" required>
                     <option value = "LGBT">LGBT+</option>
                     <option value = "BLM">Black Lives Matter</option>
                     <option value = "Environment">Enviromental Crisis</option>
@@ -86,12 +85,12 @@
                     <option value = "Other">Other</option>
                 </select>
                 <br>
-                <label for="marker-link"><b>Link for marker</b></label>
+                <label for="links"><b>Link for marker</b></label>
                 <br>
-                <input type="text" placeholder="Enter link here" id="marker-link" name="marker-link">
+                <input type="text" placeholder="Enter link here" id="links" name="links">
                 <br>
 
-                <button type="button" class="btn" onclick="createMarker()">Submit</button>
+                <button type="submit" class="btn" >Submit</button>
                 <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
             </form>
         </div>

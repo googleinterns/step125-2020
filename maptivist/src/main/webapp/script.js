@@ -30,7 +30,7 @@ function initMap(){
 
   // Initializes the search box
   searchBox();
-  
+
   // Example Marker
   var myLatlng = {lat: 44.8549, lng: -93.2422}
 
@@ -72,11 +72,10 @@ function initMap(){
   });
 
   map.addListener('bounds_changed', function(){
-      var markers = getMarkerstoDisplay();
-      var i;
-      for (i = 0; i < markers.length; i++){
-          createMarker(markers[i]);
-      }
+    let markers = getMarkersByBoundary();
+    for (let marker in markers){
+        createMarker(marker);
+    }
   });
 }
 
@@ -128,11 +127,33 @@ function searchBox(){
   }); 
 }
 
+/** Fetches markers from the data servlet and runs filter methods
+ */
+function getMarkersByBoundary() {
+  fetch("/marker").then(response => response.json()).then( (markers) => {
+    console.log("Marker JSON: " + markers);
+    var markersToDisplay =  markers.filter(inBoundary);
+    return markersToDisplay;
+  });
+}
+
+function inBoundary(marker){
+  var bounds = map.getBounds().toJSON();
+  if (marker.latitude <= bounds.north && marker.latitude >= bounds.south){
+    if (marker.longitude <= bounds.west && marker.longitude >= bounds.east){
+        return true;
+    }else{
+        return false;
+    }   
+  }
+  return false;
+}
+
 /** Adds a new Marker based on form submission
  */
-
-function createMarker(markerObj) {
+function createMarker({latitude, longitude, title} ) {
   // Get the coordinates from the form input and create a new Latlng object
+  var marker_title = markerObj.title;
   var latitude = markerObj.latitude;
   var longitude = markerObj.longitude;
   var myLatlng = new google.maps.LatLng(latitude, longitude);
@@ -141,7 +162,7 @@ function createMarker(markerObj) {
   var marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
-    title: markerObj.title    
+    title: marker_title
   });
 
   // Adds the new marker to the map and pans to the marker 
@@ -158,26 +179,26 @@ function createMarker(markerObj) {
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow(markerObj, position) {
+function createInfowindow({title, description, links, categories}, position) {
   //Set info window content from form
   var title = markerObj.title;
   var location = position.toString();
   var description = markerObj.description;
-  var link = markerObj.link;
-  var category = markerObj.category;
+  var links = markerObj.links;
+  var categories = markerObj.categories;
   
   // Set the content of the info window 
   var contentString = 
   `<div class="marker-window">
     <h1>${title}</h1>
     <br>
-    <h3>${category}</h3>
+    <h3>${categories}</h3>
     <br>
     <h2>${location}</h2>
     <br>
     <p>${description}</p>
     <br>
-    <a href=${link}>Related source</a>
+    <a href=${links}>Related source</a>
     <br>
     <div class="upvote">
         <button>Upvote</button>
