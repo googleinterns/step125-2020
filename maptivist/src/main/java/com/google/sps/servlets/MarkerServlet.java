@@ -65,7 +65,7 @@ public final class MarkerServlet extends HttpServlet {
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameter("marker-category")));
         String categories = createCategoriesString(categorySet);
         String flag = request.getParameter("flags");
-        Boolean voteCheck = true; // Boolean.parseBoolean(request.getParameter("votes"));
+        Boolean voteCheck = true; //  It is assumed that the creator of the marker would vote for it. Changes to voteChecking will made added.
         int votes = 0;
         if (voteCheck) {votes = 1;}
  
