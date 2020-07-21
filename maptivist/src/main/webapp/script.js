@@ -162,7 +162,7 @@ function createInfowindow(position) {
   var location = position.toString();
   var description = document.getElementById('marker-description').value;
   var link = document.getElementById('marker-link').value;
-  var category = document.getElementsByClassName('marker-category').value;
+  var category = document.getElementById('marker-category').value;
   
   // Set the content of the info window 
   var contentString = 
