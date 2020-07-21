@@ -60,9 +60,9 @@ public final class MarkerServlet extends HttpServlet {
         String longitude = request.getParameter("marker-lng");
         String latitude = request.getParameter("marker-lat");
         String description = request.getParameter("marker-description"); 
-        Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameter("marker-link")));
+        Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-link")));
         String links = createLinkString(linkSet);
-        Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameter("marker-category")));
+        Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
         String categories = createCategoriesString(categorySet);
         String flag = request.getParameter("flags");
         Boolean voteCheck = true; //  It is assumed that the creator of the marker would vote for it. Changes to voteChecking will made added.
