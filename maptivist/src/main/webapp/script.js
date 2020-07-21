@@ -193,7 +193,8 @@ function flagFunction() {
     `<div class="flag-window">
 		<h1>Enter issue here</h1>
 		<input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
-		<button type="button" class="btn cancel" onclick="InfoWindow.close()">Close</button>
+        <input type="submit" value="Submit">
+
     </div>`;
 
 
@@ -201,8 +202,13 @@ function flagFunction() {
     content: flagString
   });
 
-	return flagWindow
+    flagWindow.setPosition(map.getCenter());
+    flagWindow.open(map);
+
+    
 }
+
+
 function openForm() {
   var form = document.getElementById("myFormPopup");
   form.style.display = "block";
