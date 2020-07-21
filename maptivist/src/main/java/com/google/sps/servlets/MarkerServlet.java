@@ -53,15 +53,14 @@ public final class MarkerServlet extends HttpServlet {
         response.getWriter().println(gson.toJson(markers));
     }
  
- 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String title = request.getParameter("title");
-        String longitude = request.getParameter("longitude");
-        String latitude = request.getParameter("latitude");
-        String description = request.getParameter("description"); 
-        Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("links")));
+        String title = request.getParameter("marker-title");
+        String longitude = request.getParameter("marker-lng");
+        String latitude = request.getParameter("marker-lat");
+        String description = request.getParameter("marker-description"); 
+        Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
         String links = createLinkString(linkSet);
-        Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("category")));
+        Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
         String categories = createCategoriesString(categorySet);
         String flag = request.getParameter("flags");
         Boolean voteCheck = Boolean.parseBoolean(request.getParameter("upvotes"));
@@ -83,7 +82,7 @@ public final class MarkerServlet extends HttpServlet {
             markerEntity.setProperty("votes", votes);
  
             datastore.put(markerEntity);
-        } /**else {
+        } else {
             Entity markerEntity = getEntity(datastore, title);
             Key markerKey = markerEntity.getKey();
             if (flag == null) {
@@ -93,7 +92,7 @@ public final class MarkerServlet extends HttpServlet {
             if (!voteCheck) {
                 updateVotes(markerEntity, datastore, markerKey);
             }
-        }*/
+        }
  
         response.sendRedirect("/index.html");
     }

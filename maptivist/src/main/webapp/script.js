@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//MAPS API
 /** The global map variable is the initialized primary map for the webpage 
 and should be used for any map parameters or variables */
-var map;
+var map, created_markers;
 
 /**
 * Intializes the primary map for the main webpage
@@ -30,53 +31,14 @@ function initMap(){
 
   // Initializes the search box
   searchBox();
-
-  // Example Marker
-  var myLatlng = {lat: 44.8549, lng: -93.2422}
-
-  var marker = new google.maps.Marker({
-    position: myLatlng,
-    map: map,
-    title: "Justice for George Floyd"
-  });
-
-  // Adds the new marker and infowindow to the map
-  marker.setMap(map);
-  var contentString =
-    `<div class="marker-window">
-        <h1>Justice for George Floyd</h1>
-        <br>
-        <h3>BLM</h3>
-        <br>
-        <h2>Mall of America</h2>
-        <br>
-        <p>This is an example marker from a past protest</p>
-        <br>
-        <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
-        <br>
-        <div class="upvote">
-            <button>Upvote</button>
-            <p>counter: </p>
-        </div>
-        <div class="flag">
-            <button>Flag</button>
-        </div>
-    </div>`;
-
-  var infowindow = new google.maps.InfoWindow({
-    content: contentString
-  });
   
-  marker.addListener('click', function() {
-    infowindow.open(map, marker);
-  });
-
-  map.addListener('bounds_changed', function(){
-    let markers = getMarkersByBoundary();
-    for (let marker in markers){
-        createMarker(marker);
-    }
-  });
+  // Load the markers from the Marker Servlet
+  var display_markers = getMarkersByBoundary();
+  for (let marker in display_markers){
+      if (!created_markers.includes(marker.id)) {
+        createMarker(marker);          
+      }
+  }
 }
 
 /**
@@ -130,9 +92,8 @@ function searchBox(){
 /** Fetches markers from the data servlet and runs filter methods
  */
 function getMarkersByBoundary() {
-  fetch("/marker").then(response => response.json()).then( (markers) => {
-    console.log("Marker JSON: " + markers);
-    var markersToDisplay =  markers.filter(inBoundary);
+  fetch("/marker").then(response => response.json()).then((markers) => {
+    var markersToDisplay = markers.filter(inBoundary);
     return markersToDisplay;
   });
 }
@@ -149,43 +110,40 @@ function inBoundary(marker){
   return false;
 }
 
-/** Adds a new Marker based on form submission
+/** Adds a new Marker based on id array
  */
-function createMarker({latitude, longitude, title} ) {
+function createMarker({id, latitude, longitude, title, description, links, categories} ) {
   // Get the coordinates from the form input and create a new Latlng object
-  var marker_title = markerObj.title;
-  var latitude = markerObj.latitude;
-  var longitude = markerObj.longitude;
+  
   var myLatlng = new google.maps.LatLng(latitude, longitude);
   
   // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
   var marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
-    title: marker_title
+    title: title
   });
 
   // Adds the new marker to the map and pans to the marker 
   marker.setMap(map);
-  //map.panTo(marker.getPosition());
+  map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = createInfowindow(markerObj, marker.getPosition());
+  var infowindow = createInfowindow(title, description, links, categories, marker.getPosition());
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
+
+  // Adds the marker's random, unique id to list of already created markers
+  created_markers.push(id);
 }
 
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow({title, description, links, categories}, position) {
-  //Set info window content from form
-  var title = markerObj.title;
+function createInfowindow(title, description, links, categories, position) {
+  //Set info window content from Marker class
   var location = position.toString();
-  var description = markerObj.description;
-  var links = markerObj.links;
-  var categories = markerObj.categories;
   
   // Set the content of the info window 
   var contentString = 
