@@ -18,6 +18,8 @@ var map;
 /**
 * Intializes the primary map for the main webpage
  */
+
+
 function initMap(){
   var minneapolis = {lat: 44.9778, lng: -93.2650};
 
@@ -38,35 +40,34 @@ function initMap(){
     map: map,
     title: "Justice for George Floyd"
   });
+      
+
 
   // Adds the new marker and infowindow to the map
   marker.setMap(map);
   var contentString =
     `<div class="marker-window">
-        <h1>Justice for George Floyd</h1>
+    <h1>Justice for George Floyd</h1>
+    <br>
+    <h3>BLM</h3>
+    <br>
+    <h2>Mall of America</h2>
+    <br>
+    <p>This is an example marker from a past protest</p>
+    <br>
+    <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
+    <br>
+    <div class="upvote">
+        <p>Counter: <span id="counter"></span></p>
         <br>
-        <h3>BLM</h3>
-        <br>
-        <h2>Mall of America</h2>
-        <br>
-        <p>This is an example marker from a past protest</p>
-        <br>
-        <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
-        <br>
-        <div class="upvote">
-            <p>counter: </p>
-            <form action="/vote" method="POST">
-                <h1>Vote For Marker</h1>
-                    <input type="radio" id="yes" name="vote-choice" value="true" checked>
-                    <label for="Yes">Yes</label><br>
-                    <input type="radio" id="no" name="vote-choice" value="false">
-                    <label for="No">No</label><br> 
-                <input type="submit" value="Submit">
-            </form>
-        </div>
-        <div class="flag">
-            <button>Flag</button>
-        </div>
+        <form action="/votes" method="POST">
+        <button type="submit" name="title" value="Justice For George Floyd">Upvote</button>
+        </form>
+        <span id="vote-receieved"></span>
+    </div>
+    <div class="flag">
+        <button>Flag</button>
+    </div>
     </div>`;
 
   var infowindow = new google.maps.InfoWindow({
@@ -166,7 +167,24 @@ function createInfowindow(position) {
   
   // Set the content of the info window 
   var contentString = 
-  `<div class="marker-window">
+    `<script>
+        $(document).ready(function() {
+        $("#submit").click(function() {
+        $.ajax({
+        type: "POST",
+        url: "votes",
+        data: {
+            vote: voteChoice,
+            title: ${title},
+        },
+        success: function(response, status){
+            alert("Name: " + response.name + "Description: " + response.desc);
+        }
+        });
+        });
+        });
+    </script>
+    <div class="marker-window">
     <h1>${title}</h1>
     <br>
     <h3>${category}</h3>
@@ -178,9 +196,16 @@ function createInfowindow(position) {
     <a href=${link}>Related source</a>
     <br>
     <div class="upvote">
-        <button>Upvote</button>
-        <p>counter: </p>
-    </div>
+        <p id="counter">counter: </p>
+        <form>
+            <h1>Vote For Marker</h1>
+            <input type="radio" id="yes" name="vote-choice" value="true" checked>
+            <label for="Yes">Yes</label><br>
+            <input type="radio" id="no" name="vote-choice" value="false">
+            <label for="No">No</label><br> 
+            <input type="submit" value="Submit">
+        </form>
+        </div>
     <div class="flag">
         <button>Flag</button>
     </div>
@@ -277,3 +302,10 @@ var GoogleAuth;
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
   }
+
+
+async function getVote() {
+    const response = await fetch("/votes");
+    const voteCount = await response.json();
+    console.log(voteCount);
+}
