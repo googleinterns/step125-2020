@@ -150,7 +150,7 @@ function createMarker() {
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow(position) {
+function createInfowindow(position, marker) {
   //Set info window content from form
   var title = document.getElementById('marker-title').value;
   var location = position.toString();
@@ -176,11 +176,18 @@ function createInfowindow(position) {
         <p>counter: </p>
     </div>
     <div class="flag">
-        <button onclick = "flagFunction()">Flag</button>
+        <button onclick = "flagFunction() id="info_window_flag_button">Flag</button>
     </div>
   </div>`;
 
 
+  infowindow.domready = function() {
+   var flag_btn =   document.getElementById("info_window_flag_button");
+   flag_btn.onclick = function() {
+      // the closure captures the marker.
+      flagFunction(marker);
+   }
+}
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
@@ -188,7 +195,7 @@ function createInfowindow(position) {
   return infowindow;  
 }
 
-function flagFunction() {
+function flagFunction(marker) {
   var flagString = 
     `<div class="flag-window">
 		<h1>Enter issue here</h1>
