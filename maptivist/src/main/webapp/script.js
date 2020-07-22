@@ -213,16 +213,6 @@ function createInfowindow(title, description, links, categories, position) {
   return infowindow;  
 }
 
-/**
-* Creates an UUID for a specific marker when its information is submitted 
-* in the create marker form
- */
-function getId(){
-  var id = document.getElementById('id');
-  const { v4: uuidv4 } = require('uuid');
-  id.value = uuidv4();
-}
-
 // POPUP FORM
 function openForm() {
   var form = document.getElementById("myFormPopup");

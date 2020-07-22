@@ -55,45 +55,19 @@ public final class MarkerServlet extends HttpServlet {
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String title = request.getParameter("marker-title");
-        String longitude = request.getParameter("marker-lng");
-        String latitude = request.getParameter("marker-lat");
+        Double longitude = Double.parseDouble(request.getParameter("marker-lng"));
+        Double latitude = Double.parseDouble(request.getParameter("marker-lat"));
         String description = request.getParameter("marker-description"); 
-        String id = request.getParameter("id");
+        UUID id = UUID.randomUUID();
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
-        String links = createLinkString(linkSet);
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
-        String categories = createCategoriesString(categorySet);
-        String flag = request.getParameter("flags");
-        Boolean voteCheck = Boolean.parseBoolean(request.getParameter("upvotes"));
-        int votes = 0;
-        if (voteCheck) {votes = 1;}
- 
+
+        Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        if (!checkIfMarkerAlreadyInDatastore(title)) {
- 
-            Entity markerEntity = new Entity("Marker");
-            markerEntity.setProperty("title", title);
-            markerEntity.setProperty("description", description);
-            markerEntity.setProperty("longitude", longitude);            
-            markerEntity.setProperty("latitude", latitude);
-            markerEntity.setProperty("flags", flag);
-            markerEntity.setProperty("links", links);
-            markerEntity.setProperty("category", categories);
-            markerEntity.setProperty("votes", votes);
-            markerEntity.setProperty("id", id);
- 
+        if (!checkIfMarkerAlreadyInDatastore(id)) {
+            Entity markerEntity = postMarker.toEntity();
             datastore.put(markerEntity);
-        } else {
-            Entity markerEntity = getEntity(datastore, title);
-            Key markerKey = markerEntity.getKey();
-            if (flag == null) {
-                updateFlags(markerEntity, datastore, markerKey, flag);
-            }
-            
-            if (!voteCheck) {
-                updateVotes(markerEntity, datastore, markerKey);
-            }
         }
  
         response.sendRedirect("/index.html");
@@ -107,91 +81,15 @@ public final class MarkerServlet extends HttpServlet {
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity entity : results.asIterable()) {
-            String title = (String) entity.getProperty("title");
-            String description = (String) entity.getProperty("description");
-            Double longitude = Double.parseDouble((String) entity.getProperty("longitude"));
-            Double latitude = Double.parseDouble((String) entity.getProperty("latitude"));
-            UUID id = (UUID) UUID.fromString((String) entity.getProperty("id"));
-            Set<String> links = createLinkObject((String) entity.getProperty("links"));
-            ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
-            Set<String> categories = createCategoriesObject((String) entity.getProperty("category"));
-            int votes = Integer.parseInt((String) entity.getProperty("votes"));
-        
-            Marker marker = new Marker(title, description, latitude, longitude, links, categories, flags, votes, id);
+            Marker marker = new Marker(entity);
             markers.add(marker);
         }
         return markers;
     }
  
-    public String createCategoriesString(Set<String> categories){
-        String categoryString = "";
-        Base64.Encoder encoder = Base64.getEncoder();  
-        for (String category : categories) {
-            String categoryByte = encoder.encodeToString(category.getBytes());  
-            categoryString += categoryByte + ",";
-        }
-        return categoryString.substring(0, categoryString.length() - 1);     
-    }
- 
-    public Set<String> createCategoriesObject(String categoryString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        Set<String> categorySet = new HashSet<String>();
-        String[] categories;
-        categories = categoryString.split(",");
-        for (String category : categories) {
-            String categoryDecode = new String(decoder.decode(category));
-            categorySet.add(categoryDecode);
-        }
-        return categorySet;
-    }
- 
-    public String createFlagString(ArrayList<String> flags) {
-        String flagString = "";
-        Base64.Encoder encoder = Base64.getEncoder();  
-        for (String flag : flags) {
-            String comment = encoder.encodeToString(flag.getBytes());  
-            flagString += comment + ",";
-        }
-        return flagString.substring(0, flagString.length() - 1);
-    }
- 
-    public ArrayList<String> createFlagObject(String flagString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        ArrayList<String> flagsList = new ArrayList<String>();
-        String[] flags;
-        flags = flagString.split(",");
-        for (String flag : flags) {
-            String flagDecode = new String(decoder.decode(flag));
-            flagsList.add(flagDecode);
-        }
-        return flagsList;
-    }
- 
-    public String createLinkString(Set<String> links) {
-        String linkString = "";
-        Base64.Encoder encoder = Base64.getUrlEncoder();  
-        for (String link : links) {
-            String linkUrl = encoder.encodeToString(link.getBytes());  
-            linkString += linkUrl + ",";
-        }
-        return linkString.substring(0, linkString.length() - 1);
-    }
- 
-    public Set<String> createLinkObject(String linkString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        Set<String> linkList = new HashSet<String>();
-        String[] links;
-        links = linkString.split(",");
-        for (String link : links) {
-            String linkDecode = new String(decoder.decode(link));
-            linkList.add(linkDecode);
-        }
-        return linkList;
-    }
-
-    public Boolean checkIfMarkerAlreadyInDatastore(String title){
+    public Boolean checkIfMarkerAlreadyInDatastore(UUID id){
         Query query = new Query("Marker");
-        query.addFilter("title", Query.FilterOperator.EQUAL, title);
+        query.addFilter("id", Query.FilterOperator.EQUAL, id);
 
         if (query == null) {return false;}
         return true;
@@ -206,10 +104,11 @@ public final class MarkerServlet extends HttpServlet {
         return marker;
     }
 
-    public void updateFlags(Entity markerEntity, DatastoreService datastore, Key markerKey, String newFlag) {
+    // I removed the flag and votes update methods since the votes (and 
+    /**public void updateFlags(Entity markerEntity, DatastoreService datastore, Key markerKey, String newFlag) {
         ArrayList<String> flags = createFlagObject((String) markerEntity.getProperty("flags"));
         flags.add(newFlag);
-        String flagsString = createFlagString(flags);     
+        //String flagsString = createFlagString(flags);     
         markerEntity.setProperty("flags", flagsString);
         datastore.put(markerEntity);
     }
@@ -219,6 +118,6 @@ public final class MarkerServlet extends HttpServlet {
         votes += 1;
         markerEntity.setProperty("votes", votes);
         datastore.put(markerEntity);
-    }
+    }*/
 
 }

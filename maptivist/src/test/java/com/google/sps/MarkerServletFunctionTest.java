@@ -31,17 +31,9 @@ import java.util.Base64;
 import java.nio.CharBuffer; 
  
  
-/** */
+/** 
 @RunWith(JUnit4.class)
 public final class MarkerServletFunctionTest {
- 
-    private static final String[] categoryArray = new String[] {"BLM", "LGBTQ"};
-    private static final String[] flagArray = new String[] {"boy, and wo,rld", "girl,", ",cow"};
-    private static final String[] linkArray = new String[] {"www.google.com", "www.youtube.com", "www.pinterest.com"};
- 
-    private static final Set<String> categoryObject = new HashSet<String>(Arrays.asList(categoryArray));
-    private static final ArrayList<String> flagObject = new ArrayList<String>(Arrays.asList(flagArray));
-    private static final Set<String> linkObject = new HashSet<String>(Arrays.asList(linkArray));
  
     private MarkerServlet testMarkerServletFunctions;
  
@@ -50,30 +42,4 @@ public final class MarkerServletFunctionTest {
         testMarkerServletFunctions = new MarkerServlet();
     }
  
-    @Test
-    public void matchingDelimiterCounts() {
-        String categoriesString = testMarkerServletFunctions.createCategoriesString(categoryObject);
-        int expected = 1;
-        long actual = categoriesString.chars().filter(delim -> delim == ',').count();
-        Assert.assertEquals(actual, expected);
- 
-    }
- 
-    @Test
-    public void delimiterIncludedInString() {
-        String flagString = testMarkerServletFunctions.createFlagString(flagObject);
-        int expected = 2;
-        long actual = flagString.chars().filter(delim -> delim == ',').count();
-
-        Assert.assertEquals(actual, expected);
-    }
- 
-    @Test
-    public void inverseFunctionsWorkTogether() {
-        String linkString = testMarkerServletFunctions.createLinkString(linkObject);
-        Set<String> expected = testMarkerServletFunctions.createLinkObject(linkString);
- 
-        Assert.assertEquals(linkObject, expected);
-    }
- 
- }
+ } */
