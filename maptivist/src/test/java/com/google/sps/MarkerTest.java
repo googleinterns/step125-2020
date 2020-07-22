@@ -14,14 +14,6 @@
 
 package com.google.sps;
 
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
-
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -43,9 +35,6 @@ import java.nio.CharBuffer;
 public final class MarkerTest {
 
   // All the different mock examples of marker info obtained by servlet through POST method or sent by querystring
-  private final LocalServiceTestHelper helper =
-    new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-
   private final String TITLE = "Justice for Breonna Taylor";
 
   private final String DESCRIPT = "We will walk to the capital";
@@ -66,16 +55,6 @@ public final class MarkerTest {
   private final int VOTES = 0;
 
   private final UUID ID = UUID.randomUUID();
-
-  @Before
-    public void setUp() {
-        helper.setUp();
-    }
-
-  @After
-    public void tearDown() {
-        helper.tearDown();
-    }
 
   @Test
   public void createMarkerWithoutCategories() {
@@ -223,30 +202,5 @@ public final class MarkerTest {
         Assert.assertEquals(actual, expected);
     }
 
-  @Test
-  public void setAndUnsetEntity() {
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-
-    Set<String> CATS = new HashSet<>();
-        CATS.add(CAT_A);
-        CATS.add(CAT_B);
-        CATS.add(CAT_C);
-
-    Set<String> LINKS = new HashSet<>();
-        LINKS.add(LINK_A);
-        LINKS.add(LINK_B);
-
-    Marker expected_marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID);
-        expected_marker.addFlagReport(FLAG_A);
-
-
-    assertEquals(0, ds.prepare(new Query("Marker")).countEntities());
-    Entity serialized_marker = expected_marker.toEntity();
-    ds.put(serialized_marker);
-    assertEquals(1, ds.prepare(new Query("Marker")).countEntities());
-    Marker deserialized_maker = new Marker(serialized_marker);
-    
-    Assert.assertEquals(expected_marker, deserialized_maker);
-  }
   
 }

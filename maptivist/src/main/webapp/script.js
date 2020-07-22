@@ -75,9 +75,7 @@ function initMap(){
   // Load the markers from the Marker Servlet
   var display_markers = loadMarkersByBoundary();
   for (let marker in display_markers){
-      if (!created_markers.includes(marker.id)) {
-        createMarker(marker);          
-      }
+    createMarker(marker);          
   }
 }
 

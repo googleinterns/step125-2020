@@ -114,7 +114,7 @@ public class Marker {
     this.description = (String) entity.getProperty("description");
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
-    this.id = (UUID) entity.getProperty("id");
+    this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
@@ -207,6 +207,7 @@ public class Marker {
     String categories_string = createCategoriesString(this.categories);
     String links_string = createFlagString(this.flags);
     String flags_string = createLinkString(this.links);
+    String id_string = this.id.toString();
 
     Entity markerEntity = new Entity("Marker");
         markerEntity.setProperty("title", this.title);
@@ -217,7 +218,7 @@ public class Marker {
         markerEntity.setProperty("links", links_string);
         markerEntity.setProperty("category", categories_string);
         markerEntity.setProperty("votes", this.votes);
-        markerEntity.setProperty("id", this.id);
+        markerEntity.setProperty("id", id_string);
 
     return markerEntity;
     }

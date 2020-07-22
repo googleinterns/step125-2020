@@ -65,7 +65,7 @@ public final class MarkerServlet extends HttpServlet {
         Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        if (!checkIfMarkerAlreadyInDatastore(id)) {
+        if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
             Entity markerEntity = postMarker.toEntity();
             datastore.put(markerEntity);
         }
@@ -88,8 +88,9 @@ public final class MarkerServlet extends HttpServlet {
     }
  
     public Boolean checkIfMarkerAlreadyInDatastore(UUID id){
+        String id_string = id.toString();
         Query query = new Query("Marker");
-        query.addFilter("id", Query.FilterOperator.EQUAL, id);
+        query.addFilter("id", Query.FilterOperator.EQUAL, id_string);
 
         if (query == null) {return false;}
         return true;
