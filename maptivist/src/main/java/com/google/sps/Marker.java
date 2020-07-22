@@ -66,12 +66,10 @@ public class Marker {
    * @param categories The collection of categories assigned to the marker. Preferred to be 
    * non-null but if so can be assigned other.
    * @param links Collected list of all the urls connected to the specific marker and can be null.
+   * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, ArrayList<String> flags, int votes) {
-    
-    // Creates a random UUID for the marker can be identified. Can be used as the id for the HTML id
-    this.id = UUID.randomUUID();
+  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, ArrayList<String> flags, int votes, UUID id) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -92,6 +90,10 @@ public class Marker {
     if (longitude < -180 || longitude > 180){
        throw new IllegalArgumentException("this isn't a viable value for longitude"); 
     }
+    
+    if (id == null) {
+      throw new IllegalArgumentException("id cannot be null");
+    }
 
     this.title = title;
     this.description = description;
@@ -100,6 +102,7 @@ public class Marker {
     this.longitude = longitude;
     this.links = links;
     this.votes = 0;
+    this.id = id;
   }
 
   /**

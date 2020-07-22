@@ -29,11 +29,51 @@ function initMap(){
     mapId: '837a93b1537b2a61'
   });
 
+  // EXAMPLE MARKER
+  var myLatlng = {lat: 44.8549, lng: -93.2422}
+
+  var marker = new google.maps.Marker({
+    position: myLatlng,
+    map: map,
+    title: "Justice for George Floyd"
+  });
+
+  // Adds the new marker and infowindow to the map
+  marker.setMap(map);
+  var contentString =
+    `<div class="marker-window">
+        <h1>Justice for George Floyd</h1>
+        <br>
+        <h3>BLM</h3>
+        <br>
+        <h2>Mall of America</h2>
+        <br>
+        <p>This is an example marker from a past protest</p>
+        <br>
+        <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
+        <br>
+        <div class="upvote">
+            <button>Upvote</button>
+            <p>counter: </p>
+        </div>
+        <div class="flag">
+            <button>Flag</button>
+        </div>
+    </div>`;
+
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
+  
+  marker.addListener('click', function() {
+    infowindow.open(map, marker);
+  });
+
   // Initializes the search box
   searchBox();
   
   // Load the markers from the Marker Servlet
-  var display_markers = getMarkersByBoundary();
+  var display_markers = loadMarkersByBoundary();
   for (let marker in display_markers){
       if (!created_markers.includes(marker.id)) {
         createMarker(marker);          
@@ -91,7 +131,7 @@ function searchBox(){
 
 /** Fetches markers from the data servlet and runs filter methods
  */
-function getMarkersByBoundary() {
+function loadMarkersByBoundary() {
   fetch("/marker").then(response => response.json()).then((markers) => {
     var markersToDisplay = markers.filter(inBoundary);
     return markersToDisplay;
@@ -112,9 +152,8 @@ function inBoundary(marker){
 
 /** Adds a new Marker based on id array
  */
-function createMarker({id, latitude, longitude, title, description, links, categories} ) {
-  // Get the coordinates from the form input and create a new Latlng object
-  
+function createMarker({id, latitude, longitude, title, description, links, categories}) {
+  // Get the coordinates from the marker class and create a new Latlng object
   var myLatlng = new google.maps.LatLng(latitude, longitude);
   
   // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
@@ -174,6 +213,17 @@ function createInfowindow(title, description, links, categories, position) {
   return infowindow;  
 }
 
+/**
+* Creates an UUID for a specific marker when its information is submitted 
+* in the create marker form
+ */
+function getId(){
+  var id = document.getElementById('id');
+  const { v4: uuidv4 } = require('uuid');
+  id.value = uuidv4();
+}
+
+// POPUP FORM
 function openForm() {
   var form = document.getElementById("myFormPopup");
   form.style.display = "block";

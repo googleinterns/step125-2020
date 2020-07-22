@@ -3,6 +3,7 @@
     "jest": "^26.1.0"
   },
   "dependencies": {
-    "@conversationai/perspectiveapi-simple-server": "^0.2.1"
+    "@conversationai/perspectiveapi-simple-server": "^0.2.1",
+    "uuid": "^8.2.0"
   }
 }

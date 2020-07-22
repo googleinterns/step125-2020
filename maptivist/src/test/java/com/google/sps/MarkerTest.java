@@ -52,6 +52,8 @@ public final class MarkerTest {
   private static final String COMMENT = "What should we bring?";
   private static final int VOTES = 0;
 
+  private static final UUID ID = UUID.randomUUID();
+
   @Test
   public void createMarkerWithoutCategories() {
     Set<String> CATS = new HashSet<>();
@@ -61,8 +63,8 @@ public final class MarkerTest {
     ArrayList<String> FLAGS = new ArrayList<>();
         FLAGS.add(FLAG_A);
         FLAGS.add(FLAG_B);
-
-    Marker noCatMarker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
+   
+    Marker noCatMarker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES, ID);
 
     Set<String> actual = noCatMarker.getCategories();
     Set<String> expected = new HashSet<String>();
@@ -86,7 +88,7 @@ public final class MarkerTest {
         FLAGS.add(FLAG_A);
         FLAGS.add(FLAG_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES); 
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES, ID); 
 
     UUID actual = marker.getUUID();
     UUID not_expected = null;
@@ -109,7 +111,7 @@ public final class MarkerTest {
         FLAGS.add(FLAG_A);
         FLAGS.add(FLAG_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES, ID);
     marker.addFlagReport(FLAG_A); 
 
     int actual = marker.getFlags().size();
@@ -133,7 +135,7 @@ public final class MarkerTest {
         FLAGS.add(FLAG_A);
         FLAGS.add(FLAG_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES, ID);
     marker.addVote();
 
     int actual = marker.getVotes();
@@ -157,7 +159,7 @@ public final class MarkerTest {
         FLAGS.add(FLAG_A);
         FLAGS.add(FLAG_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES);
+    Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, FLAGS, VOTES, ID);
     marker.addComment(COMMENT);
 
     int actual = marker.getComments().size();

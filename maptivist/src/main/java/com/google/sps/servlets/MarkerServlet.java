@@ -35,7 +35,7 @@ import com.google.sps.Marker;
 import java.util.Set;
 import java.util.List;
 import java.util.Base64;
- 
+import java.util.UUID;
  
 /** Servlet that handles all my received marker data */
 @WebServlet("/marker")
@@ -58,6 +58,7 @@ public final class MarkerServlet extends HttpServlet {
         String longitude = request.getParameter("marker-lng");
         String latitude = request.getParameter("marker-lat");
         String description = request.getParameter("marker-description"); 
+        String id = request.getParameter("id");
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
         String links = createLinkString(linkSet);
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
@@ -80,6 +81,7 @@ public final class MarkerServlet extends HttpServlet {
             markerEntity.setProperty("links", links);
             markerEntity.setProperty("category", categories);
             markerEntity.setProperty("votes", votes);
+            markerEntity.setProperty("id", id);
  
             datastore.put(markerEntity);
         } else {
@@ -109,12 +111,13 @@ public final class MarkerServlet extends HttpServlet {
             String description = (String) entity.getProperty("description");
             Double longitude = Double.parseDouble((String) entity.getProperty("longitude"));
             Double latitude = Double.parseDouble((String) entity.getProperty("latitude"));
+            UUID id = (UUID) UUID.fromString((String) entity.getProperty("id"));
             Set<String> links = createLinkObject((String) entity.getProperty("links"));
             ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
             Set<String> categories = createCategoriesObject((String) entity.getProperty("category"));
             int votes = Integer.parseInt((String) entity.getProperty("votes"));
         
-            Marker marker = new Marker(title, description, latitude, longitude, links, categories, flags, votes);
+            Marker marker = new Marker(title, description, latitude, longitude, links, categories, flags, votes, id);
             markers.add(marker);
         }
         return markers;
