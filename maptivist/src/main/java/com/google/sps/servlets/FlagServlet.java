@@ -79,7 +79,6 @@ public final class FlagServlet extends HttpServlet {
         ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
 
         flags.add(flag);
-        Globals.flags = new ArrayList<>(flags);
 
         String flagString = createFlagString(flags);
         entity.setProperty("flags", flagString);

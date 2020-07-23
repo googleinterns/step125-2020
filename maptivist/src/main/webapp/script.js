@@ -181,7 +181,7 @@ function createInfowindow(position) {
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <form action="/votes" method="POST">
-            <button type="submit" name="title" value="${title}">Upvote</button>
+            <button type="submit" name="title" value="${title} "onclick="getVote()">Upvote</button>
         </form>
     </div>
     <div class="flag">

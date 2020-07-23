@@ -49,9 +49,9 @@ public final class VoteServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
  
         Gson gson = new Gson();
- 
+
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(Globals.voteCount));
+        response.getWriter().println(gson.toJson("1"));
     }
  
  
@@ -75,17 +75,17 @@ public final class VoteServlet extends HttpServlet {
 
     public void updateVotes(DatastoreService datastore, String titleMatch) {
         Entity entity = getEntity(datastore, titleMatch);
-        int votes = (int) (long) entity.getProperty("votes");
+        int votes = getVote(entity);
 
-        votes += 1;
-        Globals.voteCount = Integer.toString(votes);
         entity.setProperty("votes", votes);
 
         datastore.put(entity);        
     }
 
-    static class Globals {
-        public static String voteCount;
+    public int getVote(Entity entity){
+        int votes = (int) (long) entity.getProperty("votes");
+        return votes + 1;      
     }
+
 
 }
