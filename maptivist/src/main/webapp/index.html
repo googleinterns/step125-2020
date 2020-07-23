@@ -38,9 +38,6 @@
 		<button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
     </div>
 
-    <div class="search-container">
-        <input id="search-input" type="text" placeholder="Find a location for your marker">
-    </div>
     <div id="map"></div>
     <div id="infowindow-content">
       <img src="" width="16" height="16" id="place-icon">
@@ -58,13 +55,21 @@
                 <br>
                 <input type="text" placeholder="Enter Email" id="email" name="email" required>
                 <br>
-                <label for="marker-lat"><b>Marker Location (Latitude)</b></label>
+                <label for="marker-address"><b>Marker Location</b></label>
                 <br>
-                <input type="number" step="any" placeholder="0.000" id="marker-lat" name="marker-lat" required>
+                <div class="search-container">
+                    <input id="search-input" type="text" placeholder="Find a location for your marker">
+                </div>
+                <div id="infowindow-content">
+                    <img src="" width="16" height="16" id="place-icon">
+                    <span id="place-name"  class="title"></span><br>
+                    <span id="place-address"></span>
+                </div>
+                <input type="text" id="marker-address" name="marker-address" required>
                 <br>
-                <label for="marker-lng"><b>Marker Location (Longitude)</b></label>
+                <input type="hidden" step="any" value="0.00" id="marker-lat" name="marker-lat" required>
                 <br>
-                <input type="number" step="any" placeholder="0.000" id="marker-lng" name="marker-lng" required>
+                <input type="hidden" step="any" id="marker-lng" name="marker-lng" value="0.00" required>
                 <br>
                 <label for="marker-title"><b>Marker Title</b></label>
                 <br>
@@ -89,7 +94,11 @@
                 <br>
                 <input type="text" placeholder="Enter link here" id="marker-links" name="marker-links">
                 <br>
+<<<<<<< HEAD
                 <input type="submit" value="Submit">
+=======
+                <button type="button" class="btn" onclick="createMarker()">Submit</button>
+>>>>>>> Initial set up
                 <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
             </form>
         </div>

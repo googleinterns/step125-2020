@@ -79,7 +79,9 @@ function initMap(){
   loadMarkersByBoundary();
 
   // If the bounds of the map changed markers in that area will be drawn
-  map.addListener('bounds-changed', loadMarkersByBoundary(){});
+  map.addListener('bounds-changed', function() {
+    loadMarkersByBoundary()    
+  });
   
 }
 
@@ -94,6 +96,11 @@ function searchBox(){
   var infowindow = new google.maps.InfoWindow();
   var infowindowContent = document.getElementById('infowindow-content');
   infowindow.setContent(infowindowContent);
+  
+  // Grabs the hidden input values for the coordinates
+  var lat = document.getElementById("marker-lat");
+  var lng = document.getElementById("marker-lng");
+  var address = document.getElementById("marker-address");
 
   // Add to the map
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(box);
@@ -119,7 +126,11 @@ function searchBox(){
         map.setCenter(place.geometry.location);
         map.setZoom(17);  
     }
-    
+    console.log(place.geometry.location);
+    lat.value = place.geometry.location.lat();
+    lng.value = place.geometry.location.lng();
+    address.value = place.geometry.formatted_address;
+
     // Concatentates a readable address for an autocomplete result
     var address = place.formatted_address;
 
