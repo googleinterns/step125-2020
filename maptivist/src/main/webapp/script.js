@@ -72,11 +72,9 @@ function initMap(){
   // Initializes the search box
   searchBox();
   
-  // Load the markers from the Marker Servlet
-  var display_markers = loadMarkersByBoundary();
-  for (let marker in display_markers){
-    createMarker(marker);          
-  }
+  // Add markers to map
+  loadMarkersByBoundary();
+  
 }
 
 /**
@@ -132,7 +130,9 @@ function searchBox(){
 function loadMarkersByBoundary() {
   fetch("/marker").then(response => response.json()).then((markers) => {
     var markersToDisplay = markers.filter(inBoundary);
-    return markersToDisplay;
+    for (let marker in markersToDisplay) {
+        createMarker(marker);          
+    }
   });
 }
 
