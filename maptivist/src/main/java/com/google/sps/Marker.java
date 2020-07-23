@@ -210,15 +210,15 @@ public class Marker {
     String id_string = this.id.toString();
 
     Entity markerEntity = new Entity("Marker");
-        markerEntity.setProperty("title", this.title);
-        markerEntity.setProperty("description", this.description);
-        markerEntity.setProperty("longitude", this.longitude);            
-        markerEntity.setProperty("latitude", this.latitude);
-        markerEntity.setProperty("flags", flags_string);
-        markerEntity.setProperty("links", links_string);
-        markerEntity.setProperty("category", categories_string);
-        markerEntity.setProperty("votes", this.votes);
-        markerEntity.setProperty("id", id_string);
+    markerEntity.setProperty("title", this.title);
+    markerEntity.setProperty("description", this.description);
+    markerEntity.setProperty("longitude", this.longitude);            
+    markerEntity.setProperty("latitude", this.latitude);
+    markerEntity.setProperty("flags", flags_string);
+    markerEntity.setProperty("links", links_string);
+    markerEntity.setProperty("category", categories_string);
+    markerEntity.setProperty("votes", this.votes);
+    markerEntity.setProperty("id", id_string);
 
     return markerEntity;
     }

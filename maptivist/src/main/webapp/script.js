@@ -13,9 +13,12 @@
 // limitations under the License.
 
 //MAPS API
-/** The global map variable is the initialized primary map for the webpage 
-and should be used for any map parameters or variables */
-var map, created_markers;
+
+/** The global variable, map, is the initialized primary map for the webpage 
+* and should be used for any map parameters or variables.
+* The global variable, drawn_markers, is an array of the UUIDs of 
+* the markers that were already created*/
+var map, drawn_markers;
 
 /**
 * Intializes the primary map for the main webpage
@@ -72,8 +75,11 @@ function initMap(){
   // Initializes the search box
   searchBox();
   
-  // Add markers to map
+  // Adds markers to map
   loadMarkersByBoundary();
+
+  // If the bounds of the map changed markers in that area will be drawn
+  map.addListener('bounds-changed', loadMarkersByBoundary(){});
   
 }
 
@@ -131,26 +137,22 @@ function loadMarkersByBoundary() {
   fetch("/marker").then(response => response.json()).then((markers) => {
     var markersToDisplay = markers.filter(inBoundary);
     for (let marker in markersToDisplay) {
-        createMarker(marker);          
+        drawMarker(marker);          
     }
   });
 }
 
 function inBoundary(marker){
   var bounds = map.getBounds().toJSON();
-  if (marker.latitude <= bounds.north && marker.latitude >= bounds.south){
-    if (marker.longitude <= bounds.west && marker.longitude >= bounds.east){
-        return true;
-    }else{
-        return false;
-    }   
-  }
-  return false;
+  return (marker.latitude <= bounds.north && 
+         marker.latitude >= bounds.south &&
+         marker.longitude <= bounds.west &&
+         marker.longitude >= bounds.east);
 }
 
 /** Adds a new Marker based on id array
  */
-function createMarker({id, latitude, longitude, title, description, links, categories}) {
+function drawMarker({id, latitude, longitude, title, description, links, categories}) {
   // Get the coordinates from the marker class and create a new Latlng object
   var myLatlng = new google.maps.LatLng(latitude, longitude);
   
@@ -166,19 +168,19 @@ function createMarker({id, latitude, longitude, title, description, links, categ
   map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = createInfowindow(title, description, links, categories, marker.getPosition());
+  var infowindow = drawInfowindow(title, description, links, categories, marker.getPosition());
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
 
   // Adds the marker's random, unique id to list of already created markers
-  created_markers.push(id);
+  drawn_markers.push(id);
 }
 
 /**
 * Adds an infowindow based on the marker creation form
  */
-function createInfowindow(title, description, links, categories, position) {
+function drawInfowindow(title, description, links, categories, position) {
   //Set info window content from Marker class
   var location = position.toString();
   

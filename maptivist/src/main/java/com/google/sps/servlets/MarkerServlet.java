@@ -96,29 +96,14 @@ public final class MarkerServlet extends HttpServlet {
         return true;
     }
 
-    public Entity getEntity(DatastoreService datastore, String title) {
+    public Entity getEntity(DatastoreService datastore, UUID id) {
+        String id_string = id.toString();
         Query query = new Query("Marker");
-        query.addFilter("title", Query.FilterOperator.EQUAL, title); 
+        query.addFilter("id", Query.FilterOperator.EQUAL, id_string); 
 
         PreparedQuery results = datastore.prepare(query);
         Entity marker = results.asSingleEntity();
         return marker;
     }
-
-    // I removed the flag and votes update methods since the votes (and 
-    /**public void updateFlags(Entity markerEntity, DatastoreService datastore, Key markerKey, String newFlag) {
-        ArrayList<String> flags = createFlagObject((String) markerEntity.getProperty("flags"));
-        flags.add(newFlag);
-        //String flagsString = createFlagString(flags);     
-        markerEntity.setProperty("flags", flagsString);
-        datastore.put(markerEntity);
-    }
-
-    public void updateVotes(Entity markerEntity, DatastoreService datastore, Key markerKey) {
-        int votes = Integer.parseInt((String) markerEntity.getProperty("votes"));
-        votes += 1;
-        markerEntity.setProperty("votes", votes);
-        datastore.put(markerEntity);
-    }*/
 
 }

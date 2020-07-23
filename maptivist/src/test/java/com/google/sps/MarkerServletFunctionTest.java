@@ -33,14 +33,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import java.util.Base64;
-import java.nio.CharBuffer; 
  
 @RunWith(JUnit4.class)
 public final class MarkerServletFunctionTest {
@@ -102,7 +100,7 @@ public final class MarkerServletFunctionTest {
     Marker deserialized_maker = new Marker(serialized_marker);
     assertEquals(1, ds.prepare(new Query("Marker")).countEntities());
 
-    Assert.assertEquals(expected_marker.getUUID(), deserialized_maker.getUUID());
+    assertEquals(expected_marker.getUUID(), deserialized_maker.getUUID());
   }
  
  } 
