@@ -68,20 +68,17 @@ public final class MarkerServlet extends HttpServlet {
         int votes = 1; //  It is assumed that the creator of the marker would vote for it. Changes to voteChecking will made added.
  
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Key key = datastore.newKeyFactory()
-        .setKind("Marker")
-        .newKey(title);
-        Entity entity =
-            Entity.newBuilder(key)
-            .set("title", title.trim())
-            .set("description", description.trim())
-            .set("longitude", longitude.trim())     
-            .set("latitude", latitude.trim())
-            .set("flags", flag)
-            .set("links", links)
-            .set("category", categories)
-            .set("votes", votes)
-            .build();
+
+        String ID = Integer.toString(title.hashCode());
+        Entity entity = new Entity("Marker", ID);
+            entity.setProperty("title", title.trim());
+            entity.setProperty("description", description.trim());
+            entity.setProperty("longitude", longitude.trim());     
+            entity.setProperty("latitude", latitude.trim());
+            entity.setProperty("flags", flag);
+            entity.setProperty("links", links);
+            entity.setProperty("category", categories);
+            entity.setProperty("votes", votes);
 
         datastore.put(entity);
  

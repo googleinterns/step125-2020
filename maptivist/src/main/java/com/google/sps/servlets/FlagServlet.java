@@ -42,8 +42,8 @@ import java.util.Base64;
 
 
 /** Servlet that handles all my received marker data */
-@WebServlet("/votes")
-public final class VoteServlet extends HttpServlet {
+@WebServlet("/flags")
+public final class FlagServlet extends HttpServlet {
     
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,14 +51,15 @@ public final class VoteServlet extends HttpServlet {
         Gson gson = new Gson();
  
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(Globals.voteCount));
+        response.getWriter().println(gson.toJson(Globals.flags));
     }
  
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String titleMatch = request.getParameter("title");
+        String flag = request.getParameter("flag");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        updateVotes(datastore, titleMatch);
+        updateFlags(datastore, titleMatch, flag);
 
         response.sendRedirect("/index.html");
     }
@@ -73,19 +74,43 @@ public final class VoteServlet extends HttpServlet {
         return entity;
     }
 
-    public void updateVotes(DatastoreService datastore, String titleMatch) {
+    public void updateFlags(DatastoreService datastore, String titleMatch, String flag) {
         Entity entity = getEntity(datastore, titleMatch);
-        int votes = (int) (long) entity.getProperty("votes");
+        ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
 
-        votes += 1;
-        Globals.voteCount = Integer.toString(votes);
-        entity.setProperty("votes", votes);
+        flags.add(flag);
+        Globals.flags = new ArrayList<>(flags);
+
+        String flagString = createFlagString(flags);
+        entity.setProperty("flags", flagString);
 
         datastore.put(entity);        
     }
 
+    public String createFlagString(ArrayList<String> flags) {
+        String flagString = "";
+        Base64.Encoder encoder = Base64.getEncoder();  
+        for (String flag : flags) {
+            String comment = encoder.encodeToString(flag.getBytes());  
+            flagString += comment + ",";
+        }
+        return flagString.substring(0, flagString.length() - 1);
+    }
+ 
+    public ArrayList<String> createFlagObject(String flagString) {
+        Base64.Decoder decoder = Base64.getDecoder();  
+        ArrayList<String> flagsList = new ArrayList<String>();
+        String[] flags;
+        flags = flagString.split(",");
+        for (String flag : flags) {
+            String flagDecode = new String(decoder.decode(flag));
+            flagsList.add(flagDecode);
+        }
+        return flagsList;
+    }
+    
     static class Globals {
-        public static String voteCount;
+        public static ArrayList<String> flags;
     }
 
 }

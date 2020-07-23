@@ -61,9 +61,9 @@ function initMap(){
         <p>Counter: <span id="counter"></span></p>
         <br>
         <form action="/votes" method="POST">
-        <button type="submit" name="title" value="Justice For George Floyd">Upvote</button>
-        </form>
-        <span id="vote-receieved"></span>
+            <button type="submit" name="title" value="Justice for George Floyd" onclick="getVote()">Upvote</button>
+        </form>      
+        <span hidden id="vote-receieved" value="Not voted"></span>
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -166,25 +166,8 @@ function createInfowindow(position) {
   var category = document.getElementById('marker-category').value;
   
   // Set the content of the info window 
-  var contentString = 
-    `<script>
-        $(document).ready(function() {
-        $("#submit").click(function() {
-        $.ajax({
-        type: "POST",
-        url: "votes",
-        data: {
-            vote: voteChoice,
-            title: ${title},
-        },
-        success: function(response, status){
-            alert("Name: " + response.name + "Description: " + response.desc);
-        }
-        });
-        });
-        });
-    </script>
-    <div class="marker-window">
+  var contentString =
+    `<div class="marker-window">
     <h1>${title}</h1>
     <br>
     <h3>${category}</h3>
@@ -196,16 +179,11 @@ function createInfowindow(position) {
     <a href=${link}>Related source</a>
     <br>
     <div class="upvote">
-        <p id="counter">counter: </p>
-        <form>
-            <h1>Vote For Marker</h1>
-            <input type="radio" id="yes" name="vote-choice" value="true" checked>
-            <label for="Yes">Yes</label><br>
-            <input type="radio" id="no" name="vote-choice" value="false">
-            <label for="No">No</label><br> 
-            <input type="submit" value="Submit">
+        <p>Counter: <span id="counter"></span></p>
+        <form action="/votes" method="POST">
+            <button type="submit" name="title" value="${title}">Upvote</button>
         </form>
-        </div>
+    </div>
     <div class="flag">
         <button>Flag</button>
     </div>
@@ -305,7 +283,11 @@ var GoogleAuth;
 
 
 async function getVote() {
-    const response = await fetch("/votes");
+    const response = await fetch("/votes", {method: "GET"});
     const voteCount = await response.json();
     console.log(voteCount);
+    document.getElementById("counter").innerHTML = voteCount;
 }
+
+
+
