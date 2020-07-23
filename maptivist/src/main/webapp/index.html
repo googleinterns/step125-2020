@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <script type="text/javascript" src="script.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places,geometry,drawing">
     </script>
   </head>
   <body>
-    
     <ul>
         <li><a class="navText" href="#home"><h1>home</h1></a></li>
         <li class = "centerNav"><a href="#home"><h1>
@@ -53,7 +52,7 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-            <form class="form-container" id="create-form" action="/marker" method="POST">
+            <form class="form-container" id="create-form" action="/marker" method="POST" onsubmit="loadMarkersByBoundary()">
                 <h1>Fill in Marker</h1>
                 <label for="email"><b>Email</b></label>
                 <br>
@@ -61,11 +60,11 @@
                 <br>
                 <label for="marker-lat"><b>Marker Location (Latitude)</b></label>
                 <br>
-                <input type="text" placeholder="Enter Latitude" id="marker-lat" name="marker-lat" required>
+                <input type="number" step="any" placeholder="0.000" id="marker-lat" name="marker-lat" required>
                 <br>
                 <label for="marker-lng"><b>Marker Location (Longitude)</b></label>
                 <br>
-                <input type="text" placeholder="Enter Longitude" id="marker-lng" name="marker-lng" required>
+                <input type="number" step="any" placeholder="0.000" id="marker-lng" name="marker-lng" required>
                 <br>
                 <label for="marker-title"><b>Marker Title</b></label>
                 <br>
@@ -86,9 +85,9 @@
                     <option value = "Other">Other</option>
                 </select>
                 <br>
-                <label for="marker-link"><b>Link for marker</b></label>
+                <label for="marker-links"><b>Link for marker</b></label>
                 <br>
-                <input type="text" placeholder="Enter link here" id="marker-link" name="marker-link">
+                <input type="text" placeholder="Enter link here" id="marker-links" name="marker-links">
                 <br>
                 <input type="submit" value="Submit">
                 <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
