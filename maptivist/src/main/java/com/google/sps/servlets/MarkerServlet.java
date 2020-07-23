@@ -86,7 +86,7 @@ public final class MarkerServlet extends HttpServlet {
         }
         return markers;
     }
- 
+
     public Boolean checkIfMarkerAlreadyInDatastore(UUID id){
         String id_string = id.toString();
         Query query = new Query("Marker");
