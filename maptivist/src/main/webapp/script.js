@@ -62,10 +62,9 @@ function initMap(){
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <br>
-        <form action="/votes" method="POST">
-            <button type="submit" name="title" value="Justice for George Floyd" onclick="getVote()">Upvote</button>
-        </form>      
-        <span hidden id="vote-receieved" value="Not voted"></span>
+    <form action="/votes" method="POST">
+        <button type="submit" name="id" id="vote-button" value="e785b625-4a62-4a15-9e51-9c2f5b212450" onclick="getVote()">Upvote</button>       
+    </form>
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -87,7 +86,7 @@ function initMap(){
   loadMarkersByBoundary();
 
   // If the bounds of the map changed markers in that area will be drawn
-  map.addListener('bounds-changed', loadMarkersByBoundary(){});
+  map.addListener('bounds-changed', loadMarkersByBoundary());
   
 }
 
@@ -176,7 +175,7 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
   map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = drawInfowindow(title, description, links, categories, marker.getPosition());
+  var infowindow = drawInfowindow(id, title, description, links, categories, marker.getPosition());
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
@@ -188,13 +187,14 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
 /**
 * Adds an infowindow based on the marker creation form
  */
-function drawInfowindow(title, description, links, categories, position) {
+function drawInfowindow(id, title, description, links, categories, position) {
   //Set info window content from Marker class
   var location = position.toString();
   
   // Set the content of the info window 
   var contentString =
-    `<div class="marker-window">
+    `<body onload="getVote">
+    <div class="marker-window">
     <h1>${title}</h1>
     <br>
     <h3>${categories}</h3>
@@ -208,13 +208,14 @@ function drawInfowindow(title, description, links, categories, position) {
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <form action="/votes" method="POST">
-            <button type="submit" name="title" value="${title} "onclick="getVote()">Upvote</button>
+            <button type="submit" id="vote-button" name="id" value="${id}" onclick="getVote()">Upvote</button>
         </form>
     </div>
     <div class="flag">
         <button>Flag</button>
     </div>
-  </div>`;
+  </div>
+  </body>`;
 
   var infowindow = new google.maps.InfoWindow({
     content: contentString
@@ -308,7 +309,6 @@ var GoogleAuth;
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
   }
-
 
 async function getVote() {
     const response = await fetch("/votes", {method: "GET"});

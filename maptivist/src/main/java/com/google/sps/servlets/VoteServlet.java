@@ -43,48 +43,46 @@ import java.util.Base64;
 
 /** Servlet that handles all my received marker data */
 @WebServlet("/votes")
+
 public final class VoteServlet extends HttpServlet {
     
+    public static int voteCount;
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
  
         Gson gson = new Gson();
 
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson("1"));
+        response.getWriter().println(gson.toJson(voteCount));
     }
  
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String titleMatch = request.getParameter("title");
+        String id = request.getParameter("id");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        updateVotes(datastore, titleMatch);
+        updateVotes(datastore, id);
 
         response.sendRedirect("/index.html");
     }
  
 
-    public Entity getEntity(DatastoreService datastore, String titleMatch) {
+    public Entity getEntity(DatastoreService datastore, String id) {
         Query query = new Query("Marker"); 
-        query.addFilter("title", FilterOperator.EQUAL, titleMatch); 
+        query.addFilter("id", FilterOperator.EQUAL, id); 
         PreparedQuery pq = datastore.prepare(query);    
         Entity entity = pq.asSingleEntity();
 
         return entity;
     }
 
-    public void updateVotes(DatastoreService datastore, String titleMatch) {
-        Entity entity = getEntity(datastore, titleMatch);
-        int votes = getVote(entity);
-
-        entity.setProperty("votes", votes);
+    public void updateVotes(DatastoreService datastore, String id) {
+        Entity entity = getEntity(datastore, id);
+        int vote = (int) (long) entity.getProperty("votes");
+        voteCount = vote + 1;   
+        entity.setProperty("votes", voteCount);
 
         datastore.put(entity);        
-    }
-
-    public int getVote(Entity entity){
-        int votes = (int) (long) entity.getProperty("votes");
-        return votes + 1;      
     }
 
 

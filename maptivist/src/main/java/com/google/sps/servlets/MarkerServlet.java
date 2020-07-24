@@ -97,14 +97,4 @@ public final class MarkerServlet extends HttpServlet {
         return true;
     }
 
-    public Entity getEntity(DatastoreService datastore, UUID id) {
-        String id_string = id.toString();
-        Query query = new Query("Marker");
-        query.addFilter("id", Query.FilterOperator.EQUAL, id_string); 
-
-        PreparedQuery results = datastore.prepare(query);
-        Entity marker = results.asSingleEntity();
-        return marker;
-    }
-
 }

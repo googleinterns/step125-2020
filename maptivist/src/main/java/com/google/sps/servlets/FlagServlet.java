@@ -45,13 +45,15 @@ import java.util.Base64;
 @WebServlet("/flags")
 public final class FlagServlet extends HttpServlet {
     
+    public static ArrayList<String> flagsObject;
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
  
         Gson gson = new Gson();
  
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(Globals.flags));
+        response.getWriter().println(gson.toJson(flagsObject));
     }
  
  
@@ -76,40 +78,15 @@ public final class FlagServlet extends HttpServlet {
 
     public void updateFlags(DatastoreService datastore, String titleMatch, String flag) {
         Entity entity = getEntity(datastore, titleMatch);
-        ArrayList<String> flags = createFlagObject((String) entity.getProperty("flags"));
+        ArrayList<String> flags =  Marker.createFlagObject((String) entity.getProperty("flags"));
 
         flags.add(flag);
+        flagsObject = new ArrayList<>(flags);
 
-        String flagString = createFlagString(flags);
+        String flagString = Marker.createFlagString(flags);
         entity.setProperty("flags", flagString);
 
         datastore.put(entity);        
-    }
-
-    public String createFlagString(ArrayList<String> flags) {
-        String flagString = "";
-        Base64.Encoder encoder = Base64.getEncoder();  
-        for (String flag : flags) {
-            String comment = encoder.encodeToString(flag.getBytes());  
-            flagString += comment + ",";
-        }
-        return flagString.substring(0, flagString.length() - 1);
-    }
- 
-    public ArrayList<String> createFlagObject(String flagString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        ArrayList<String> flagsList = new ArrayList<String>();
-        String[] flags;
-        flags = flagString.split(",");
-        for (String flag : flags) {
-            String flagDecode = new String(decoder.decode(flag));
-            flagsList.add(flagDecode);
-        }
-        return flagsList;
-    }
-    
-    static class Globals {
-        public static ArrayList<String> flags;
     }
 
 }

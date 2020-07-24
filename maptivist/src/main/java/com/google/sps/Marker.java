@@ -118,7 +118,6 @@ public class Marker {
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
-    this.votes = (Integer) entity.getProperty("votes");
   }
 
   /**
@@ -205,8 +204,8 @@ public class Marker {
   // This method turns the atrributes of the marker object into properties of the Marker Entity
   public Entity toEntity() {
     String categories_string = createCategoriesString(this.categories);
-    String links_string = createFlagString(this.flags);
-    String flags_string = createLinkString(this.links);
+    String links_string = createLinkString(this.links);
+    String flags_string = "";
     String id_string = this.id.toString();
 
     Entity markerEntity = new Entity("Marker");
@@ -245,9 +244,9 @@ public class Marker {
         return categorySet;
     }
  
-    public String createFlagString(ArrayList<String> flags) {
+    public static String createFlagString(ArrayList<String> flags) {
         String flagString = "";
-        Base64.Encoder encoder = Base64.getEncoder();  
+        Base64.Encoder encoder = Base64.getEncoder(); 
         for (String flag : flags) {
             String comment = encoder.encodeToString(flag.getBytes());  
             flagString += comment + ",";
@@ -255,7 +254,7 @@ public class Marker {
         return flagString.substring(0, flagString.length() - 1);
     }
  
-    public ArrayList<String> createFlagObject(String flagString) {
+    public static ArrayList<String> createFlagObject(String flagString) {
         Base64.Decoder decoder = Base64.getDecoder();  
         ArrayList<String> flagsList = new ArrayList<String>();
         String[] flags;
