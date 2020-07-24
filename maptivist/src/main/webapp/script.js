@@ -234,8 +234,10 @@ window.onclick = function(event) {
   }
 }
 
-//GOOGLE OAUTH
 
+
+//GOOGLE OAUTH
+/*
 var GoogleAuth;
   var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
   function handleClientLoad() {
@@ -273,16 +275,7 @@ var GoogleAuth;
     }
   }
 
-  function signInOrOut2() {
-    //opens map if signed in, prompts to sign in if not signed in
-    if (GoogleAuth.isSignedIn.get()) {
 
-      openForm();
-    } else {
-
-      GoogleAuth.signIn();
-    }
-  }
 
 
   function revokeAccess() {
@@ -292,15 +285,7 @@ var GoogleAuth;
   function setSigninStatus(isSignedIn) {
     var user = GoogleAuth.currentUser.get();
     var isAuthorized = user.hasGrantedScopes(SCOPE);
-    $('#sign-in-or-out-button').click(function() {
-        signInOrOut();
-      });
-      $('#myButton').click(function() {
-        signInOrOut2();
-      });
-      $('#authLink').click(function() {
-        signInOrOut();
-      });
+    
     if (isAuthorized) {
       $('#sign-in-or-out-button').html('Sign out');
       $('#authLink').html('Sign out');
@@ -317,3 +302,102 @@ var GoogleAuth;
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
   }
+
+*/
+  //Firebase
+  var firebaseConfig = {
+    apiKey: "AIzaSyDa2o12S4k-ILczNuf-WpmeY2zIFoUFxAQ",
+    authDomain: "maptivist-step-2020.firebaseapp.com",
+    databaseURL: "https://maptivist-step-2020.firebaseio.com",
+    projectId: "maptivist-step-2020",
+    storageBucket: "maptivist-step-2020.appspot.com",
+    messagingSenderId: "1032109305013",
+    appId: "1:1032109305013:web:bef8b67db0d5ae091422fc",
+    measurementId: "G-E38S0D5C9B"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    //firebase.analytics();
+
+    
+
+
+
+function signUp() {
+    var email = document.getElementById("email");
+    var password = document.getElementById("pass");
+    const promise = firebase.auth().createUserWithEmailAndPassword(email.value, password.value);
+    promise.catch(e => alert(e.message));
+    alert("Signed Up");
+  }
+  
+function signIn(){
+    var email = document.getElementById("email");
+    var password = document.getElementById("password");
+    const promise = firebase.auth().signInWithEmailAndPassword(email.value, password.value);
+    promise.catch(e => alert(e.message));
+    alert("Signed In" + email.value);
+ }
+
+function signOut(){
+    firebase.auth().signOut();
+    alert("Signed Out");
+}
+
+
+
+
+function signInOrOut2() {
+//opens map if signed in, prompts to sign in if not signed in
+if (user) {
+    openForm();
+
+} else {
+    openSignIn();
+    }
+}
+function signInOrOut2() {
+//opens map if signed in, prompts to sign in if not signed in
+if (user) {
+    signOut();
+
+} else {
+    openSignIn();
+    }
+}
+
+function openSignIn() {
+    window.location.replace("login.html");
+}
+
+
+ firebase.auth().onAuthStateChanged(function(user){
+    
+    if(user){
+        signInButtons();
+    }
+    else{
+        signOutButtons();
+    }
+ });
+
+$('#myButton').click(function() {
+    signInOrOut2();
+});
+
+$('#authLink').click(function() {
+    signInOrOut();
+});
+
+function signInButtons(){
+    $('#sign-in-or-out-button').html('Sign out');
+    $('#authLink').html('Sign out');
+    $('#myButton').html('Become a Maptivist');
+    $('#myButton').css('display','block');
+}
+
+function signOutButtons(){
+    $('#authLink').html('Sign in here');
+    $('#myButton').html('Sign in');
+    $('#myButton').css('display','block');
+}
