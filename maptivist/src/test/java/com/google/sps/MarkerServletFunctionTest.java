@@ -14,65 +14,93 @@
 // limitations under the License.
  
 package com.google.sps.servlets;
- 
-import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.sps.Marker;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection; 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.UUID;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import java.util.Base64;
-import java.nio.CharBuffer; 
  
- 
-/** */
 @RunWith(JUnit4.class)
 public final class MarkerServletFunctionTest {
  
-    private static final String[] categoryArray = new String[] {"BLM", "LGBTQ"};
-    private static final String[] flagArray = new String[] {"boy, and wo,rld", "girl,", ",cow"};
-    private static final String[] linkArray = new String[] {"www.google.com", "www.youtube.com", "www.pinterest.com"};
- 
-    private static final Set<String> categoryObject = new HashSet<String>(Arrays.asList(categoryArray));
-    private static final ArrayList<String> flagObject = new ArrayList<String>(Arrays.asList(flagArray));
-    private static final Set<String> linkObject = new HashSet<String>(Arrays.asList(linkArray));
- 
-    private MarkerServlet testMarkerServletFunctions;
- 
+    private final LocalServiceTestHelper helper =
+        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+
+    // All the different mock examples of marker info obtained by servlet through POST method or sent by querystring
+    private final String TITLE = "Justice for Breonna Taylor";
+
+    private final String DESCRIPT = "We will walk to the capital";
+
+    private final double LAT = 32.565;
+    private final double LONG = 45.8574;
+
+    private final String CAT_A = "BLM";
+    private final String CAT_B = "LGBTQ";
+    private final String CAT_C = "Policy";
+
+    private final String LINK_A = "google.com";
+    private final String LINK_B = "bing.com";
+
+    private final String FLAG_A = "Hateful, message";
+    private final String FLAG_B = "Not real";
+
+    private final int VOTES = 0;
+
+    private final UUID ID = UUID.randomUUID();
+    
     @Before
     public void setUp() {
-        testMarkerServletFunctions = new MarkerServlet();
+        helper.setUp();
     }
- 
-    @Test
-    public void matchingDelimiterCounts() {
-        String categoriesString = testMarkerServletFunctions.createCategoriesString(categoryObject);
-        int expected = 1;
-        long actual = categoriesString.chars().filter(delim -> delim == ',').count();
-        Assert.assertEquals(actual, expected);
- 
-    }
- 
-    @Test
-    public void delimiterIncludedInString() {
-        String flagString = testMarkerServletFunctions.createFlagString(flagObject);
-        int expected = 2;
-        long actual = flagString.chars().filter(delim -> delim == ',').count();
 
-        Assert.assertEquals(actual, expected);
+  @After
+    public void tearDown() {
+        helper.tearDown();
     }
+
+  @Test
+  public void setAndUnsetEntity() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    Set<String> CATS = new HashSet<>();
+        CATS.add(CAT_A);
+        CATS.add(CAT_B);
+        CATS.add(CAT_C);
+
+    Set<String> LINKS = new HashSet<>();
+        LINKS.add(LINK_A);
+        LINKS.add(LINK_B);
+
+    Marker expected_marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID);
+        expected_marker.addFlagReport(FLAG_A);
+
+    assertEquals(0, ds.prepare(new Query("Marker")).countEntities());
+    Entity serialized_marker = expected_marker.toEntity();
+    ds.put(serialized_marker);
+    Marker deserialized_maker = new Marker(serialized_marker);
+    assertEquals(1, ds.prepare(new Query("Marker")).countEntities());
+
+    assertEquals(expected_marker.getUUID(), deserialized_maker.getUUID());
+  }
  
-    @Test
-    public void inverseFunctionsWorkTogether() {
-        String linkString = testMarkerServletFunctions.createLinkString(linkObject);
-        Set<String> expected = testMarkerServletFunctions.createLinkObject(linkString);
- 
-        Assert.assertEquals(linkObject, expected);
-    }
- }
+ } 
