@@ -58,14 +58,14 @@
                 <label for="marker-address"><b>Marker Location</b></label>
                 <br>
                 <div class="search-container">
-                    <input id="search-input" type="text" placeholder="Find a location for your marker">
+                    <input type="text" id="search-input" type="text" placeholder="Find a location for your marker">
                 </div>
                 <div id="infowindow-content">
-                    <img src="" width="16" height="16" id="place-icon">
+                    <img src="" width="16" height="16" id="place-icon" alt="empty icon">
                     <span id="place-name"  class="title"></span><br>
                     <span id="place-address"></span>
                 </div>
-                <input type="text" id="marker-address" name="marker-address" required>
+                <input type="hidden" id="marker-address" name="marker-address" required>
                 <br>
                 <input type="hidden" step="any" value="0.00" id="marker-lat" name="marker-lat" required>
                 <br>
@@ -94,11 +94,7 @@
                 <br>
                 <input type="text" placeholder="Enter link here" id="marker-links" name="marker-links">
                 <br>
-<<<<<<< HEAD
                 <input type="submit" value="Submit">
-=======
-                <button type="button" class="btn" onclick="createMarker()">Submit</button>
->>>>>>> Initial set up
                 <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
             </form>
         </div>

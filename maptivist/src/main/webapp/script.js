@@ -82,7 +82,7 @@ function initMap(){
   map.addListener('bounds-changed', function() {
     loadMarkersByBoundary()    
   });
-  
+
 }
 
 /**
