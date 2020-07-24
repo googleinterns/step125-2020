@@ -126,18 +126,18 @@ function searchBox(){
         map.setCenter(place.geometry.location);
         map.setZoom(17);  
     }
-    console.log(place.geometry.location);
+    console.log(place.geometry.location.lat());
     lat.value = place.geometry.location.lat();
     lng.value = place.geometry.location.lng();
     address.value = place.geometry.formatted_address;
 
     // Concatentates a readable address for an autocomplete result
-    var address = place.formatted_address;
+    var result_address = place.formatted_address;
 
     // Add the result contents to the infowindow display
     infowindowContent.children['place-icon'].src = place.icon;
     infowindowContent.children['place-name'].textContent = place.name;
-    infowindowContent.children['place-address'].textContent = address;
+    infowindowContent.children['place-address'].textContent = result_address;
     infowindow.open(map);
   }); 
 }

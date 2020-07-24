@@ -55,6 +55,7 @@ public final class MarkerServlet extends HttpServlet {
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String title = request.getParameter("marker-title");
+        String address = request.getParameter("marker-address");
         Double longitude = Double.parseDouble(request.getParameter("marker-lng"));
         Double latitude = Double.parseDouble(request.getParameter("marker-lat"));
         String description = request.getParameter("marker-description"); 
@@ -62,7 +63,7 @@ public final class MarkerServlet extends HttpServlet {
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
 
-        Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id);
+        Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {

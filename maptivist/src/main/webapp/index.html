@@ -61,16 +61,13 @@
                     <input type="text" id="search-input" type="text" placeholder="Find a location for your marker">
                 </div>
                 <div id="infowindow-content">
-                    <img src="" width="16" height="16" id="place-icon" alt="empty icon">
+                    <img src="" width="16" height="16" id="place-icon">
                     <span id="place-name"  class="title"></span><br>
                     <span id="place-address"></span>
                 </div>
-                <input type="hidden" id="marker-address" name="marker-address" required>
-                <br>
-                <input type="hidden" step="any" value="0.00" id="marker-lat" name="marker-lat" required>
-                <br>
-                <input type="hidden" step="any" id="marker-lng" name="marker-lng" value="0.00" required>
-                <br>
+                <input type="hidden" id="marker-address" name="marker-address" value="DEFAULT">
+                <input type="hidden" step="any" value="0.00" id="marker-lat" name="marker-lat">
+                <input type="hidden" step="any" id="marker-lng" name="marker-lng" value="0.00">
                 <label for="marker-title"><b>Marker Title</b></label>
                 <br>
                 <input type="text" placeholder="Enter Title" placeholder="Name" id="marker-title" name="marker-title" required>
