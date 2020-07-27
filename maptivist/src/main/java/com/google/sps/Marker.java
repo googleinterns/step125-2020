@@ -14,8 +14,10 @@
 
 package com.google.sps;
 
+import com.google.appengine.api.datastore.Entity;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,6 +37,7 @@ public class Marker {
   private final UUID id;
 
   private final String title;
+  private final String address;
   private final String description;
 
   // Both double attributes provide the coordinates of where the marker is placed
@@ -50,9 +53,6 @@ public class Marker {
   // The flags attribute holds written reports that are posted when the marker is flagged
   private ArrayList<String> flags = new ArrayList<String>();
   
-  // The comments attributes holds written comments that are submitted and posted on a marker popup
-  private ArrayList<String> comments = new ArrayList<String>();
-
   // The votes attribute is a mutable counter for the number of upvotes a marker has gotten
   private int votes;
   
@@ -66,12 +66,10 @@ public class Marker {
    * @param categories The collection of categories assigned to the marker. Preferred to be 
    * non-null but if so can be assigned other.
    * @param links Collected list of all the urls connected to the specific marker and can be null.
+   * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, ArrayList<String> flags, int votes) {
-    
-    // Creates a random UUID for the marker can be identified. Can be used as the id for the HTML id
-    this.id = UUID.randomUUID();
+  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -79,6 +77,10 @@ public class Marker {
 
     if (description == null) {
       throw new IllegalArgumentException("description cannot be null");
+    }
+
+    if (address == null) {
+      throw new IllegalArgumentException("address cannot be null");
     }
     
     if (categories.isEmpty()) {
@@ -92,14 +94,38 @@ public class Marker {
     if (longitude < -180 || longitude > 180){
        throw new IllegalArgumentException("this isn't a viable value for longitude"); 
     }
+    
+    if (id == null) {
+      throw new IllegalArgumentException("id cannot be null");
+    }
 
     this.title = title;
     this.description = description;
+    this.address = address;
     this.categories = categories;
     this.latitude = latitude;
     this.longitude = longitude;
     this.links = links;
+    this.flags = new ArrayList<String>();
     this.votes = 0;
+    this.id = id;
+  }
+
+  public Marker(Entity entity) {
+    Set<String> links_object = createLinkObject((String) entity.getProperty("links"));
+    ArrayList<String> flags_object = createFlagObject((String) entity.getProperty("flags"));
+    Set<String> categories_object = createCategoriesObject((String) entity.getProperty("category"));
+
+    this.title = (String) entity.getProperty("title");
+    this.description = (String) entity.getProperty("description");
+    this.address = (String) entity.getProperty("address");
+    this.longitude = (Double) entity.getProperty("longitude");
+    this.latitude = (Double) entity.getProperty("latitude");
+    this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
+    this.links = links_object;
+    this.flags = flags_object;
+    this.categories = categories_object;
+    this.votes = (Integer) entity.getProperty("votes");
   }
 
   /**
@@ -117,10 +143,17 @@ public class Marker {
   }
 
   /**
-   * Returns the human-readable description for when this marker
+   * Returns the human-readable description for this marker
    */
   public String getDescription() {
     return description;
+  }
+
+  /**
+   * Returns the human-readable address for this marker
+   */
+  public String getAddress() {
+    return address;
   }
 
   /**
@@ -164,15 +197,6 @@ public class Marker {
     // internal data.
     return flags;
   }
-  
-  /**
-   * Returns a mutable set of comments for this marker.
-   */
-  public ArrayList<String> getComments() {
-    // Return the comments as a modifiable set so that the caller can add to our
-    // internal data.
-    return comments;
-  }
 
   /**
    * Returns a modifiable integer for the count of upvotes for this Marker.
@@ -187,14 +211,97 @@ public class Marker {
     flags.add(flagReport);
   }
   
-  // This method adds a comment to the ArrayList, comments (repeated comments are permitted)
-  public void addComment(String comment) {
-    comments.add(comment);   
-  }
-  
   // This method increments the upvote counter when it's called
   public void addVote() {
     votes++;   
+  }
+
+  // This method turns the atrributes of the marker object into properties of the Marker Entity
+  public Entity toEntity() {
+    String categories_string = createCategoriesString(this.categories);
+    String links_string = createFlagString(this.flags);
+    String flags_string = createLinkString(this.links);
+    String id_string = this.id.toString();
+
+    Entity markerEntity = new Entity("Marker");
+    markerEntity.setProperty("title", this.title);
+    markerEntity.setProperty("description", this.description);
+    markerEntity.setProperty("address", this.address);
+    markerEntity.setProperty("longitude", this.longitude);            
+    markerEntity.setProperty("latitude", this.latitude);
+    markerEntity.setProperty("flags", flags_string);
+    markerEntity.setProperty("links", links_string);
+    markerEntity.setProperty("category", categories_string);
+    markerEntity.setProperty("votes", this.votes);
+    markerEntity.setProperty("id", id_string);
+
+    return markerEntity;
+    }
+
+  public String createCategoriesString(Set<String> categories){
+    String categoryString = "";
+    Base64.Encoder encoder = Base64.getEncoder();  
+    for (String category : categories) {
+        String categoryByte = encoder.encodeToString(category.getBytes());  
+        categoryString += categoryByte + ",";
+    }
+    return categoryString.substring(0, categoryString.length() - 1);     
+  }
+ 
+  public Set<String> createCategoriesObject(String categoryString) {
+    Base64.Decoder decoder = Base64.getDecoder();  
+    Set<String> categorySet = new HashSet<String>();
+    String[] categories;
+    categories = categoryString.split(",");
+    for (String category : categories) {
+        String categoryDecode = new String(decoder.decode(category));
+        categorySet.add(categoryDecode);
+    }
+    return categorySet;
+  }
+ 
+  public String createFlagString(ArrayList<String> flags) {
+    String flagString = "";
+    Base64.Encoder encoder = Base64.getEncoder();  
+    for (String flag : flags) {
+        String comment = encoder.encodeToString(flag.getBytes());  
+        flagString += comment + ",";
+    }
+    return flagString.substring(0, flagString.length() - 1);
+  }
+ 
+  public ArrayList<String> createFlagObject(String flagString) {
+    Base64.Decoder decoder = Base64.getDecoder();  
+    ArrayList<String> flagsList = new ArrayList<String>();
+    String[] flags;
+    flags = flagString.split(",");
+    for (String flag : flags) {
+        String flagDecode = new String(decoder.decode(flag));
+        flagsList.add(flagDecode);
+    }
+    return flagsList;
+  }
+ 
+  public String createLinkString(Set<String> links) {
+    String linkString = "";
+    Base64.Encoder encoder = Base64.getUrlEncoder();  
+    for (String link : links) {
+        String linkUrl = encoder.encodeToString(link.getBytes());  
+        linkString += linkUrl + ",";
+    }
+    return linkString.substring(0, linkString.length() - 1);
+  }
+ 
+  public Set<String> createLinkObject(String linkString) {
+    Base64.Decoder decoder = Base64.getDecoder();  
+    Set<String> linkList = new HashSet<String>();
+    String[] links;
+    links = linkString.split(",");
+    for (String link : links) {
+        String linkDecode = new String(decoder.decode(link));
+        linkList.add(linkDecode);
+    }
+    return linkList;
   }
 
 }
