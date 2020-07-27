@@ -14,8 +14,11 @@
 }
 
 #search-container {
-  padding-bottom: 12px;
-  margin-right: 12px;
+  width: 90%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
 }
 
 .search-controls {
@@ -30,18 +33,17 @@
 }
 
 #search-input {
-  background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
+  width: 90%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
   text-overflow: ellipsis;
-  width: 400px;
 }
 
 #search-input:focus {
-  border-color: #4d90fe;
+  background-color: #ddd;
+  outline: none;
 }
 
 .open-button {
