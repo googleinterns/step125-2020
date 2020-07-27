@@ -27,7 +27,7 @@
         </h1></a></li>
         <li style = "float:right"><a class = "navText" href="#home"><h1>explore</h1></a></li>
     </ul>
-    <p><a href = "#" id = "authLink">Sign in here</a></p>
+    <p><a href = "#" id = "authLink" onclick = "signInOrOut();">Sign in here</a></p>
     <div class = "title">
         <p class="mainText">
             The problem with becoming an activist is that it is dangerous, because of this less people can get involved with the movement. In addition to the danger, the fact that we are in the midst of a pandemic also factors into why most people can’t go out and protest. Maptivist aims to remove any problems like this, and become sort of a “middle man” in terms of activism. In the age where everything is digitalized, it only makes sense for activism to be digitized as well. 
@@ -41,7 +41,7 @@
     <div class = "header">
 		<!--<button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>-->
 		<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
-		<button class="open-button" id = "myButton">Sign-in</button>
+		<button class="open-button" id = "myButton" onclick = "signInOrOut2();">Sign-in</button>
     </div>
 
     <div class="search-container">
@@ -60,9 +60,6 @@
             <span class="close" onclick="closeForm()">&times;</span>
             <form class="form-container" id="create-form" action="/marker" method="POST">
                 <h1>Fill in Marker</h1>
-                <label for="email"><b>Email</b></label>
-                <br>
-                <input type="text" placeholder="Enter Email" id="email" name="email" required>
                 <br>
                 <label for="marker-lat"><b>Marker Location (Latitude)</b></label>
                 <br>
@@ -102,18 +99,21 @@
     </div>
 
     <div id = "loginPopup" class="form">
-        <div id = "form-container">
-            <h1>Login</h1>
-            <label for="email"><b>Email</b></label>
-            <br>
-            <input type="email" placeholder="Enter Email" id="email" name="email" required>
-            <br>
-            <label for="password"><b>Password</b></label>
-            <br>
-            <input type="password" placeholder="Password" id="pass" name="pass" required>
-            <br>
-            <input type="submit" onclick = "signUp()" value="Sign Up">
-            <input type="submit" onclick = "signIn()" value="Sign In">
+        <div class="form-popup-info" id="myForm">
+            <div class = "form-container" id="create-form">
+                <span class="close" onclick="closeLogin()">&times;</span>
+                <h1>Login</h1>
+                <label for="email"><b>Email</b></label>
+                <br>
+                <input type="email" placeholder="Enter Email" id="email" name="email" required>
+                <br>
+                <label for="password"><b>Password</b></label>
+                <br>
+                <input type="password" placeholder="Password" id="pass" name="pass" required>
+                <br>
+                <input type="submit" onclick = "signUp()" value="Sign Up">
+                <input type="submit" onclick = "signIn()" value="Sign In">
+            </div>
         </div>
     </div>
     <div class="footer">
@@ -125,10 +125,9 @@
     
     
 
-    <!--
-	<script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad();closeForm()"
+    
+	<script
+        onload="this.onload=function(){};closeForm();closeLogin();"
         onreadystatechange="if (this.readyState === 'complete') this.onload()">
 	</script>
-    -->
 </html>

@@ -349,31 +349,26 @@ function signOut(){
 
 function signInOrOut2() {
 //opens map if signed in, prompts to sign in if not signed in
-if (user) {
-    openForm();
-
-} else {
-    openSignIn();
-    }
+    if (!user) {
+        openSignIn();
+    } else {
+        openForm();
+        }
 }
-function signInOrOut2() {
+function signInOrOut() {
 //opens map if signed in, prompts to sign in if not signed in
-if (user) {
-    signOut();
+    if (!user) {
+        openSignIn();
 
-} else {
-    openSignIn();
-    }
-}
-
-function openSignIn() {
-    window.location.replace("login.html");
+    } else {
+        signOut();
+        }
 }
 
 
  firebase.auth().onAuthStateChanged(function(user){
     
-    if(user){
+    if(!user){
         signInButtons();
     }
     else{
@@ -381,13 +376,6 @@ function openSignIn() {
     }
  });
 
-$('#myButton').click(function() {
-    signInOrOut2();
-});
-
-$('#authLink').click(function() {
-    signInOrOut();
-});
 
 function signInButtons(){
     $('#sign-in-or-out-button').html('Sign out');
@@ -400,4 +388,14 @@ function signOutButtons(){
     $('#authLink').html('Sign in here');
     $('#myButton').html('Sign in');
     $('#myButton').css('display','block');
+}
+
+function openSignIn() {
+  var form = document.getElementById("loginPopup");
+  form.style.display = "block";
+}
+
+function closeLogin() {
+  var form = document.getElementById("loginPopup");
+  form.style.display = "none";
 }
