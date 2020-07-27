@@ -195,6 +195,7 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
 function createInfowindow(position, marker) {
   //Set info window content from form
   var title = document.getElementById('marker-title').value;
+}
 
 function drawInfowindow(title, description, links, categories, position) {
   //Set info window content from Marker class
@@ -377,7 +378,7 @@ function openSignIn() {
   form.style.display = "block";
 }
 
-function closeLogin() {
+function closeLogin(){
   var form = document.getElementById("loginPopup");
   form.style.display = "none";
 }
