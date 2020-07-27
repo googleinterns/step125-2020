@@ -320,6 +320,7 @@ var GoogleAuth;
     //firebase.analytics();
 
     
+var uid = firebase.auth().currentUser;
 
 
 
@@ -328,20 +329,22 @@ function signUp() {
     var password = document.getElementById("pass");
     const promise = firebase.auth().createUserWithEmailAndPassword(email.value, password.value);
     promise.catch(e => alert(e.message));
-    alert("Signed Up");
+    uid = firebase.auth().currentUser;
   }
   
 function signIn(){
     var email = document.getElementById("email");
-    var password = document.getElementById("password");
+    var password = document.getElementById("pass");
     const promise = firebase.auth().signInWithEmailAndPassword(email.value, password.value);
     promise.catch(e => alert(e.message));
-    alert("Signed In" + email.value);
+    uid = firebase.auth().currentUser;
+
  }
 
 function signOut(){
     firebase.auth().signOut();
-    alert("Signed Out");
+    uid = firebase.auth().currentUser;
+    signInButtons();
 }
 
 
@@ -349,7 +352,7 @@ function signOut(){
 
 function signInOrOut2() {
 //opens map if signed in, prompts to sign in if not signed in
-    if (!user) {
+    if (!uid) {
         openSignIn();
     } else {
         openForm();
@@ -357,7 +360,7 @@ function signInOrOut2() {
 }
 function signInOrOut() {
 //opens map if signed in, prompts to sign in if not signed in
-    if (!user) {
+    if (!uid) {
         openSignIn();
 
     } else {
@@ -367,24 +370,27 @@ function signInOrOut() {
 
 
  firebase.auth().onAuthStateChanged(function(user){
-    
+    closeLogin();
+    closeForm();
     if(!user){
+        uid = firebase.auth().currentUser;
         signInButtons();
     }
     else{
+        uid = firebase.auth().currentUser;
         signOutButtons();
     }
  });
 
 
-function signInButtons(){
+function signOutButtons(){
     $('#sign-in-or-out-button').html('Sign out');
     $('#authLink').html('Sign out');
     $('#myButton').html('Become a Maptivist');
     $('#myButton').css('display','block');
 }
 
-function signOutButtons(){
+function signInButtons(){
     $('#authLink').html('Sign in here');
     $('#myButton').html('Sign in');
     $('#myButton').css('display','block');

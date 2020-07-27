@@ -11,7 +11,7 @@
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places,geometry,drawing">
     </script>
   </head>
-  <body>
+  <body onload="closeLogin();closeForm();">
     <ul>
         <li><a class="navText" href="#home"><h1>home</h1></a></li>
         <li class = "centerNav"><a href="login.html"><h1>
@@ -111,7 +111,7 @@
                 <br>
                 <input type="password" placeholder="Password" id="pass" name="pass" required>
                 <br>
-                <input type="submit" onclick = "signUp()" value="Sign Up">
+                <input type="submit" onclick = "signUp();" value="Sign Up">
                 <input type="submit" onclick = "signIn()" value="Sign In">
             </div>
         </div>
@@ -121,13 +121,4 @@
     </div>
 
   </body>
-
-    
-    
-
-    
-	<script
-        onload="this.onload=function(){};closeForm();closeLogin();"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
-	</script>
 </html>
