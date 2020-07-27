@@ -15,6 +15,11 @@
 package com.google.sps;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -26,7 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Marker is the container class for when an unique marker is createsof people are meeting and are therefore
+ * Marker is the container class for when an unique marker is creates of people are meeting and are therefore
  * busy. The marker's title, description, location, categories are considered read-only. All the other attributes 
  * should be modified by the actions of the viewer users.
  */
@@ -288,4 +293,12 @@ public class Marker {
         return linkList;
     }
 
+    public static Entity getEntity(DatastoreService datastore, String id) {
+        Query query = new Query("Marker"); 
+        query.addFilter("id", FilterOperator.EQUAL, id); 
+        PreparedQuery pq = datastore.prepare(query);    
+        Entity entity = pq.asSingleEntity();
+
+        return entity;
+    }
 }

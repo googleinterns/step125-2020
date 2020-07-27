@@ -62,9 +62,7 @@ function initMap(){
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <br>
-    <form action="/votes" method="POST">
-        <button type="submit" name="id" id="vote-button" value="e785b625-4a62-4a15-9e51-9c2f5b212450" onclick="getVote()">Upvote</button>       
-    </form>
+    <button type="submit" name="id" id="vote-button" value="f189dbcd-5bc8-485c-a8c5-ec8e53698141" onclick="postVote()">Upvote</button>       
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -74,10 +72,23 @@ function initMap(){
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
-  
+
+  google.maps.event.addListener(infowindow, 'domready', function() {
+    const id = document.getElementById("vote-button").value;
+    const params = new URLSearchParams();
+    params.append("id", id);
+    params.append("update", false);
+
+    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
+        document.getElementById("counter").innerHTML = vote;
+        console.log(vote);
+    });
+  });  
+
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
+
 
   // Initializes the search box
   searchBox();
@@ -207,9 +218,7 @@ function drawInfowindow(id, title, description, links, categories, position) {
     <br>
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
-        <form action="/votes" method="POST">
-            <button type="submit" id="vote-button" name="id" value="${id}" onclick="getVote()">Upvote</button>
-        </form>
+        <button type="submit" id="vote-button" name="id" value="${id}" onclick="postVote()">Upvote</button>
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -221,6 +230,18 @@ function drawInfowindow(id, title, description, links, categories, position) {
     content: contentString
   });
 
+  google.maps.event.addListener(infowindow, 'domready', function() {
+    const id = document.getElementById("vote-button").value;
+    const params = new URLSearchParams();
+    params.append("id", id);
+    params.append("update", false);
+
+    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
+        document.getElementById("counter").innerHTML = vote;
+        console.log(vote);
+    });
+  });  
+  
   return infowindow;  
 }
 
@@ -310,12 +331,10 @@ var GoogleAuth;
     setSigninStatus();
   }
 
-async function getVote() {
-    const response = await fetch("/votes", {method: "GET"});
-    const voteCount = await response.json();
-    console.log(voteCount);
-    document.getElementById("counter").innerHTML = voteCount;
+function postVote() {
+  const id = document.getElementById("vote-button").value;
+  const params = new URLSearchParams();
+  params.append('id', id);
+  params.append("update", true);
+  fetch('/votes', {method: 'POST', body: params});
 }
-
-
-
