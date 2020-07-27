@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Date;
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
 
 /**
  * Marker is the container class for when an unique marker is createsof people are meeting and are therefore
@@ -54,7 +57,10 @@ public class Marker {
   
   // The votes attribute is a mutable counter for the number of upvotes a marker has gotten
   private int votes;
-  
+
+  // The date attribute holds the expected date the marker event occurs
+  private Date date;
+
   /**
    * Creates a new marker.
    *
@@ -68,7 +74,7 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id) {
+  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String datestring) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -103,6 +109,7 @@ public class Marker {
     this.flags = new ArrayList<String>();
     this.votes = 0;
     this.id = id;
+    date = stringToDate(datestring);
   }
 
   public Marker(Entity entity) {
@@ -115,6 +122,7 @@ public class Marker {
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
+    date = millisToDate((long) entity.getProperty("date"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
@@ -218,7 +226,8 @@ public class Marker {
     markerEntity.setProperty("category", categories_string);
     markerEntity.setProperty("votes", this.votes);
     markerEntity.setProperty("id", id_string);
-
+    markerEntity.setProperty("date", date.getTime());
+    
     return markerEntity;
     }
 
@@ -286,6 +295,15 @@ public class Marker {
             linkList.add(linkDecode);
         }
         return linkList;
+    }
+
+    private Date millisToDate(long millis) {
+        return new Date(millis);
+    }
+
+    private Date stringToDate(String dateString) { 
+        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
+        return date;
     }
 
 }
