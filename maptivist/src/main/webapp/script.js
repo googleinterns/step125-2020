@@ -188,14 +188,6 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
   drawn_markers.push(id);
 }
 
-/**
-* Adds an infowindow based on the marker creation form
- */
-
-function createInfowindow(position, marker) {
-  //Set info window content from form
-  var title = document.getElementById('marker-title').value;
-}
 
 function drawInfowindow(title, description, links, categories, position) {
   //Set info window content from Marker class
