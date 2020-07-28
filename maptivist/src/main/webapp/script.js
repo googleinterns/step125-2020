@@ -23,6 +23,8 @@ var map, drawn_markers;
 /**
 * Intializes the primary map for the main webpage
  */
+
+
 function initMap(){
   var minneapolis = {lat: 44.9778, lng: -93.2650};
 
@@ -40,37 +42,53 @@ function initMap(){
     map: map,
     title: "Justice for George Floyd"
   });
+      
+
 
   // Adds the new marker and infowindow to the map
   marker.setMap(map);
   var contentString =
     `<div class="marker-window">
-        <h1>Justice for George Floyd</h1>
+    <h1>Justice for George Floyd</h1>
+    <br>
+    <h3>BLM</h3>
+    <br>
+    <h2>Mall of America</h2>
+    <br>
+    <p>This is an example marker from a past protest</p>
+    <br>
+    <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
+    <br>
+    <div class="upvote">
+        <p>Counter: <span id="counter"></span></p>
         <br>
-        <h3>BLM</h3>
-        <br>
-        <h2>Mall of America</h2>
-        <br>
-        <p>This is an example marker from a past protest</p>
-        <br>
-        <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
-        <br>
-        <div class="upvote">
-            <button>Upvote</button>
-            <p>counter: </p>
-        </div>
-        <div class="flag">
-            <button>Flag</button>
-        </div>
+    <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
+    </div>
+    <div class="flag">
+        <button>Flag</button>
+    </div>
     </div>`;
 
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
-  
+
+  google.maps.event.addListener(infowindow, 'domready', function() {
+    const id = document.getElementById("vote-button").value;
+    const params = new URLSearchParams();
+    params.append("id", id);
+    params.append("update", false);
+
+    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
+        document.getElementById("counter").innerHTML = vote;
+        console.log(vote);
+    });
+  });  
+
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
+
 
   // Initializes the search box
   searchBox();
@@ -82,7 +100,6 @@ function initMap(){
   map.addListener('bounds-changed', function() {
     loadMarkersByBoundary()    
   });
-
 }
 
 /**
@@ -179,7 +196,7 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
   map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = drawInfowindow(title, description, links, categories, marker.getPosition());
+  var infowindow = drawInfowindow(id, title, description, links, categories, marker.getPosition());
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
@@ -191,13 +208,14 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
 /**
 * Adds an infowindow based on the marker creation form
  */
-function drawInfowindow(title, description, links, categories, position) {
+function drawInfowindow(id, title, description, links, categories, position) {
   //Set info window content from Marker class
   var location = position.toString();
   
   // Set the content of the info window 
-  var contentString = 
-  `<div class="marker-window">
+  var contentString =
+    `<body onload="getVote">
+    <div class="marker-window">
     <h1>${title}</h1>
     <br>
     <h3>${categories}</h3>
@@ -209,18 +227,31 @@ function drawInfowindow(title, description, links, categories, position) {
     <a href=${links}>Related source</a>
     <br>
     <div class="upvote">
-        <button>Upvote</button>
-        <p>counter: </p>
+        <p>Counter: <span id="counter"></span></p>
+        <button type="submit" id="vote-button" name="id" value="${id}" onclick="postVote()">Upvote</button>
     </div>
     <div class="flag">
         <button>Flag</button>
     </div>
-  </div>`;
+  </div>
+  </body>`;
 
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
 
+  google.maps.event.addListener(infowindow, 'domready', function() {
+    const id = document.getElementById("vote-button").value;
+    const params = new URLSearchParams();
+    params.append("id", id);
+    params.append("update", false);
+
+    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
+        document.getElementById("counter").innerHTML = vote;
+        console.log(vote);
+    });
+  });  
+  
   return infowindow;  
 }
 
@@ -309,3 +340,11 @@ var GoogleAuth;
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
   }
+
+function postVote() {
+  const id = document.getElementById("vote-button").value;
+  const params = new URLSearchParams();
+  params.append('id', id);
+  params.append("update", true);
+  fetch('/votes', {method: 'POST', body: params});
+}
