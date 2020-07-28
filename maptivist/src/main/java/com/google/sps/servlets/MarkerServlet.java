@@ -67,9 +67,9 @@ public final class MarkerServlet extends HttpServlet {
         UUID id = UUID.randomUUID();
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
-        String datestring = request.getParameter("marker-date");
+        String dateString = request.getParameter("marker-date");
 
-        Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id, datestring);
+        Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id, dateString);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
         if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {

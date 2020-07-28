@@ -67,6 +67,8 @@ public final class MarkerServletFunctionTest {
     private final int VOTES = 0;
 
     private final UUID ID = UUID.randomUUID();
+
+    private final String DATE = "25/12/2019";
     
     @Before
     public void setUp() {
@@ -91,7 +93,7 @@ public final class MarkerServletFunctionTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker expected_marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID);
+    Marker expected_marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID, DATE);
         expected_marker.addFlagReport(FLAG_A);
 
     assertEquals(0, ds.prepare(new Query("Marker")).countEntities());

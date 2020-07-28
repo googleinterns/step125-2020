@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.Date;
 import java.text.SimpleDateFormat;  
+import java.text.DateFormat;  
+import java.text.ParseException;
 import java.util.Date;  
 
 /**
@@ -59,7 +61,7 @@ public class Marker {
   private int votes;
 
   // The date attribute holds the expected date the marker event occurs
-  private Date date;
+  private String dateString;
 
   /**
    * Creates a new marker.
@@ -109,7 +111,7 @@ public class Marker {
     this.flags = new ArrayList<String>();
     this.votes = 0;
     this.id = id;
-    date = stringToDate(datestring);
+    this.dateString = dateString;
   }
 
   public Marker(Entity entity) {
@@ -122,7 +124,7 @@ public class Marker {
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
-    date = millisToDate((long) entity.getProperty("date"));
+    this.dateString = millisToString((long) entity.getProperty("date"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
@@ -226,7 +228,7 @@ public class Marker {
     markerEntity.setProperty("category", categories_string);
     markerEntity.setProperty("votes", this.votes);
     markerEntity.setProperty("id", id_string);
-    markerEntity.setProperty("date", date.getTime());
+    markerEntity.setProperty("date", stringToDate(dateString).getTime());
     
     return markerEntity;
     }
@@ -297,13 +299,18 @@ public class Marker {
         return linkList;
     }
 
-    private Date millisToDate(long millis) {
-        return new Date(millis);
+    private Date stringToDate(String dateString) { 
+        Date date = new Date(dateString);
+        return date;
     }
 
-    private Date stringToDate(String dateString) { 
-        Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
-        return date;
+    private String millisToString(long millis) {
+        Date date = new Date(millis);
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        String dateString = formatter.format(date);
+
+        return dateString;
     }
 
 }
