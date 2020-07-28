@@ -67,26 +67,21 @@ public final class FlagServlet extends HttpServlet {
     }
  
 
-    public Entity getEntity(DatastoreService datastore, String titleMatch) {
+    public Entity getEntity(DatastoreService datastore, String id) {
         Query query = new Query("Marker"); 
-        query.addFilter("title", FilterOperator.EQUAL, titleMatch); 
+        query.addFilter("id", FilterOperator.EQUAL, id); 
         PreparedQuery pq = datastore.prepare(query);    
         Entity entity = pq.asSingleEntity();
 
         return entity;
     }
 
-    public void updateFlags(DatastoreService datastore, String titleMatch, String flag) {
-        Entity entity = getEntity(datastore, titleMatch);
-        ArrayList<String> flags =  Marker.createFlagObject((String) entity.getProperty("flags"));
+    public void updateFlags(DatastoreService datastore, String id, String flag) {
 
-        flags.add(flag);
-        flagsObject = new ArrayList<>(flags);
+        Marker marker = new Marker(Marker.getEntity(datastore, id));
+        marker.addFlagReport(flag);
+        datastore.put(marker.toEntity());
 
-        String flagString = Marker.createFlagString(flags);
-        entity.setProperty("flags", flagString);
-
-        datastore.put(entity);        
     }
 
 }

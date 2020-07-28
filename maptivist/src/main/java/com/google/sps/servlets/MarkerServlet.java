@@ -61,6 +61,7 @@ public final class MarkerServlet extends HttpServlet {
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String title = request.getParameter("marker-title");
+        String address = request.getParameter("marker-address");
         Double longitude = Double.parseDouble(request.getParameter("marker-lng"));
         Double latitude = Double.parseDouble(request.getParameter("marker-lat"));
         String description = request.getParameter("marker-description"); 
@@ -70,12 +71,13 @@ public final class MarkerServlet extends HttpServlet {
         String dateString = request.getParameter("marker-date");
 
         Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id, dateString);
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
+        // if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
             Entity markerEntity = postMarker.toEntity();
             datastore.put(markerEntity);
-        }
+        // }
  
         response.sendRedirect("/index.html");
     }
@@ -112,4 +114,5 @@ public final class MarkerServlet extends HttpServlet {
         Date date = Date.from(localDate.atStartOfDay(zoneId).toInstant());
         return date;
     }
+
 }

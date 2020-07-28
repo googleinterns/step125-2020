@@ -51,6 +51,8 @@ public final class MarkerServletFunctionTest {
 
     private final String DESCRIPT = "We will walk to the capital";
 
+    private final String ADDY = "123 Black Lives Matter Plaza, Washington DC 20043";
+
     private final double LAT = 32.565;
     private final double LONG = 45.8574;
 
@@ -94,6 +96,7 @@ public final class MarkerServletFunctionTest {
         LINKS.add(LINK_B);
 
     Marker expected_marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID, DATE);
+
         expected_marker.addFlagReport(FLAG_A);
 
     assertEquals(0, ds.prepare(new Query("Marker")).countEntities());

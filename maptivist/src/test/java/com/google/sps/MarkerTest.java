@@ -39,6 +39,8 @@ public final class MarkerTest {
 
   private final String DESCRIPT = "We will walk to the capital";
 
+  private final String ADDY = "123 Black Lives Matter Plaza, Washington DC 20043";
+
   private final double LAT = 32.565;
   private final double LONG = 45.8574;
 
@@ -106,6 +108,7 @@ public final class MarkerTest {
         LINKS.add(LINK_B);
 
     Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID, DATE);
+
     marker.addFlagReport(FLAG_A); 
 
     int actual = marker.getFlags().size();
@@ -126,6 +129,7 @@ public final class MarkerTest {
         LINKS.add(LINK_B);
 
     Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID, DATE);
+
         marker.addVote();
 
     int actual = marker.getVotes();
@@ -150,6 +154,7 @@ public final class MarkerTest {
             FLAGS.add(FLAG_B);
 
         Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID, DATE);
+
 
         String linkString = marker.createLinkString(LINKS);
         Set<String> expected = marker.createLinkObject(linkString);
@@ -197,6 +202,7 @@ public final class MarkerTest {
             FLAGS.add(FLAG_B);
 
         Marker marker = new Marker(TITLE, DESCRIPT, LAT, LONG, LINKS, CATS, ID, DATE);
+
    
         String flagString = marker.createFlagString(FLAGS);
         int expected = 1;

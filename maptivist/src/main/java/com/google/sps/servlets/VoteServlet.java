@@ -40,50 +40,41 @@ import java.util.Set;
 import java.util.List;
 import java.util.Base64;
 
-
 /** Servlet that handles all my received marker data */
 @WebServlet("/votes")
 
 public final class VoteServlet extends HttpServlet {
     
-    public static int voteCount;
-
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
- 
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Gson gson = new Gson();
 
+        String id =  request.getParameter("id");
+        Boolean update = Boolean.parseBoolean(request.getParameter("update"));
+        int vote = getVote(datastore, id);
+
+        if (update) {updateVotes(datastore, id, vote);}
+
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(voteCount));
-    }
- 
- 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String id = request.getParameter("id");
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        updateVotes(datastore, id);
+        response.getWriter().println(gson.toJson(vote));
 
         response.sendRedirect("/index.html");
+
     }
  
-
-    public Entity getEntity(DatastoreService datastore, String id) {
-        Query query = new Query("Marker"); 
-        query.addFilter("id", FilterOperator.EQUAL, id); 
-        PreparedQuery pq = datastore.prepare(query);    
-        Entity entity = pq.asSingleEntity();
-
-        return entity;
-    }
-
-    public void updateVotes(DatastoreService datastore, String id) {
-        Entity entity = getEntity(datastore, id);
-        int vote = (int) (long) entity.getProperty("votes");
-        voteCount = vote + 1;   
-        entity.setProperty("votes", voteCount);
+    public void updateVotes(DatastoreService datastore, String id, int vote) {
+        Entity entity = Marker.getEntity(datastore, id);
+        vote += 1;
+        entity.setProperty("votes", vote);
 
         datastore.put(entity);        
     }
 
+    private int getVote(DatastoreService datastore, String id) {
+        Entity entity = Marker.getEntity(datastore, id);
+        int vote = (int) (long) entity.getProperty("votes");
+        return vote;
+    }
 
 }

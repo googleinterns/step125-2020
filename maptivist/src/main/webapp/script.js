@@ -62,9 +62,13 @@ function initMap(){
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <br>
+<<<<<<< HEAD
     <form action="/votes" method="POST">
         <button type="submit" name="id" id="vote-button" value="e785b625-4a62-4a15-9e51-9c2f5b212450" onclick="getVote()">Upvote</button>       
     </form>
+=======
+    <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
+>>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -74,10 +78,23 @@ function initMap(){
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
-  
+
+  google.maps.event.addListener(infowindow, 'domready', function() {
+    const id = document.getElementById("vote-button").value;
+    const params = new URLSearchParams();
+    params.append("id", id);
+    params.append("update", false);
+
+    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
+        document.getElementById("counter").innerHTML = vote;
+        console.log(vote);
+    });
+  });  
+
   marker.addListener('click', function() {
     infowindow.open(map, marker);
   });
+
 
   // Initializes the search box
   searchBox();
@@ -86,8 +103,14 @@ function initMap(){
   loadMarkersByBoundary();
 
   // If the bounds of the map changed markers in that area will be drawn
+<<<<<<< HEAD
   map.addListener('bounds-changed', loadMarkersByBoundary());
   
+=======
+  map.addListener('bounds-changed', function() {
+    loadMarkersByBoundary()    
+  });
+>>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
 }
 
 /**
@@ -101,6 +124,11 @@ function searchBox(){
   var infowindow = new google.maps.InfoWindow();
   var infowindowContent = document.getElementById('infowindow-content');
   infowindow.setContent(infowindowContent);
+  
+  // Grabs the hidden input values for the coordinates
+  var lat = document.getElementById("marker-lat");
+  var lng = document.getElementById("marker-lng");
+  var address = document.getElementById("marker-address");
 
   // Add to the map
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(box);
@@ -126,14 +154,18 @@ function searchBox(){
         map.setCenter(place.geometry.location);
         map.setZoom(17);  
     }
-    
+    console.log(place.geometry.location.lat());
+    lat.value = place.geometry.location.lat();
+    lng.value = place.geometry.location.lng();
+    address.value = place.geometry.formatted_address;
+
     // Concatentates a readable address for an autocomplete result
-    var address = place.formatted_address;
+    var result_address = place.formatted_address;
 
     // Add the result contents to the infowindow display
     infowindowContent.children['place-icon'].src = place.icon;
     infowindowContent.children['place-name'].textContent = place.name;
-    infowindowContent.children['place-address'].textContent = address;
+    infowindowContent.children['place-address'].textContent = result_address;
     infowindow.open(map);
   }); 
 }
@@ -207,9 +239,13 @@ function drawInfowindow(id, title, description, links, categories, position) {
     <br>
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
+<<<<<<< HEAD
         <form action="/votes" method="POST">
             <button type="submit" id="vote-button" name="id" value="${id}" onclick="getVote()">Upvote</button>
         </form>
+=======
+        <button type="submit" id="vote-button" name="id" value="${id}" onclick="postVote()">Upvote</button>
+>>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -221,6 +257,18 @@ function drawInfowindow(id, title, description, links, categories, position) {
     content: contentString
   });
 
+  google.maps.event.addListener(infowindow, 'domready', function() {
+    const id = document.getElementById("vote-button").value;
+    const params = new URLSearchParams();
+    params.append("id", id);
+    params.append("update", false);
+
+    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
+        document.getElementById("counter").innerHTML = vote;
+        console.log(vote);
+    });
+  });  
+  
   return infowindow;  
 }
 
@@ -310,6 +358,7 @@ var GoogleAuth;
     setSigninStatus();
   }
 
+<<<<<<< HEAD
 async function getVote() {
     const response = await fetch("/votes", {method: "GET"});
     const voteCount = await response.json();
@@ -319,3 +368,12 @@ async function getVote() {
 
 
 
+=======
+function postVote() {
+  const id = document.getElementById("vote-button").value;
+  const params = new URLSearchParams();
+  params.append('id', id);
+  params.append("update", true);
+  fetch('/votes', {method: 'POST', body: params});
+}
+>>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7

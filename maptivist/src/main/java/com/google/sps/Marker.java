@@ -15,6 +15,11 @@
 package com.google.sps;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -31,7 +36,7 @@ import java.text.ParseException;
 import java.util.Date;  
 
 /**
- * Marker is the container class for when an unique marker is createsof people are meeting and are therefore
+ * Marker is the container class for when an unique marker is creates of people are meeting and are therefore
  * busy. The marker's title, description, location, categories are considered read-only. All the other attributes 
  * should be modified by the actions of the viewer users.
  */
@@ -42,6 +47,7 @@ public class Marker {
   private final UUID id;
 
   private final String title;
+  private final String address;
   private final String description;
 
   // Both double attributes provide the coordinates of where the marker is placed
@@ -76,7 +82,11 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
+<<<<<<< HEAD
   public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String datestring) {
+=======
+  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id) {
+>>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -84,6 +94,10 @@ public class Marker {
 
     if (description == null) {
       throw new IllegalArgumentException("description cannot be null");
+    }
+
+    if (address == null) {
+      throw new IllegalArgumentException("address cannot be null");
     }
     
     if (categories.isEmpty()) {
@@ -104,6 +118,7 @@ public class Marker {
 
     this.title = title;
     this.description = description;
+    this.address = address;
     this.categories = categories;
     this.latitude = latitude;
     this.longitude = longitude;
@@ -121,6 +136,7 @@ public class Marker {
 
     this.title = (String) entity.getProperty("title");
     this.description = (String) entity.getProperty("description");
+    this.address = (String) entity.getProperty("address");
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
@@ -145,10 +161,17 @@ public class Marker {
   }
 
   /**
-   * Returns the human-readable description for when this marker
+   * Returns the human-readable description for this marker
    */
   public String getDescription() {
     return description;
+  }
+
+  /**
+   * Returns the human-readable address for this marker
+   */
+  public String getAddress() {
+    return address;
   }
 
   /**
@@ -221,6 +244,7 @@ public class Marker {
     Entity markerEntity = new Entity("Marker");
     markerEntity.setProperty("title", this.title);
     markerEntity.setProperty("description", this.description);
+    markerEntity.setProperty("address", this.address);
     markerEntity.setProperty("longitude", this.longitude);            
     markerEntity.setProperty("latitude", this.latitude);
     markerEntity.setProperty("flags", flags_string);
@@ -233,27 +257,27 @@ public class Marker {
     return markerEntity;
     }
 
-    public String createCategoriesString(Set<String> categories){
-        String categoryString = "";
-        Base64.Encoder encoder = Base64.getEncoder();  
-        for (String category : categories) {
-            String categoryByte = encoder.encodeToString(category.getBytes());  
-            categoryString += categoryByte + ",";
-        }
-        return categoryString.substring(0, categoryString.length() - 1);     
+  public String createCategoriesString(Set<String> categories){
+    String categoryString = "";
+    Base64.Encoder encoder = Base64.getEncoder();  
+    for (String category : categories) {
+        String categoryByte = encoder.encodeToString(category.getBytes());  
+        categoryString += categoryByte + ",";
     }
+    return categoryString.substring(0, categoryString.length() - 1);     
+  }
  
-    public Set<String> createCategoriesObject(String categoryString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        Set<String> categorySet = new HashSet<String>();
-        String[] categories;
-        categories = categoryString.split(",");
-        for (String category : categories) {
-            String categoryDecode = new String(decoder.decode(category));
-            categorySet.add(categoryDecode);
-        }
-        return categorySet;
+  public Set<String> createCategoriesObject(String categoryString) {
+    Base64.Decoder decoder = Base64.getDecoder();  
+    Set<String> categorySet = new HashSet<String>();
+    String[] categories;
+    categories = categoryString.split(",");
+    for (String category : categories) {
+        String categoryDecode = new String(decoder.decode(category));
+        categorySet.add(categoryDecode);
     }
+    return categorySet;
+  }
  
     public static String createFlagString(ArrayList<String> flags) {
         String flagString = "";
@@ -265,6 +289,7 @@ public class Marker {
         return flagString.substring(0, flagString.length() - 1);
     }
  
+  
     public static ArrayList<String> createFlagObject(String flagString) {
         Base64.Decoder decoder = Base64.getDecoder();  
         ArrayList<String> flagsList = new ArrayList<String>();
@@ -276,28 +301,30 @@ public class Marker {
         }
         return flagsList;
     }
+    return flagsList;
+  }
  
-    public String createLinkString(Set<String> links) {
-        String linkString = "";
-        Base64.Encoder encoder = Base64.getUrlEncoder();  
-        for (String link : links) {
-            String linkUrl = encoder.encodeToString(link.getBytes());  
-            linkString += linkUrl + ",";
-        }
-        return linkString.substring(0, linkString.length() - 1);
+  public String createLinkString(Set<String> links) {
+    String linkString = "";
+    Base64.Encoder encoder = Base64.getUrlEncoder();  
+    for (String link : links) {
+        String linkUrl = encoder.encodeToString(link.getBytes());  
+        linkString += linkUrl + ",";
     }
+    return linkString.substring(0, linkString.length() - 1);
+  }
  
-    public Set<String> createLinkObject(String linkString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        Set<String> linkList = new HashSet<String>();
-        String[] links;
-        links = linkString.split(",");
-        for (String link : links) {
-            String linkDecode = new String(decoder.decode(link));
-            linkList.add(linkDecode);
-        }
-        return linkList;
+  public Set<String> createLinkObject(String linkString) {
+    Base64.Decoder decoder = Base64.getDecoder();  
+    Set<String> linkList = new HashSet<String>();
+    String[] links;
+    links = linkString.split(",");
+    for (String link : links) {
+        String linkDecode = new String(decoder.decode(link));
+        linkList.add(linkDecode);
     }
+    return linkList;
+  }
 
     private Date stringToDate(String dateString) { 
         Date date = new Date(dateString);
@@ -313,4 +340,12 @@ public class Marker {
         return dateString;
     }
 
+    public static Entity getEntity(DatastoreService datastore, String id) {
+        Query query = new Query("Marker"); 
+        query.addFilter("id", FilterOperator.EQUAL, id); 
+        PreparedQuery pq = datastore.prepare(query);    
+        Entity entity = pq.asSingleEntity();
+
+        return entity;
+    }
 }
