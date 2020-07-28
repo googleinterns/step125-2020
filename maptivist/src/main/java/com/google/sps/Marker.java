@@ -332,12 +332,10 @@ public class Marker {
     }
 
     private String millisToString(long millis) {
-        Date date = new Date(millis);
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
-        String dateString = formatter.format(date);
-
-        return dateString;
+        LocalDate date =
+        Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
+        String text = date.format(formatter);
     }
 
     public static Entity getEntity(DatastoreService datastore, String id) {
