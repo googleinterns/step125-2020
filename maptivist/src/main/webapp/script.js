@@ -62,7 +62,7 @@ function initMap(){
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <br>
-    <button type="submit" name="id" id="vote-button" value="f189dbcd-5bc8-485c-a8c5-ec8e53698141" onclick="postVote()">Upvote</button>       
+    <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
     </div>
     <div class="flag">
         <button>Flag</button>
