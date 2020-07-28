@@ -15,11 +15,6 @@
 package com.google.sps;
 
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.FilterOperator;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -31,7 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Marker is the container class for when an unique marker is creates of people are meeting and are therefore
+ * Marker is the container class for when an unique marker is createsof people are meeting and are therefore
  * busy. The marker's title, description, location, categories are considered read-only. All the other attributes 
  * should be modified by the actions of the viewer users.
  */
@@ -130,6 +125,7 @@ public class Marker {
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
+    this.votes = (Integer) entity.getProperty("votes");
   }
 
   /**
@@ -223,8 +219,8 @@ public class Marker {
   // This method turns the atrributes of the marker object into properties of the Marker Entity
   public Entity toEntity() {
     String categories_string = createCategoriesString(this.categories);
-    String links_string = createLinkString(this.links);
-    String flags_string = "";
+    String links_string = createFlagString(this.flags);
+    String flags_string = createLinkString(this.links);
     String id_string = this.id.toString();
 
     Entity markerEntity = new Entity("Marker");
@@ -264,25 +260,24 @@ public class Marker {
     return categorySet;
   }
  
-    public static String createFlagString(ArrayList<String> flags) {
-        String flagString = "";
-        Base64.Encoder encoder = Base64.getEncoder(); 
-        for (String flag : flags) {
-            String comment = encoder.encodeToString(flag.getBytes());  
-            flagString += comment + ",";
-        }
-        return flagString.substring(0, flagString.length() - 1);
-  
-    public static ArrayList<String> createFlagObject(String flagString) {
-        Base64.Decoder decoder = Base64.getDecoder();  
-        ArrayList<String> flagsList = new ArrayList<String>();
-        String[] flags;
-        flags = flagString.split(",");
-        for (String flag : flags) {
-            String flagDecode = new String(decoder.decode(flag));
-            flagsList.add(flagDecode);
-        }
-        return flagsList;
+  public String createFlagString(ArrayList<String> flags) {
+    String flagString = "";
+    Base64.Encoder encoder = Base64.getEncoder();  
+    for (String flag : flags) {
+        String comment = encoder.encodeToString(flag.getBytes());  
+        flagString += comment + ",";
+    }
+    return flagString.substring(0, flagString.length() - 1);
+  }
+ 
+  public ArrayList<String> createFlagObject(String flagString) {
+    Base64.Decoder decoder = Base64.getDecoder();  
+    ArrayList<String> flagsList = new ArrayList<String>();
+    String[] flags;
+    flags = flagString.split(",");
+    for (String flag : flags) {
+        String flagDecode = new String(decoder.decode(flag));
+        flagsList.add(flagDecode);
     }
     return flagsList;
   }
@@ -309,12 +304,4 @@ public class Marker {
     return linkList;
   }
 
-    public static Entity getEntity(DatastoreService datastore, String id) {
-        Query query = new Query("Marker"); 
-        query.addFilter("id", FilterOperator.EQUAL, id); 
-        PreparedQuery pq = datastore.prepare(query);    
-        Entity entity = pq.asSingleEntity();
-
-        return entity;
-    }
 }
