@@ -148,7 +148,7 @@ function searchBox(){
         map.fitBounds(place.geometry.viewport);
     } else {
         map.setCenter(place.geometry.location);
-        map.setZoom(17);  
+        map.setZoom(8);  
     }
     console.log(place.geometry.location.lat());
     lat.value = place.geometry.location.lat();
@@ -200,6 +200,7 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
 
   // Adds the new marker to the map and pans to the marker 
   marker.setMap(map);
+  marker.setVisible(true);
   map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
@@ -210,6 +211,7 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
 
   // Adds the marker's random, unique id to list of already created markers
   drawn_markers.push(id);
+
 }
 
 
