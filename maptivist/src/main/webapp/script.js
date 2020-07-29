@@ -18,13 +18,11 @@
 * and should be used for any map parameters or variables.
 * The global variable, drawn_markers, is an array of the UUIDs of 
 * the markers that were already created*/
-var map, drawn_markers;
+var map;
 
 /**
 * Intializes the primary map for the main webpage
  */
-
-
 function initMap(){
   var minneapolis = {lat: 44.9778, lng: -93.2650};
 
@@ -101,9 +99,9 @@ function initMap(){
   loadMarkersByBoundary();
 
   // If the bounds of the map changed markers in that area will be drawn
-  
-  map.addListener('bounds-changed', function() {
-    loadMarkersByBoundary()    
+
+  map.addListener('bounds_changed', () => {
+      loadMarkersByBoundary()
   });
 }
 
@@ -132,7 +130,7 @@ function searchBox(){
   autocomplete.setFields(
     ['formatted_address', 'geometry', 'icon', 'name']);
 
-  autocomplete.addListener('place_changed', function() {
+  autocomplete.addListener('place_changed', () => {
     var place = autocomplete.getPlace();
     if (!place.geometry) {
         // User entered the name of a Place that was not suggested and
@@ -141,17 +139,10 @@ function searchBox(){
         return;
         }
 
-    // If the place has a geometry, then present it on a map.
-    if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-    } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(17);  
-    }
-    console.log(place.geometry.location.lat());
+    // Assign place information to marker attributes
     lat.value = place.geometry.location.lat();
     lng.value = place.geometry.location.lng();
-    address.value = place.geometry.formatted_address;
+    address.value = place.formatted_address;
 
     // Concatentates a readable address for an autocomplete result
     var result_address = place.formatted_address;
@@ -169,7 +160,8 @@ function searchBox(){
 function loadMarkersByBoundary() {
   fetch("/marker").then(response => response.json()).then((markers) => {
     var markersToDisplay = markers.filter(inBoundary);
-    for (let marker in markersToDisplay) {
+    //var marker;
+    for (const marker of markersToDisplay) {
         drawMarker(marker);          
     }
   });
@@ -179,71 +171,61 @@ function inBoundary(marker){
   var bounds = map.getBounds().toJSON();
   return (marker.latitude <= bounds.north && 
          marker.latitude >= bounds.south &&
-         marker.longitude <= bounds.west &&
-         marker.longitude >= bounds.east);
+         marker.longitude >= bounds.west &&
+         marker.longitude <= bounds.east);
 }
 
-/** Adds a new Marker based on id array
+/** Adds a new Marker based on fetched JSON array of marker objects
  */
-function drawMarker({id, latitude, longitude, title, description, links, categories}) {
-  // Get the coordinates from the marker class and create a new Latlng object
-  var myLatlng = new google.maps.LatLng(latitude, longitude);
-  
-  // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
+function drawMarker(markerObj) {
+  // Get attributes from the marker object and create a new Latlng object
+  var title = markerObj.title;
+  var myLatlng = new google.maps.LatLng(markerObj.latitude, markerObj.longitude);
+
+  // Create a new marker
   var marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
     title: title
   });
 
-  // Adds the new marker to the map and pans to the marker 
+  // Adds the new marker to the map 
   marker.setMap(map);
-  map.panTo(marker.getPosition());
 
   // Adds the new infowindow to the marker
-  var infowindow = drawInfowindow(id, title, description, links, categories, marker.getPosition());
-  marker.addListener('click', function() {
+  var infowindow = drawInfowindow(markerObj);
+  marker.addListener('click', ()  => {
     infowindow.open(map, marker);
   });
-
-  // Adds the marker's random, unique id to list of already created markers
-  drawn_markers.push(id);
 }
 
 /**
-* Adds an infowindow based on the marker creation form
+
+* Adds an infowindow based on the marker object attributes
  */
-
-function drawInfowindow(id, title, description, links, categories, position) {
-  //Set info window content from Marker class
-
-  var location = position.toString();
-  
+function drawInfowindow(markerObj) {
   // Set the content of the info window 
   var contentString =
     `<body onload="getVote">
     <div class="marker-window">
-    <h1>${title}</h1>
+    <h1>${markerObj.title}</h1>
     <br>
-    <h3>${categories}</h3>
+    <h3>${markerObj.categories}</h3>
     <br>
-    <h2>${location}</h2>
+    <h2>${markerObj.address}</h2>
     <br>
-    <p>${description}</p>
+    <p>${markerObj.description}</p>
     <br>
-    <a href=${links}>Related source</a>
+    <a href=${markerObj.links}>Related source</a>
     <br>
-        <div class="upvote">
-            <span id="counter"></p><br>
-        </div>
-        <button type="submit" name="id" id="vote-button" value="${id}" onclick="postVote()">Upvote</button>       
-        <br><br>
-        <div class="flag">
-            <h3>Enter flags here</h3>
-            <input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
-            <button type="submit" id="flag-button" value="${id}" onclick="postFlag()">Flag</button>
-        </div>
-        <br>
+
+    <div class="upvote">
+        <p>Counter: <span id="counter"></span></p>
+        <button type="submit" id="vote-button" name="id" value="${markerObj.id}" onclick="postVote()">Upvote</button>
+    </div>
+    <div class="flag">
+        <button onclick = "flagFunction() id="info_window_flag_button">Flag</button>
+    </div>
   </div>
   </body>`;
 
@@ -251,6 +233,14 @@ function drawInfowindow(id, title, description, links, categories, position) {
     content: contentString
   });
 
+  infowindow.domready = function() {
+   var flag_btn =   document.getElementById("info_window_flag_button");
+   flag_btn.onclick = function() {
+      // the closure captures the marker.
+      flagFunction(marker);
+   }
+  }
+  
   google.maps.event.addListener(infowindow, 'domready', function() {
     const id = document.getElementById("vote-button").value;
     const params = new URLSearchParams();
@@ -266,6 +256,28 @@ function drawInfowindow(id, title, description, links, categories, position) {
   return infowindow;  
 }
 
+
+function flagFunction(marker) {
+  var flagString = 
+    `<div class="flag-window">
+		<h1>Enter issue here</h1>
+		<input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
+        <input type="submit" value="Submit">
+
+    </div>`;
+
+
+	var flagWindow = new google.maps.InfoWindow({
+    content: flagString
+  });
+
+    flagWindow.setPosition(map.getCenter());
+    flagWindow.open(map);
+
+    
+}
+
+// POPUP CREATE MARKER FORM
 function openForm() {
   var form = document.getElementById("myFormPopup");
   form.style.display = "block";
