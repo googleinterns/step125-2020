@@ -70,7 +70,7 @@ public final class MarkerServlet extends HttpServlet {
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
         String dateString = request.getParameter("marker-date");
 
-        Marker postMarker = new Marker(title, description, latitude, longitude, linkSet, categorySet, id, dateString);
+        Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id, dateString);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  

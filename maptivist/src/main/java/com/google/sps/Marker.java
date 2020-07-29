@@ -33,6 +33,10 @@ import java.util.Date;
 import java.text.SimpleDateFormat;  
 import java.text.DateFormat;  
 import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;  
 
 /**
@@ -82,7 +86,7 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String datestring) {
+  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String datestring) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -136,7 +140,7 @@ public class Marker {
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
-    this.dateString = millisToString((long) entity.getProperty("date"));
+    this.dateString = valueToString((int) entity.getProperty("date"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
@@ -248,7 +252,7 @@ public class Marker {
     markerEntity.setProperty("category", categories_string);
     markerEntity.setProperty("votes", this.votes);
     markerEntity.setProperty("id", id_string);
-    markerEntity.setProperty("date", stringToDate(dateString).getTime());
+    markerEntity.setProperty("date", dateValue(dateString));
     
     return markerEntity;
     }
@@ -320,15 +324,25 @@ public class Marker {
   }
 
     private Date stringToDate(String dateString) { 
-        Date date = new Date(dateString);
-        return date;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate localDate = LocalDate.parse(dateString, formatter);
+
+        return localDate;
     }
 
-    private String millisToString(long millis) {
-        LocalDate date =
-        Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MM dd");
-        String text = date.format(formatter);
+    private String valueToString(long dateValue) {
+
+        LocalDate localDate = new java.sql.Date(dateValue).toLocalDate();
+        return localDate.toString();
+    }
+
+    private long dateValue(String dateString) {
+
+        LocalDate localDate = stringToDate(dateString);
+        java.util.Date date = java.sql.Date.valueOf(localDate);
+
+        return date.getTime(); 
     }
 
     public static Entity getEntity(DatastoreService datastore, String id) {
