@@ -44,9 +44,8 @@ public final class MarkerServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
  
-        List<Marker> markers = new ArrayList<>();
-        ArrayList<Marker> results = getMarkers(request);
- 
+        ArrayList<Marker> markers = getMarkers(request);
+    
         Gson gson = new Gson();
  
         response.setContentType("application/json;");

@@ -60,8 +60,6 @@ public final class VoteServlet extends HttpServlet {
         response.setContentType("application/json;");
         response.getWriter().println(gson.toJson(vote));
 
-        response.sendRedirect("/index.html");
-
     }
  
     public void updateVotes(DatastoreService datastore, String id, int vote) {
