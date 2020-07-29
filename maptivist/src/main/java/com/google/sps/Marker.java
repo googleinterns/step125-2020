@@ -323,7 +323,7 @@ public class Marker {
     return linkList;
   }
 
-    private Date stringToDate(String dateString) { 
+    private LocalDate stringToDate(String dateString) { 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         LocalDate localDate = LocalDate.parse(dateString, formatter);
