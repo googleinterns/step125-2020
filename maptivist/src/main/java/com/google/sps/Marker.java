@@ -71,7 +71,7 @@ public class Marker {
   private int votes;
 
   // The date attribute holds the expected date the marker event occurs
-  private String dateString;
+  private final String dateString;
 
   /**
    * Creates a new marker.
@@ -86,7 +86,7 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String datestring) {
+  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String dateString) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -116,6 +116,10 @@ public class Marker {
       throw new IllegalArgumentException("id cannot be null");
     }
 
+    if (dateString == null) {
+      throw new IllegalArgumentException("date cannot be null");
+    }
+
     this.title = title;
     this.description = description;
     this.address = address;
@@ -140,7 +144,7 @@ public class Marker {
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
-    this.dateString = valueToString((int) entity.getProperty("date"));
+    this.dateString = valueToString((long) entity.getProperty("date"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;

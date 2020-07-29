@@ -73,10 +73,10 @@ public final class MarkerServlet extends HttpServlet {
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        // if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
+        if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
             Entity markerEntity = postMarker.toEntity();
             datastore.put(markerEntity);
-        // }
+        }
  
         response.sendRedirect("/index.html");
     }
