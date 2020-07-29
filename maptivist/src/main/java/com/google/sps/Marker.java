@@ -82,11 +82,7 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
-<<<<<<< HEAD
   public Marker(String title, String description, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String datestring) {
-=======
-  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id) {
->>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -288,7 +284,6 @@ public class Marker {
         }
         return flagString.substring(0, flagString.length() - 1);
     }
- 
   
     public static ArrayList<String> createFlagObject(String flagString) {
         Base64.Decoder decoder = Base64.getDecoder();  
@@ -300,8 +295,6 @@ public class Marker {
             flagsList.add(flagDecode);
         }
         return flagsList;
-    }
-    return flagsList;
   }
  
   public String createLinkString(Set<String> links) {

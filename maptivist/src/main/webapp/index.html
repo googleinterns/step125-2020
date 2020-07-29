@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <title>Maptivist</title>
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="script.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places,geometry,drawing">
     </script>
   </head>
-  <body>
+  <body onload="closeLogin();closeForm();">
+
     <ul>
         <li><a class="navText" href="#home"><h1>home</h1></a></li>
         <li class = "centerNav"><a href="#home"><h1>
@@ -24,18 +28,20 @@
         </h1></a></li>
         <li style = "float:right"><a class = "navText" href="#home"><h1>explore</h1></a></li>
     </ul>
+    <p><a href = "#" id = "authLink" onclick = "signInOrOut();">Sign in here</a></p>
     <div class = "title">
         <p class="mainText">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas integer eget aliquet nibh. Posuere morbi leo urna molestie at elementum. Tristique risus nec feugiat in. Aenean vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi. Eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum. Neque sodales ut etiam sit amet nisl. Sit amet dictum sit amet justo donec. Praesent semper feugiat nibh sed pulvinar. Adipiscing elit pellentesque habitant morbi tristique senectus et netus. Odio ut sem nulla pharetra diam sit amet. Nec feugiat nisl pretium fusce id velit. Eros in cursus turpis massa tincidunt dui.
+            The problem with becoming an activist is that it is dangerous, because of this less people can get involved with the movement. In addition to the danger, the fact that we are in the midst of a pandemic also factors into why most people can’t go out and protest. Maptivist aims to remove any problems like this, and become sort of a “middle man” in terms of activism. In the age where everything is digitalized, it only makes sense for activism to be digitized as well. 
             <br>
-            Laoreet sit amet cursus sit. Vitae semper quis lectus nulla. Lectus urna duis convallis convallis tellus. Tellus integer feugiat scelerisque varius morbi enim nunc faucibus a. Mi quis hendrerit dolor magna eget est lorem. Nunc sed blandit libero volutpat. Tristique nulla aliquet enim tortor at auctor. Diam sollicitudin tempor id eu nisl nunc mi ipsum faucibus. Parturient montes nascetur ridiculus mus mauris vitae ultricies. Malesuada nunc vel risus commodo viverra. Eget nunc lobortis mattis aliquam faucibus purus in. Tristique nulla aliquet enim tortor at auctor urna nunc. Vitae turpis massa sed elementum tempus egestas sed sed risus. Facilisis magna etiam tempor orci eu lobortis elementum.
+            <br>
+            Especially in the current state of the United States, it is clear that people are looking to engage in organized activism. People have and continue to protest in the streets to make their voices heard. However, there are many groups of people who are not able to physically participate in local movements. Our project, Maptivist, aims to virtually connect our users to the physical places of social change. Mapvist is an interactive map web application to mark the locations of local activism. The web application will allow verified users to create and place markers on a Google Map to represent the location of a protest, meetings or important events about local issues. With the posted markers, all users will be able to search for markers based on specific issues, areas, or time periods. Maptivist provides users with a more inclusive path for activism, yet roots the users to the local places where change is occurring. 
+            <br>
         </p>
     </div>
 
     <div class = "header">
-		<button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
 		<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
-		<button class="open-button" id = "myButton" onclick="openForm()">Become A Maptivist</button>
+		<button class="open-button" id = "myButton" onclick = "signInOrOpenForm();">Sign-in</button>
     </div>
 
     <div id="map"></div>
@@ -52,9 +58,6 @@
 
             <form class="form-container" id="create-form" action="/marker" method="POST" onsubmit="loadMarkersByBoundary()">
                 <h1>Fill in Marker</h1>
-                <label for="email"><b>Email</b></label>
-                <br>
-                <input type="text" placeholder="Enter Email" id="email" name="email" required>
                 <br>
                 <label for="marker-address"><b>Marker Location</b></label>
                 <br>
@@ -101,15 +104,28 @@
             </form>
         </div>
     </div>
+
+    <div id = "loginPopup" class="form">
+        <div class="form-popup-info" id="myForm">
+            <div class = "form-container" id="create-form">
+                <span class="close" onclick="closeLogin()">&times;</span>
+                <h1>Login</h1>
+                <label for="email"><b>Email</b></label>
+                <br>
+                <input type="email" placeholder="Enter Email" id="email" name="email" required>
+                <br>
+                <label for="password"><b>Password</b></label>
+                <br>
+                <input type="password" placeholder="Password" id="pass" name="pass" required>
+                <br>
+                <input type="submit" onclick = "signUp();" value="Sign Up">
+                <input type="submit" onclick = "signIn()" value="Sign In">
+            </div>
+        </div>
+    </div>
     <div class="footer">
         <p>TODO: Add links to footer</p>
     </div>
 
   </body>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script async defer src="https://apis.google.com/js/api.js"
-        onload="this.onload=function(){};handleClientLoad();closeForm()"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
-	</script>
 </html>

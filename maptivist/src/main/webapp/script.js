@@ -61,14 +61,10 @@ function initMap(){
     <br>
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
-        <br>
-<<<<<<< HEAD
-    <form action="/votes" method="POST">
-        <button type="submit" name="id" id="vote-button" value="e785b625-4a62-4a15-9e51-9c2f5b212450" onclick="getVote()">Upvote</button>       
-    </form>
-=======
+        <div class="flag">
+            <button onclick="flagFunction()">Flag</button>
+        </div>
     <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
->>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
     </div>
     <div class="flag">
         <button>Flag</button>
@@ -103,14 +99,10 @@ function initMap(){
   loadMarkersByBoundary();
 
   // If the bounds of the map changed markers in that area will be drawn
-<<<<<<< HEAD
-  map.addListener('bounds-changed', loadMarkersByBoundary());
-  
-=======
+
   map.addListener('bounds-changed', function() {
     loadMarkersByBoundary()    
   });
->>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
 }
 
 /**
@@ -216,11 +208,10 @@ function drawMarker({id, latitude, longitude, title, description, links, categor
   drawn_markers.push(id);
 }
 
-/**
-* Adds an infowindow based on the marker creation form
- */
+
 function drawInfowindow(id, title, description, links, categories, position) {
   //Set info window content from Marker class
+
   var location = position.toString();
   
   // Set the content of the info window 
@@ -239,20 +230,22 @@ function drawInfowindow(id, title, description, links, categories, position) {
     <br>
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
-<<<<<<< HEAD
-        <form action="/votes" method="POST">
-            <button type="submit" id="vote-button" name="id" value="${id}" onclick="getVote()">Upvote</button>
-        </form>
-=======
         <button type="submit" id="vote-button" name="id" value="${id}" onclick="postVote()">Upvote</button>
->>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
     </div>
     <div class="flag">
-        <button>Flag</button>
+        <button onclick = "flagFunction() id="info_window_flag_button">Flag</button>
     </div>
   </div>
   </body>`;
 
+
+  infowindow.domready = function() {
+   var flag_btn =   document.getElementById("info_window_flag_button");
+   flag_btn.onclick = function() {
+      // the closure captures the marker.
+      flagFunction(marker);
+   }
+}
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
@@ -272,7 +265,28 @@ function drawInfowindow(id, title, description, links, categories, position) {
   return infowindow;  
 }
 
-// POPUP FORM
+
+function flagFunction(marker) {
+  var flagString = 
+    `<div class="flag-window">
+		<h1>Enter issue here</h1>
+		<input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
+        <input type="submit" value="Submit">
+
+    </div>`;
+
+
+	var flagWindow = new google.maps.InfoWindow({
+    content: flagString
+  });
+
+    flagWindow.setPosition(map.getCenter());
+    flagWindow.open(map);
+
+    
+}
+
+
 function openForm() {
   var form = document.getElementById("myFormPopup");
   form.style.display = "block";
@@ -291,84 +305,116 @@ window.onclick = function(event) {
   }
 }
 
-//GOOGLE OAUTH
 
-var GoogleAuth;
-  var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
-  function handleClientLoad() {
-    gapi.load('client:auth2', initClient);
+  //Firebase
+  var firebaseConfig = {
+    apiKey: "AIzaSyDa2o12S4k-ILczNuf-WpmeY2zIFoUFxAQ",
+    authDomain: "maptivist-step-2020.firebaseapp.com",
+    databaseURL: "https://maptivist-step-2020.firebaseio.com",
+    projectId: "maptivist-step-2020",
+    storageBucket: "maptivist-step-2020.appspot.com",
+    messagingSenderId: "1032109305013",
+    appId: "1:1032109305013:web:bef8b67db0d5ae091422fc",
+    measurementId: "G-E38S0D5C9B"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    //firebase.analytics();
+
+    
+var uid = firebase.auth().currentUser;
+
+
+
+function signUp() {
+    var email = document.getElementById("email");
+    var password = document.getElementById("pass");
+    const promise = firebase.auth().createUserWithEmailAndPassword(email.value, password.value);
+    promise.catch(e => alert(e.message));
+    uid = firebase.auth().currentUser;
   }
+  
+function signIn(){
+    var email = document.getElementById("email");
+    var password = document.getElementById("pass");
+    const promise = firebase.auth().signInWithEmailAndPassword(email.value, password.value);
+    promise.catch(e => alert(e.message));
+    uid = firebase.auth().currentUser;
 
-  function initClient() {
-    var discoveryUrl = 'https://people.googleapis.com/$discovery/rest?version=v1'
+ }
 
-    gapi.client.init({
-        'apiKey': 'AIzaSyAxjgLiAauEKT35UoAhinExXFUvQSCHTKM',
-        'clientId': '1032109305013-hmru372nf0vslo52b0aqq2kpf20m88mb.apps.googleusercontent.com',
-        'discoveryDocs': [discoveryUrl],
-        'scope': SCOPE
-    }).then(function () {
-      GoogleAuth = gapi.auth2.getAuthInstance();
-
-      GoogleAuth.isSignedIn.listen(updateSigninStatus);
-      var user = GoogleAuth.currentUser.get();
-      setSigninStatus();
+function signOut(){
+    firebase.auth().signOut();
+    uid = firebase.auth().currentUser;
+    signInButtons();
+}
 
 
-      $('#sign-in-or-out-button').click(function() {
-        handleAuthClick();
-      });
-      $('#revoke-access-button').click(function() {
-        revokeAccess();
-      });
-    });
-  }
 
-  function handleAuthClick() {
-    if (GoogleAuth.isSignedIn.get()) {
 
-      GoogleAuth.signOut();
-    } else {
-
-      GoogleAuth.signIn();
+function signInOrOpenForm() {
+//opens map if signed in, prompts to sign in if not signed in
+    if (!uid) {
+        openSignIn();
+    } 
+    else {
+        openForm();
     }
-  }
-
-  function revokeAccess() {
-    GoogleAuth.disconnect();
-  }
-
-  function setSigninStatus(isSignedIn) {
-    var user = GoogleAuth.currentUser.get();
-    var isAuthorized = user.hasGrantedScopes(SCOPE);
-    if (isAuthorized) {
-      $('#sign-in-or-out-button').html('Sign out');
-      $('#myButton').css('display', 'block');
-      $('#auth-status').html('You are currently signed in and have granted ' +
-          'access to this app.');
-    } else {
-      $('#sign-in-or-out-button').html('Sign In/Authorize');
-      $('#myButton').css('display', 'none');
-      $('#auth-status').html('You have not authorized this app or you are ' +
-          'signed out.');
+}
+function signInOrOut() {
+//signs out if signed in, prompts to sign in if not signed in
+    if (!uid) {
+        openSignIn();
+    } 
+    else {
+        signOut();
     }
-  }
+}
+
+
+ firebase.auth().onAuthStateChanged(function(user){
+    closeLogin();
+    closeForm();
+    if(!user){
+        uid = firebase.auth().currentUser;
+        signInButtons();
+    }
+    else{
+        uid = firebase.auth().currentUser;
+        signOutButtons();
+    }
+ });
+
+
+function signOutButtons(){
+    $('#sign-in-or-out-button').html('Sign out');
+    $('#authLink').html('Sign out');
+    $('#myButton').html('Become a Maptivist');
+    $('#myButton').css('display','block');
+}
+
+function signInButtons(){
+    $('#authLink').html('Sign in here');
+    $('#myButton').html('Sign in');
+    $('#myButton').css('display','block');
+}
+
+
+function openSignIn() {
+  var form = document.getElementById("loginPopup");
+  form.style.display = "block";
+}
+
+function closeLogin(){
+  var form = document.getElementById("loginPopup");
+  form.style.display = "none";
+}
 
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
   }
 
-<<<<<<< HEAD
-async function getVote() {
-    const response = await fetch("/votes", {method: "GET"});
-    const voteCount = await response.json();
-    console.log(voteCount);
-    document.getElementById("counter").innerHTML = voteCount;
-}
 
-
-
-=======
 function postVote() {
   const id = document.getElementById("vote-button").value;
   const params = new URLSearchParams();
@@ -376,4 +422,4 @@ function postVote() {
   params.append("update", true);
   fetch('/votes', {method: 'POST', body: params});
 }
->>>>>>> 07a6e7b386b1778012dfee789a43e958130c77b7
+
