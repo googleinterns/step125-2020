@@ -279,7 +279,7 @@ public class Marker {
     return categorySet;
   }
  
-    public static String createFlagString(ArrayList<String> flags) {
+  public static String createFlagString(ArrayList<String> flags) {
         String flagString = "";
         Base64.Encoder encoder = Base64.getEncoder(); 
         for (String flag : flags) {
@@ -299,7 +299,7 @@ public class Marker {
             flagsList.add(flagDecode);
         }
         return flagsList;
-  }
+    }
  
   public String createLinkString(Set<String> links) {
     String linkString = "";

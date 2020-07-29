@@ -7,9 +7,8 @@
     <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-auth.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places"></script>
     <script src="script.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDWRxSt9kmnVGgeui_G2ZYwTnKfU3yuTw&callback=initMap&libraries=places,geometry,drawing">
-    </script>
   </head>
   <body onload="closeLogin();closeForm();">
 
@@ -55,8 +54,7 @@
         <!--TODO: Connect this to the backend--> 
         <div class="form-popup-info" id="myForm">
             <span class="close" onclick="closeForm()">&times;</span>
-
-            <form class="form-container" id="create-form" action="/marker" method="POST" onsubmit="loadMarkersByBoundary()">
+            <form class="form-container" id="create-form" action="/marker" method="POST">
                 <h1>Fill in Marker</h1>
                 <br>
                 <label for="marker-address"><b>Marker Location</b></label>
