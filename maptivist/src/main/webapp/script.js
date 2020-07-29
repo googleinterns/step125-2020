@@ -234,12 +234,12 @@ function drawInfowindow(id, title, description, links, categories, position) {
     <a href=${links}>Related source</a>
     <br>
         <div class="upvote">
-            <button>Upvote</button>
-            <p>counter: </p><br>
+            <span id="counter"></p><br>
         </div>
         <button type="submit" name="id" id="vote-button" value="${id}" onclick="postVote()">Upvote</button>       
-        <br>
+        <br><br>
         <div class="flag">
+            <h3>Enter flags here</h3>
             <input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
             <button type="submit" id="flag-button" value="${id}" onclick="postFlag()">Flag</button>
         </div>
