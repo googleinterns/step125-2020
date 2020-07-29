@@ -99,8 +99,8 @@ function searchBox(){
 function loadMarkersByBoundary() {
   fetch("/marker").then(response => response.json()).then((markers) => {
     var markersToDisplay = markers.filter(inBoundary);
-    var marker;
-    for (marker of markersToDisplay) {
+    //var marker;
+    for (const marker of markersToDisplay) {
         drawMarker(marker);          
     }
   });
@@ -114,14 +114,14 @@ function inBoundary(marker){
          marker.longitude <= bounds.east);
 }
 
-/** Adds a new Marker based on id array
+/** Adds a new Marker based on fetched JSON array of marker objects
  */
 function drawMarker(markerObj) {
-  // Get attributes from the marker class and create a new Latlng object
+  // Get attributes from the marker object and create a new Latlng object
   var title = markerObj.title;
   var myLatlng = new google.maps.LatLng(markerObj.latitude, markerObj.longitude);
 
-  // Create a new marker, it assumed that the position is a private attribute that cannot be accessed
+  // Create a new marker
   var marker = new google.maps.Marker({
     position: myLatlng,
     map: map,
@@ -139,7 +139,7 @@ function drawMarker(markerObj) {
 }
 
 /**
-* Adds an infowindow based on the marker creation form
+* Adds an infowindow based on the marker object attributes
  */
 function drawInfowindow(markerObj) {
   // Set the content of the info window 
