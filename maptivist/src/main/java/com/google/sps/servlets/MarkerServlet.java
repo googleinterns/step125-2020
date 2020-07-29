@@ -49,7 +49,7 @@ public final class MarkerServlet extends HttpServlet {
         Gson gson = new Gson();
  
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(results));
+        response.getWriter().println(gson.toJson(markers));
     }
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
