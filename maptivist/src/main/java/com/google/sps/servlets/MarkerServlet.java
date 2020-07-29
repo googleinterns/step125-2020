@@ -110,8 +110,7 @@ public final class MarkerServlet extends HttpServlet {
     }
 
     private Date localDateToDate(LocalDate localDate) {
-        ZoneId zoneId = ZoneId.systemDefault();
-        Date date = Date.from(localDate.atStartOfDay(zoneId).toInstant());
+        java.util.Date date = java.sql.Date.valueOf(localDate);
         return date;
     }
 
