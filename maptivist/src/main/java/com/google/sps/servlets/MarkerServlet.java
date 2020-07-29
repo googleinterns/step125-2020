@@ -50,7 +50,7 @@ public final class MarkerServlet extends HttpServlet {
         Gson gson = new Gson();
  
         response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(markers));
+        response.getWriter().println(gson.toJson(results));
     }
  
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -66,10 +66,10 @@ public final class MarkerServlet extends HttpServlet {
         Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        // if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
+        if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
             Entity markerEntity = postMarker.toEntity();
             datastore.put(markerEntity);
-        // }
+        }
  
         response.sendRedirect("/index.html");
     }

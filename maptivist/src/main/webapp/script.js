@@ -59,20 +59,17 @@ function initMap(){
     <br>
     <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
     <br>
-    <div class="upvote">
-        <p>Counter: <span id="counter"></span></p>
-        <br>
         <div class="upvote">
-            <button>Upvote</button>
-            <p>counter: </p>
+            <span id="counter"></p><br>
         </div>
+        <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
+        <br><br>
         <div class="flag">
-            <button onclick="flagFunction()">Flag</button>
+            <h3>Enter flags here</h3>
+            <input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
+            <button type="submit" id="flag-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postFlag()">Flag</button>
         </div>
-    <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
-    </div>
-    <div class="flag">
-        <button>Flag</button>
+        <br>
     </div>
     </div>`;
 
@@ -87,8 +84,8 @@ function initMap(){
     params.append("update", false);
 
     fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
-        document.getElementById("counter").innerHTML = vote;
         console.log(vote);
+        document.getElementById("counter").innerHTML = "Counter: " + vote;
     });
   });  
 
@@ -236,24 +233,20 @@ function drawInfowindow(id, title, description, links, categories, position) {
     <br>
     <a href=${links}>Related source</a>
     <br>
-    <div class="upvote">
-        <p>Counter: <span id="counter"></span></p>
-        <button type="submit" id="vote-button" name="id" value="${id}" onclick="postVote()">Upvote</button>
-    </div>
-    <div class="flag">
-        <button onclick = "flagFunction() id="info_window_flag_button">Flag</button>
-    </div>
+        <div class="upvote">
+            <button>Upvote</button>
+            <p>counter: </p><br>
+        </div>
+        <button type="submit" name="id" id="vote-button" value="${id}" onclick="postVote()">Upvote</button>       
+        <br>
+        <div class="flag">
+            <input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
+            <button type="submit" id="flag-button" value="${id}" onclick="postFlag()">Flag</button>
+        </div>
+        <br>
   </div>
   </body>`;
 
-
-  infowindow.domready = function() {
-   var flag_btn =   document.getElementById("info_window_flag_button");
-   flag_btn.onclick = function() {
-      // the closure captures the marker.
-      flagFunction(marker);
-   }
-}
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
@@ -272,28 +265,6 @@ function drawInfowindow(id, title, description, links, categories, position) {
   
   return infowindow;  
 }
-
-
-function flagFunction(marker) {
-  var flagString = 
-    `<div class="flag-window">
-		<h1>Enter issue here</h1>
-		<input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
-        <input type="submit" value="Submit">
-
-    </div>`;
-
-
-	var flagWindow = new google.maps.InfoWindow({
-    content: flagString
-  });
-
-    flagWindow.setPosition(map.getCenter());
-    flagWindow.open(map);
-
-    
-}
-
 
 function openForm() {
   var form = document.getElementById("myFormPopup");
@@ -428,4 +399,15 @@ function postVote() {
   params.append('id', id);
   params.append("update", true);
   fetch('/votes', {method: 'POST', body: params});
+}
+
+function postFlag() {
+  const id = document.getElementById("flag-button").value;
+  const flag = document.getElementById("flag-problem").value;
+  const params = new URLSearchParams();
+  params.append('flag', flag);
+  params.append("id", id);
+  fetch('/flags', {method: 'POST', body: params});
+  document.getElementById("flag-problem").value = "";
+
 }

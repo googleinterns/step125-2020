@@ -47,40 +47,21 @@ public final class FlagServlet extends HttpServlet {
     
     public static ArrayList<String> flagsObject;
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
- 
-        Gson gson = new Gson();
- 
-        response.setContentType("application/json;");
-        response.getWriter().println(gson.toJson(flagsObject));
-    }
- 
- 
+    @Override 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String titleMatch = request.getParameter("title");
+        String id = request.getParameter("id");
         String flag = request.getParameter("flag");
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        updateFlags(datastore, titleMatch, flag);
-
-        response.sendRedirect("/index.html");
+        updateFlags(datastore, id, flag);
     }
  
-
-    public Entity getEntity(DatastoreService datastore, String id) {
-        Query query = new Query("Marker"); 
-        query.addFilter("id", FilterOperator.EQUAL, id); 
-        PreparedQuery pq = datastore.prepare(query);    
-        Entity entity = pq.asSingleEntity();
-
-        return entity;
-    }
-
     public void updateFlags(DatastoreService datastore, String id, String flag) {
-
-        Marker marker = new Marker(Marker.getEntity(datastore, id));
-        marker.addFlagReport(flag);
-        datastore.put(marker.toEntity());
+    
+        Entity entity = Marker.getEntity(datastore, id);
+        ArrayList<String> flags = Marker.createFlagObject((String) entity.getProperty("flags"));  
+        flags.add(flag);      
+        entity.setProperty("flags", Marker.createFlagString(flags));
+        datastore.put(entity);
 
     }
 
