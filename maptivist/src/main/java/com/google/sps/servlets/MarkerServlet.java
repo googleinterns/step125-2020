@@ -88,7 +88,7 @@ public final class MarkerServlet extends HttpServlet {
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query = new Query("Marker")
-        .setFilter(new FilterPredicate("epoch-days", FilterOperator.GREATER_THAN_OR_EQUAL	, localDate.toEpochDay()));
+        .setFilter(new FilterPredicate("epoch-days", FilterOperator.GREATER_THAN_OR_EQUAL, localDate.toEpochDay()));
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity entity : results.asIterable()) {
