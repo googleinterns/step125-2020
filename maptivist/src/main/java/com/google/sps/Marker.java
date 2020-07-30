@@ -292,7 +292,7 @@ public class Marker {
         }
         return flagString.substring(0, flagString.length() - 1);
     }
-  
+
     public static ArrayList<String> createFlagObject(String flagString) {
         Base64.Decoder decoder = Base64.getDecoder();  
         ArrayList<String> flagsList = new ArrayList<String>();
