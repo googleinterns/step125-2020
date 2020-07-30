@@ -39,6 +39,7 @@ function initMap(){
   loadMarkersByBoundary();
 
   // If the bounds of the map changed markers in that area will be drawn
+
   map.addListener('bounds_changed', () => {
       loadMarkersByBoundary()
   });
@@ -139,6 +140,7 @@ function drawMarker(markerObj) {
 }
 
 /**
+
 * Adds an infowindow based on the marker object attributes
  */
 function drawInfowindow(markerObj) {
@@ -156,6 +158,7 @@ function drawInfowindow(markerObj) {
     <br>
     <a href=${markerObj.links}>Related source</a>
     <br>
+
     <div class="upvote">
         <p>Counter: <span id="counter"></span></p>
         <button type="submit" id="vote-button" name="id" value="${markerObj.id}" onclick="postVote()">Upvote</button>
@@ -192,6 +195,7 @@ function drawInfowindow(markerObj) {
   
   return infowindow;  
 }
+
 
 function flagFunction(marker) {
   var flagString = 
@@ -350,3 +354,13 @@ function postVote() {
   fetch('/votes', {method: 'POST', body: params});
 }
 
+function postFlag() {
+  const id = document.getElementById("flag-button").value;
+  const flag = document.getElementById("flag-problem").value;
+  const params = new URLSearchParams();
+  params.append('flag', flag);
+  params.append("id", id);
+  fetch('/flags', {method: 'POST', body: params});
+  document.getElementById("flag-problem").value = "";
+
+}
