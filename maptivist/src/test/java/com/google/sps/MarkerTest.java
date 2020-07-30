@@ -29,6 +29,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import java.nio.CharBuffer; 
+import java.time.LocalDate;
+
 
 /** This is for testing the capabilities of the Marker Class (not started but did add JUnit to pom.xml)*/
 @RunWith(JUnit4.class)
@@ -58,7 +60,7 @@ public final class MarkerTest {
 
   private final UUID ID = UUID.randomUUID();
 
-  private final String DATE = "25/12/2019";
+  private final LocalDate DATE = Marker.stringToDate("25/12/2019");
 
 
   @Test

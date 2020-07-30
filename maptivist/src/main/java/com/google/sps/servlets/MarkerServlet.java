@@ -67,9 +67,9 @@ public final class MarkerServlet extends HttpServlet {
         UUID id = UUID.randomUUID();
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
-        String dateString = request.getParameter("marker-date");
+        LocalDate localDate = Marker.stringToDate(request.getParameter("marker-date-dd/mm/yyyy"));
 
-        Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id, dateString);
+        Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id, localDate);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
@@ -84,11 +84,11 @@ public final class MarkerServlet extends HttpServlet {
     private ArrayList<Marker> getMarkers(HttpServletRequest request){
         ArrayList<Marker> markers = new ArrayList<>();
         LocalDate localDate = LocalDate.now();
-        Date currentDate = localDateToDate(localDate);
+        localDate.minusDays(1);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query = new Query("Marker")
-        .setFilter(new FilterPredicate("date", FilterOperator.GREATER_THAN_OR_EQUAL	, currentDate.getTime()));
+        .setFilter(new FilterPredicate("epoch-days", FilterOperator.GREATER_THAN_OR_EQUAL	, localDate.toEpochDay()));
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity entity : results.asIterable()) {
@@ -106,11 +106,6 @@ public final class MarkerServlet extends HttpServlet {
 
         if (query == null) {return false;}
         return true;
-    }
-
-    private Date localDateToDate(LocalDate localDate) {
-        java.util.Date date = java.sql.Date.valueOf(localDate);
-        return date;
     }
 
 }

@@ -71,7 +71,7 @@ public class Marker {
   private int votes;
 
   // The date attribute holds the expected date the marker event occurs
-  private final String dateString;
+  private final LocalDate localDate;
 
   /**
    * Creates a new marker.
@@ -86,7 +86,7 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, String dateString) {
+  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, LocalDate localDate) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -116,7 +116,7 @@ public class Marker {
       throw new IllegalArgumentException("id cannot be null");
     }
 
-    if (dateString == null) {
+    if (localDate == null) {
       throw new IllegalArgumentException("date cannot be null");
     }
 
@@ -130,7 +130,7 @@ public class Marker {
     this.flags = new ArrayList<String>();
     this.votes = 0;
     this.id = id;
-    this.dateString = dateString;
+    this.localDate = localDate;
   }
 
   public Marker(Entity entity) {
@@ -144,7 +144,7 @@ public class Marker {
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
-    this.dateString = valueToString((long) entity.getProperty("date"));
+    this.localDate = LocalDate.ofEpochDay((long) entity.getProperty("epoch-days"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
@@ -256,7 +256,7 @@ public class Marker {
     markerEntity.setProperty("category", categories_string);
     markerEntity.setProperty("votes", this.votes);
     markerEntity.setProperty("id", id_string);
-    markerEntity.setProperty("date", dateValue(dateString));
+    markerEntity.setProperty("epoch-days", this.localDate.toEpochDay());
     
     return markerEntity;
     }
@@ -327,26 +327,12 @@ public class Marker {
     return linkList;
   }
 
-    private LocalDate stringToDate(String dateString) { 
+    public static LocalDate stringToDate(String dateString) { 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         LocalDate localDate = LocalDate.parse(dateString, formatter);
 
         return localDate;
-    }
-
-    private String valueToString(long dateValue) {
-
-        LocalDate localDate = new java.sql.Date(dateValue).toLocalDate();
-        return localDate.toString();
-    }
-
-    private long dateValue(String dateString) {
-
-        LocalDate localDate = stringToDate(dateString);
-        java.util.Date date = java.sql.Date.valueOf(localDate);
-
-        return date.getTime(); 
     }
 
     public static Entity getEntity(DatastoreService datastore, String id) {

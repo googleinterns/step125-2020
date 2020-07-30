@@ -38,6 +38,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import java.time.LocalDate;
 import java.util.Base64;
  
 @RunWith(JUnit4.class)
@@ -70,7 +71,7 @@ public final class MarkerServletFunctionTest {
 
     private final UUID ID = UUID.randomUUID();
 
-    private final String DATE = "25/12/2019";
+    private final LocalDate DATE = Marker.stringToDate("25/12/2019");
     
     @Before
     public void setUp() {
