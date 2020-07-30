@@ -38,6 +38,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import java.time.LocalDate;
 import java.util.Base64;
  
 @RunWith(JUnit4.class)
@@ -69,6 +70,8 @@ public final class MarkerServletFunctionTest {
     private final int VOTES = 0;
 
     private final UUID ID = UUID.randomUUID();
+
+    private final LocalDate DATE = Marker.stringToDate("25/12/2019");
     
     @Before
     public void setUp() {
@@ -93,7 +96,8 @@ public final class MarkerServletFunctionTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker expected_marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+    Marker expected_marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
+
         expected_marker.addFlagReport(FLAG_A);
 
     assertEquals(0, ds.prepare(new Query("Marker")).countEntities());
@@ -105,4 +109,4 @@ public final class MarkerServletFunctionTest {
     assertEquals(expected_marker.getUUID(), deserialized_maker.getUUID());
   }
  
- } 
+} 

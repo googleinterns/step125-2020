@@ -29,6 +29,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import java.nio.CharBuffer; 
+import java.time.LocalDate;
+
 
 /** This is for testing the capabilities of the Marker Class (not started but did add JUnit to pom.xml)*/
 @RunWith(JUnit4.class)
@@ -58,6 +60,9 @@ public final class MarkerTest {
 
   private final UUID ID = UUID.randomUUID();
 
+  private final LocalDate DATE = Marker.stringToDate("25/12/2019");
+
+
   @Test
   public void createMarkerWithoutCategories() {
     Set<String> CATS = new HashSet<>();
@@ -65,7 +70,7 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
    
-    Marker noCatMarker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+    Marker noCatMarker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
 
     Set<String> actual = noCatMarker.getCategories();
     Set<String> expected = new HashSet<String>();
@@ -85,7 +90,7 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID); 
+    Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE); 
 
     UUID actual = marker.getUUID();
     UUID not_expected = null;
@@ -104,7 +109,8 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+    Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
+
     marker.addFlagReport(FLAG_A); 
 
     int actual = marker.getFlags().size();
@@ -124,7 +130,8 @@ public final class MarkerTest {
         LINKS.add(LINK_A);
         LINKS.add(LINK_B);
 
-    Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+    Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
+
         marker.addVote();
 
     int actual = marker.getVotes();
@@ -148,7 +155,8 @@ public final class MarkerTest {
             FLAGS.add(FLAG_A);
             FLAGS.add(FLAG_B);
 
-        Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+        Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
+
 
         String linkString = marker.createLinkString(LINKS);
         Set<String> expected = marker.createLinkObject(linkString);
@@ -171,7 +179,7 @@ public final class MarkerTest {
             FLAGS.add(FLAG_A);
             FLAGS.add(FLAG_B);
 
-        Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+        Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
 
         String categoriesString = marker.createCategoriesString(CATS);
         int expected = 2;
@@ -195,7 +203,8 @@ public final class MarkerTest {
             FLAGS.add(FLAG_A);
             FLAGS.add(FLAG_B);
 
-        Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID);
+        Marker marker = new Marker(TITLE, DESCRIPT, ADDY, LAT, LONG, LINKS, CATS, ID, DATE);
+
    
         String flagString = marker.createFlagString(FLAGS);
         int expected = 1;

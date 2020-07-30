@@ -29,6 +29,15 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Date;
+import java.text.SimpleDateFormat;  
+import java.text.DateFormat;  
+import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;  
 
 /**
  * Marker is the container class for when an unique marker is creates of people are meeting and are therefore
@@ -60,7 +69,10 @@ public class Marker {
   
   // The votes attribute is a mutable counter for the number of upvotes a marker has gotten
   private int votes;
-  
+
+  // The date attribute holds the expected date the marker event occurs
+  private final LocalDate localDate;
+
   /**
    * Creates a new marker.
    *
@@ -74,7 +86,7 @@ public class Marker {
    * @param id 128 bit UUID, must be non-null.
    */
 
-  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id) {
+  public Marker(String title, String description, String address, double latitude, double longitude, Set<String> links, Set<String> categories, UUID id, LocalDate localDate) {
 
     if (title == null) {
       throw new IllegalArgumentException("title cannot be null");
@@ -104,6 +116,10 @@ public class Marker {
       throw new IllegalArgumentException("id cannot be null");
     }
 
+    if (localDate == null) {
+      throw new IllegalArgumentException("date cannot be null");
+    }
+
     this.title = title;
     this.description = description;
     this.address = address;
@@ -114,6 +130,7 @@ public class Marker {
     this.flags = new ArrayList<String>();
     this.votes = 0;
     this.id = id;
+    this.localDate = localDate;
   }
 
   public Marker(Entity entity) {
@@ -127,6 +144,7 @@ public class Marker {
     this.longitude = (Double) entity.getProperty("longitude");
     this.latitude = (Double) entity.getProperty("latitude");
     this.id = (UUID) UUID.fromString((String) entity.getProperty("id"));
+    this.localDate = LocalDate.ofEpochDay((long) entity.getProperty("epoch-days"));
     this.links = links_object;
     this.flags = flags_object;
     this.categories = categories_object;
@@ -238,7 +256,8 @@ public class Marker {
     markerEntity.setProperty("category", categories_string);
     markerEntity.setProperty("votes", this.votes);
     markerEntity.setProperty("id", id_string);
-
+    markerEntity.setProperty("epoch-days", this.localDate.toEpochDay());
+    
     return markerEntity;
     }
 
@@ -307,6 +326,14 @@ public class Marker {
     }
     return linkList;
   }
+
+    public static LocalDate stringToDate(String dateString) { 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate localDate = LocalDate.parse(dateString, formatter);
+
+        return localDate;
+    }
 
     public static Entity getEntity(DatastoreService datastore, String id) {
         Query query = new Query("Marker"); 

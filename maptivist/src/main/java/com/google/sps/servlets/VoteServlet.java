@@ -45,7 +45,6 @@ import java.util.Base64;
 
 public final class VoteServlet extends HttpServlet {
     
-   
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

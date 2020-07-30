@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -34,8 +35,13 @@ import java.util.HashSet;
 import com.google.sps.Marker;
 import java.util.Set;
 import java.util.List;
-import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
+import java.util.Base64;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+
  
 /** Servlet that handles all my received marker data */
 @WebServlet("/marker")
@@ -61,23 +67,28 @@ public final class MarkerServlet extends HttpServlet {
         UUID id = UUID.randomUUID();
         Set<String> linkSet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-links")));
         Set<String> categorySet = new HashSet<String>(Arrays.asList(request.getParameterValues("marker-category")));
+        LocalDate localDate = Marker.stringToDate(request.getParameter("marker-date-dd/mm/yyyy"));
 
-        Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id);
+        Marker postMarker = new Marker(title, description, address, latitude, longitude, linkSet, categorySet, id, localDate);
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  
-        // if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
+        if (!checkIfMarkerAlreadyInDatastore(postMarker.getUUID())) {
             Entity markerEntity = postMarker.toEntity();
             datastore.put(markerEntity);
-        // }
+        }
  
         response.sendRedirect("/index.html");
     }
  
     private ArrayList<Marker> getMarkers(HttpServletRequest request){
         ArrayList<Marker> markers = new ArrayList<>();
- 
+        LocalDate localDate = LocalDate.now();
+        localDate.minusDays(1);
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query("Marker");
+        Query query = new Query("Marker")
+        .setFilter(new FilterPredicate("epoch-days", FilterOperator.GREATER_THAN_OR_EQUAL, localDate.toEpochDay()));
         PreparedQuery results = datastore.prepare(query);
  
         for (Entity entity : results.asIterable()) {

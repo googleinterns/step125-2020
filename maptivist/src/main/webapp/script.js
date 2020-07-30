@@ -30,7 +30,7 @@ function initMap(){
     zoom: 8,
     center: minneapolis,
     mapId: '837a93b1537b2a61'
-  });
+  });      
 
   // Initializes the search box
   searchBox();
@@ -340,6 +340,7 @@ function closeLogin(){
   function updateSigninStatus(isSignedIn) {
     setSigninStatus();
   }
+
 
 function postVote() {
   const id = document.getElementById("vote-button").value;
