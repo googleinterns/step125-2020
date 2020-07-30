@@ -154,6 +154,8 @@ function drawInfowindow(markerObj) {
     <br>
     <h2>${markerObj.address}</h2>
     <br>
+    <h2>${markerObj.localDate}</h2>
+    <br>
     <p>${markerObj.description}</p>
     <br>
     <a href=${markerObj.links}>Related source</a>
