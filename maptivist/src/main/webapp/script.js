@@ -32,66 +32,6 @@ function initMap(){
     mapId: '837a93b1537b2a61'
   });
 
-  // EXAMPLE MARKER
-  var myLatlng = {lat: 44.8549, lng: -93.2422}
-
-  var marker = new google.maps.Marker({
-    position: myLatlng,
-    map: map,
-    title: "Justice for George Floyd"
-  });
-      
-
-
-  // Adds the new marker and infowindow to the map
-  marker.setMap(map);
-  var contentString =
-    `<div class="marker-window">
-    <h1>Justice for George Floyd</h1>
-    <br>
-    <h3>BLM</h3>
-    <br>
-    <h2>Mall of America</h2>
-    <br>
-    <p>This is an example marker from a past protest</p>
-    <br>
-    <a href="https://en.wikipedia.org/wiki/George_Floyd">Related source</a>
-    <br>
-        <div class="upvote">
-            <span id="counter"></p><br>
-        </div>
-        <button type="submit" name="id" id="vote-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postVote()">Upvote</button>       
-        <br><br>
-        <div class="flag">
-            <h3>Enter flags here</h3>
-            <input type="text" placeholder="Problem" id="flag-problem" name="flag-problem" required></input>
-            <button type="submit" id="flag-button" value="e8fb4ec8-22c6-4128-8878-938fc3baf99d" onclick="postFlag()">Flag</button>
-        </div>
-        <br>
-    </div>
-    </div>`;
-
-  var infowindow = new google.maps.InfoWindow({
-    content: contentString
-  });
-
-  google.maps.event.addListener(infowindow, 'domready', function() {
-    const id = document.getElementById("vote-button").value;
-    const params = new URLSearchParams();
-    params.append("id", id);
-    params.append("update", false);
-
-    fetch('/votes', {method: 'POST', body: params}).then(response => response.json()).then((vote) => {
-        console.log(vote);
-        document.getElementById("counter").innerHTML = "Counter: " + vote;
-    });
-  });  
-
-  marker.addListener('click', function() {
-    infowindow.open(map, marker);
-  });
-
-
   // Initializes the search box
   searchBox();
   
