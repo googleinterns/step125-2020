@@ -100,11 +100,13 @@ public final class MarkerServlet extends HttpServlet {
 
 
     public Boolean checkIfMarkerAlreadyInDatastore(UUID id){
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
         String id_string = id.toString();
         Query query = new Query("Marker");
         query.addFilter("id", Query.FilterOperator.EQUAL, id_string);
 
-        if (query == null) {return false;}
+        if (datastore.prepare(query).countEntities() == 0) {return false;}
         return true;
     }
 
