@@ -143,8 +143,12 @@ function drawMarker(markerObj) {
 
 * Adds an infowindow based on the marker object attributes
  */
+
 function drawInfowindow(markerObj) {
   // Set the content of the info window 
+
+  const date = dateToString(markerObj.localDate);
+
   var contentString =
     `<body onload="getVote">
     <div class="marker-window">
@@ -154,7 +158,7 @@ function drawInfowindow(markerObj) {
     <br>
     <h2>${markerObj.address}</h2>
     <br>
-    <h2>${markerObj.localDate}</h2>
+    <h2>${date}</h2>
     <br>
     <p>${markerObj.description}</p>
     <br>
@@ -365,4 +369,9 @@ function postFlag() {
   fetch('/flags', {method: 'POST', body: params});
   document.getElementById("flag-problem").value = "";
 
+}
+
+function dateToString(date) {
+    const string = date["day"] + "/" + date["month"] + "/" + date["year"];
+    return string
 }
